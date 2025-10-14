@@ -18,20 +18,23 @@
       color: #2C2C2C;
       line-height: 1.65;
       -webkit-font-smoothing: antialiased;
+    }
+
+    /* Wrapper for content section with dotted grid */
+    .content-bg {
+      background: radial-gradient(circle, #D0D0C8 2px, transparent 2px);
+      background-size: 30px 30px;
+      background-color: #F5F5F0;
       position: relative;
     }
 
-    /* Lighter dotted grid for entire page below hero */
-    body::after {
+    .content-bg::before {
       content: '';
       position: absolute;
       width: 100%;
-      height: calc(100% - 100vh);
-      top: 100vh;
-      left: 0;
-      background: radial-gradient(circle, #D0D0C8 2px, transparent 2px);
-      background-size: 30px 30px;
-      opacity: 0.2;
+      height: 100%;
+      background-color: #F5F5F0;
+      opacity: 0.8;
       pointer-events: none;
       z-index: 0;
     }
@@ -87,7 +90,6 @@
       max-width: 680px;
       margin: 0 auto;
       padding: 80px 20px 120px;
-      background-color: #F5F5F0;
       position: relative;
       z-index: 1;
     }
@@ -222,12 +224,6 @@
       .content-section {
         padding: 60px 20px 80px;
       }
-
-      .contact-links {
-        flex-direction: column;
-        gap: 14px;
-        align-items: flex-start;
-      }
     }
   </style>
 </head>
@@ -240,8 +236,9 @@
     </div>
   </div>
 
-  <!-- Content Section -->
-  <div class="content-section">
+  <!-- Content Section with dotted background -->
+  <div class="content-bg">
+    <div class="content-section">
     <div class="bio">
       <p>15 years in IT consulting and edtech.</p>
       
@@ -291,6 +288,7 @@
     <footer>
       <p>© <span id="year"></span> Aasif Iqbal J. All rights reserved.</p>
     </footer>
+  </div>
   </div>
 
   <script>
