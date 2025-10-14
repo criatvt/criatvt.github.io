@@ -18,6 +18,22 @@
       color: #2C2C2C;
       line-height: 1.65;
       -webkit-font-smoothing: antialiased;
+      position: relative;
+    }
+
+    /* Lighter dotted grid for entire page below hero */
+    body::after {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: calc(100% - 100vh);
+      top: 100vh;
+      left: 0;
+      background: radial-gradient(circle, #D0D0C8 2px, transparent 2px);
+      background-size: 30px 30px;
+      opacity: 0.2;
+      pointer-events: none;
+      z-index: 0;
     }
 
     .hero-section {
@@ -72,6 +88,8 @@
       margin: 0 auto;
       padding: 80px 20px 120px;
       background-color: #F5F5F0;
+      position: relative;
+      z-index: 1;
     }
 
     section {
@@ -115,6 +133,14 @@
       margin-bottom: 0;
     }
 
+    .highlight {
+      background-color: #FFF4A3;
+      color: #3A5875;
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 3px;
+    }
+
     .work-item {
       margin-bottom: 14px;
     }
@@ -134,6 +160,51 @@
       display: inline-block;
     }
 
+    /* Icon-only social links */
+    .social-icon {
+      width: 40px;
+      height: 40px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #3A5875;
+      border-radius: 8px;
+      color: #3A5875;
+      font-weight: 600;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      border-bottom: 2px solid #3A5875 !important;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    .social-icon:hover {
+      background-color: #3A5875;
+      color: #F5F5F0;
+      border-bottom: 2px solid #3A5875 !important;
+    }
+
+    .linkedin-icon::after {
+      content: 'in';
+      font-size: 1.5rem;
+      font-weight: 700;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform: translateY(2px);
+    }
+
+    .x-icon::after {
+      content: '𝕏';
+      font-size: 1.3rem;
+      font-weight: 600;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform: translateY(5px);
+    }
+
     footer {
       margin-top: 80px;
       padding-top: 36px;
@@ -146,10 +217,6 @@
       .hero-section {
         min-height: 90vh;
         padding: 32px 20px;
-      }
-
-      .hero-section::before {
-        display: none;
       }
 
       .content-section {
@@ -179,8 +246,9 @@
       <p>15 years in IT consulting and edtech.</p>
       
       <p>Started with fixing bugs as a software engineer.<br>
-      Moved to pitching customers at a startup.<br>
-      Eventually became co-founder and COO at iamneo.</p>
+      Moved to pitching customers at a startup.</p>
+      
+      <p>Eventually became co-founder and COO at iamneo.</p>
       
       <p>We built something our customers loved.<br>
       NIIT acquired us in April, 2025.</p>
@@ -192,7 +260,7 @@
       
       <p>And</p>
       
-      <p>I'm writing my first book.</p>
+      <p><strong><span class="highlight">I'm writing my first book.</span></strong></p>
     </div>
 
     <section>
@@ -213,10 +281,10 @@
     </section>
 
     <section>
-      <h2>Contact</h2>
+      <h2>Connect with me</h2>
       <div class="contact-links">
-        <a href="https://linkedin.com/in/aasifiqbalj">LinkedIn</a>
-        <a href="https://x.com/theaasifj">X / Twitter</a>
+        <a href="https://linkedin.com/in/aasifiqbalj" class="social-icon linkedin-icon" aria-label="LinkedIn"></a>
+        <a href="https://x.com/theaasifj" class="social-icon x-icon" aria-label="X / Twitter"></a>
       </div>
     </section>
 
