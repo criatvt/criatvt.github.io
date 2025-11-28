@@ -3,8 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Aasif Iqbal J</title>
-  <meta name="description" content="Read. Think. Create.">
+  <title>Aasif Iqbal J - Doomscroller to Reader</title>
+  <meta name="description" content="The 30-Minute Method to Build a Reading Habit That Sticks">
+  
+  <!-- Google Fonts - EB Garamond for title, Inter for body -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  
   <style>
     * {
       margin: 0;
@@ -12,19 +18,30 @@
       box-sizing: border-box;
     }
 
+    :root {
+      --coral-red: #E84A38;
+      --coral-red-hover: #D43E2D;
+      --bg: #F5F0E6;
+      --bg-light: #FAF7F2;
+      --text-dark: #1A1A1A;
+      --text-muted: #6B6B6B;
+      --dot-color: #E0DAD0;
+      --border-color: #DDD8CE;
+    }
+
     body {
-      font-family: 'Charter', 'Bitstream Charter', 'Sitka Text', Cambria, serif;
-      background-color: #F5F5F0;
-      color: #2C2C2C;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background-color: var(--bg);
+      color: var(--text-dark);
       line-height: 1.65;
       -webkit-font-smoothing: antialiased;
     }
 
     /* Wrapper for content section with dotted grid */
     .content-bg {
-      background: radial-gradient(circle, #D0D0C8 2px, transparent 2px);
+      background: radial-gradient(circle, var(--dot-color) 2px, transparent 2px);
       background-size: 30px 30px;
-      background-color: #F5F5F0;
+      background-color: var(--bg);
       position: relative;
     }
 
@@ -33,7 +50,7 @@
       position: absolute;
       width: 100%;
       height: 100%;
-      background-color: #F5F5F0;
+      background-color: var(--bg);
       opacity: 0.8;
       pointer-events: none;
       z-index: 0;
@@ -44,14 +61,14 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 40px 20px;
+      padding: 60px 20px;
       text-align: center;
-      background-color: #EEEEE8;
+      background-color: var(--bg-light);
       position: relative;
       overflow: hidden;
     }
 
-    /* Dotted grid pattern - like a notebook for Read, Think, Create */
+    /* Dotted grid pattern */
     .hero-section::before {
       content: '';
       position: absolute;
@@ -59,7 +76,7 @@
       height: 100%;
       top: 0;
       left: 0;
-      background: radial-gradient(circle, #D0D0C8 2px, transparent 2px);
+      background: radial-gradient(circle, var(--dot-color) 2px, transparent 2px);
       background-size: 30px 30px;
       opacity: 0.5;
       pointer-events: none;
@@ -68,22 +85,176 @@
     .hero-content {
       position: relative;
       z-index: 1;
+      max-width: 650px;
+      margin: 0 auto;
     }
 
-    .hero-content h1 {
-      font-size: clamp(1.125rem, 2.5vw, 1.5rem);
-      font-weight: 400;
-      margin-bottom: 12px;
-      color: #3A3A3A;
-      letter-spacing: -0.01em;
+    .book-label {
+      font-size: 0.813rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--coral-red);
+      margin-bottom: 16px;
+      font-weight: 600;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     }
 
-    .hero-content .tagline {
-      font-size: clamp(2.5rem, 6vw, 4rem);
-      color: #3A5875;
+    .hero-title {
+      font-size: clamp(2.5rem, 5vw, 3.5rem);
       font-weight: 500;
-      font-style: italic;
+      margin-bottom: 16px;
+      color: var(--text-dark);
       letter-spacing: -0.02em;
+      line-height: 1.2;
+      font-family: 'EB Garamond', serif;
+    }
+
+    .hero-subtitle {
+      font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+      color: #4A4A4A;
+      margin-bottom: 48px;
+      font-style: italic;
+      font-weight: 400;
+      line-height: 1.5;
+      font-family: 'EB Garamond', serif;
+    }
+
+    .book-cover-container {
+      margin-bottom: 48px;
+    }
+
+    .book-cover {
+      max-width: 280px;
+      height: auto;
+      border-radius: 4px;
+      box-shadow: 0 15px 50px rgba(232, 74, 56, 0.25), 0 5px 20px rgba(0,0,0,0.1);
+    }
+
+    .book-link {
+      color: var(--text-dark);
+      text-decoration: none;
+      border-bottom: 3px solid var(--coral-red) !important;
+      padding-bottom: 2px;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .book-link:hover {
+      color: var(--coral-red);
+    }
+
+    .email-capture-box {
+      background-color: rgba(255,255,255,0.95);
+      padding: 32px 28px;
+      border-radius: 12px;
+      max-width: 480px;
+      margin: 0 auto;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      border: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    .email-capture-heading {
+      font-size: 1.125rem;
+      font-weight: 500;
+      color: var(--text-dark);
+      margin-bottom: 20px;
+      line-height: 1.5;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    .release-date {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      margin: 16px 0 0 0;
+      text-align: center;
+    }
+
+    /* Custom Kit Form Styling to Match Site Theme */
+    .formkit-form[data-uid="26c4feec7c"] {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+    }
+
+    /* Hide "Built with Kit" branding */
+    .formkit-powered-by-convertkit-container {
+      display: none !important;
+    }
+
+    /* Input field styling */
+    .formkit-form[data-uid="26c4feec7c"] .formkit-input {
+      background: #FFFFFF !important;
+      border: 2px solid #E0E0E0 !important;
+      border-radius: 6px !important;
+      padding: 14px 16px !important;
+      font-size: 1.063rem !important;
+      color: var(--text-dark) !important;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+      transition: border-color 0.2s ease !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+    }
+
+    .formkit-form[data-uid="26c4feec7c"] .formkit-input:focus {
+      outline: none !important;
+      border-color: var(--coral-red) !important;
+    }
+
+    .formkit-form[data-uid="26c4feec7c"] .formkit-input::placeholder {
+      color: var(--text-muted) !important;
+      opacity: 0.7 !important;
+    }
+
+    /* Button styling - Coral red to match book */
+    .formkit-form[data-uid="26c4feec7c"] .formkit-submit {
+      background-color: var(--coral-red) !important;
+      color: #FFFFFF !important;
+      border: none !important;
+      border-radius: 6px !important;
+      padding: 14px 24px !important;
+      font-size: 1rem !important;
+      font-weight: 500 !important;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+      cursor: pointer !important;
+      transition: all 0.2s ease !important;
+      margin-bottom: 0 !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+    }
+
+    .formkit-form[data-uid="26c4feec7c"] .formkit-submit:hover {
+      background-color: var(--coral-red-hover) !important;
+    }
+
+    .formkit-form[data-uid="26c4feec7c"] .formkit-submit > span {
+      padding: 0 !important;
+    }
+
+    /* Form layout adjustments */
+    .formkit-form[data-uid="26c4feec7c"] .formkit-fields {
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 0 !important;
+    }
+
+    .formkit-form[data-uid="26c4feec7c"] .formkit-field {
+      width: 100% !important;
+      flex: none !important;
+      margin: 0 0 16px 0 !important;
+    }
+
+    .formkit-form[data-uid="26c4feec7c"] .formkit-submit {
+      width: 100% !important;
+      flex: none !important;
+      margin: 0 !important;
+    }
+
+    /* Success message styling */
+    .formkit-form[data-uid="26c4feec7c"] .formkit-alert-success {
+      background-color: #FEF3F2 !important;
+      border-color: var(--coral-red) !important;
+      color: var(--text-dark) !important;
+      border-radius: 6px !important;
+      padding: 16px !important;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
     }
 
     .content-section {
@@ -92,6 +263,23 @@
       padding: 80px 20px 120px;
       position: relative;
       z-index: 1;
+    }
+
+    .author-intro {
+      text-align: center;
+      margin-bottom: 56px;
+      padding-top: 40px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .author-intro h2 {
+      font-size: 2rem;
+      text-transform: none;
+      letter-spacing: -0.01em;
+      color: var(--text-dark);
+      margin-bottom: 0;
+      font-weight: 500;
+      font-family: 'EB Garamond', serif;
     }
 
     section {
@@ -106,7 +294,7 @@
       font-size: 0.813rem;
       text-transform: uppercase;
       letter-spacing: 0.12em;
-      color: #6B6B6B;
+      color: var(--text-muted);
       margin-bottom: 20px;
       font-weight: 500;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -114,116 +302,68 @@
 
     p {
       margin-bottom: 18px;
-      color: #3A3A3A;
+      color: var(--text-dark);
       line-height: 1.7;
-      font-size: 1.063rem;
+      font-size: 1.125rem;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     }
 
     a {
-      color: #3A5875;
+      color: var(--text-dark);
       text-decoration: none;
-      border-bottom: 1px solid #A8B8C8;
+      border-bottom: 1px solid #D0D0D0;
       transition: all 0.2s ease;
     }
 
     a:hover {
-      border-bottom-color: #3A5875;
-      color: #2E4A6B;
+      border-bottom-color: var(--coral-red);
+      color: var(--text-dark);
     }
 
     .bio p:last-child {
       margin-bottom: 0;
     }
 
-    .highlight {
-      background-color: #FFF4A3;
-      color: #3A5875;
-      display: inline-block;
-      padding: 4px 8px;
-      border-radius: 3px;
+    .connect {
+      margin-bottom: 56px;
     }
 
-    .work-item {
-      margin-bottom: 14px;
+    .connect p {
+      margin-bottom: 8px;
     }
 
-    .work-item p {
+    .connect p:last-child {
       margin-bottom: 0;
     }
 
-    .contact-links {
-      display: flex;
-      gap: 28px;
-      flex-wrap: wrap;
-      font-size: 1.063rem;
-    }
-
-    .contact-links a {
-      display: inline-block;
-    }
-
-    /* Icon-only social links */
-    .social-icon {
-      width: 40px;
-      height: 40px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border: 2px solid transparent;
-      border-radius: 8px;
-      color: #3A5875;
-      font-weight: 600;
-      transition: all 0.2s ease;
-      text-decoration: none;
-      border-bottom: 2px solid transparent !important;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    }
-
-    .social-icon:hover {
-      background-color: #3A5875;
-      color: #F5F5F0;
-      border: 2px solid #3A5875;
-      border-bottom: 2px solid #3A5875 !important;
-    }
-
-    .linkedin-icon::after {
-      content: 'in';
-      font-size: 1.5rem;
-      font-weight: 700;
-      line-height: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transform: translateY(2px);
-    }
-
-    .x-icon::after {
-      content: '𝕏';
-      font-size: 1.3rem;
-      font-weight: 600;
-      line-height: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transform: translateY(5px);
+    .connect a {
+      border-bottom: 2px solid var(--coral-red);
     }
 
     footer {
       margin-top: 80px;
       padding-top: 36px;
-      border-top: 1px solid #DCDCD7;
-      color: #7A7A7A;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-muted);
       font-size: 0.938rem;
     }
 
     @media (max-width: 640px) {
       .hero-section {
         min-height: 90vh;
-        padding: 32px 20px;
+        padding: 40px 20px;
+      }
+
+      .email-capture-box {
+        padding: 24px 20px;
       }
 
       .content-section {
         padding: 60px 20px 80px;
+      }
+
+      .book-cover {
+        max-width: 220px;
       }
     }
   </style>
@@ -232,19 +372,59 @@
   <!-- Hero Section -->
   <div class="hero-section">
     <div class="hero-content">
-      <h1>Aasif Iqbal J</h1>
-      <p class="tagline">Read. Think. Create.</p>
+      <p class="book-label">My first book</p>
+      <h1 class="hero-title">Doomscroller to Reader</h1>
+      <p class="hero-subtitle">The 30-Minute Method to Build a Reading Habit That Sticks</p>
+      
+      <!-- Book Cover Mockup -->
+      <div class="book-cover-container">
+        <img src="cover.jpg" alt="Doomscroller to Reader Book Cover" class="book-cover">
+      </div>
+      
+      <!-- Email Capture -->
+      <div class="email-capture-box">
+        <p class="email-capture-heading">
+          Download Chapter One of <em>Doomscroller to Reader</em>
+        </p>
+        
+        <!-- Kit Form Embed (HTML Version with Custom Styling) -->
+        <script src="https://f.convertkit.com/ckjs/ck.5.js"></script>
+        <form action="https://app.kit.com/forms/8768398/subscriptions" class="seva-form formkit-form" method="post" data-sv-form="8768398" data-uid="26c4feec7c" data-format="inline" data-version="5" data-options="{&quot;settings&quot;:{&quot;after_subscribe&quot;:{&quot;action&quot;:&quot;message&quot;,&quot;success_message&quot;:&quot;Success! Now check your email to confirm your subscription.&quot;,&quot;redirect_url&quot;:&quot;&quot;},&quot;analytics&quot;:{&quot;google&quot;:null,&quot;fathom&quot;:null,&quot;facebook&quot;:null,&quot;segment&quot;:null,&quot;pinterest&quot;:null,&quot;sparkloop&quot;:null,&quot;googletagmanager&quot;:null},&quot;modal&quot;:{&quot;trigger&quot;:&quot;timer&quot;,&quot;scroll_percentage&quot;:null,&quot;timer&quot;:5,&quot;devices&quot;:&quot;all&quot;,&quot;show_once_every&quot;:15},&quot;powered_by&quot;:{&quot;show&quot;:false},&quot;recaptcha&quot;:{&quot;enabled&quot;:false},&quot;return_visitor&quot;:{&quot;action&quot;:&quot;show&quot;,&quot;custom_content&quot;:&quot;&quot;},&quot;slide_in&quot;:{&quot;display_in&quot;:&quot;bottom_right&quot;,&quot;trigger&quot;:&quot;timer&quot;,&quot;scroll_percentage&quot;:null,&quot;timer&quot;:5,&quot;devices&quot;:&quot;all&quot;,&quot;show_once_every&quot;:15},&quot;sticky_bar&quot;:{&quot;display_in&quot;:&quot;top&quot;,&quot;trigger&quot;:&quot;timer&quot;,&quot;scroll_percentage&quot;:null,&quot;timer&quot;:5,&quot;devices&quot;:&quot;all&quot;,&quot;show_once_every&quot;:15}},&quot;version&quot;:&quot;5&quot;}" min-width="400 500 600 700 800">
+          <div data-style="clean">
+            <ul class="formkit-alert formkit-alert-error" data-element="errors" data-group="alert"></ul>
+            <div data-element="fields" data-stacked="false" class="seva-fields formkit-fields">
+              <div class="formkit-field">
+                <input class="formkit-input" name="email_address" aria-label="Email Address" placeholder="Your email address" required="" type="email">
+              </div>
+              <button data-element="submit" class="formkit-submit formkit-submit">
+                <div class="formkit-spinner">
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                </div>
+                <span class="">Get the Free Chapter</span>
+              </button>
+            </div>
+          </div>
+        </form>
+        <p class="release-date">Book releases January 1, 2026</p>
+      </div>
     </div>
   </div>
 
   <!-- Content Section with dotted background -->
   <div class="content-bg">
     <div class="content-section">
-    <div class="bio">
-      <p>15 years in IT consulting and edtech.</p>
       
-      <p>Started with fixing bugs as a software engineer.<br>
-      Moved to pitching customers at a startup.</p>
+    <!-- Author Bio Header -->
+    <div class="author-intro">
+      <h2>Hi, I am Aasif Iqbal J.</h2>
+    </div>
+    
+    <div class="bio">
+      <p>Fifteen years in IT and Edtech.</p>
+      
+      <p>Started with fixing bugs as a software engineer. Moved to pitching customers at a startup.</p>
       
       <p>Eventually became co-founder and COO at iamneo.</p>
       
@@ -258,32 +438,12 @@
       
       <p>And</p>
       
-      <p><strong><span class="highlight">I'm writing my first book.</span></strong></p>
+      <p>I wrote <a href="https://www.amazon.in/dp/B0G4813L8M" class="book-link">my first book.</a></p>
     </div>
 
-    <section>
-      <h2>Stuff I've written</h2>
-      <div class="work-item">
-        <p><a href="https://www.thehindu.com/education/indias-tech-education-crisis-when-computer-engineers-cant-code/article69243098.ece">When Computer Engineers Can't Code</a> — Published in The Hindu</p>
-      </div>
-      
-      <div class="work-item">
-        <p><a href="https://aasifj.substack.com/p/sunshine-republic">Sunshine Republic: A story that is beyond cricket</a></p>
-      </div>
-      
-      <div class="work-item">
-        <p><a href="https://aasifj.substack.com/p/an-unhurried-childhood">Unhurried Childhood: What Nature, Animals, and Freedom Taught Me at Six</a></p>
-      </div>
-      
-      <p style="margin-top: 20px;">Read more on <a href="https://aasifj.substack.com/">my Substack</a>.</p>
-    </section>
-
-    <section>
-      <h2>Connect with me</h2>
-      <div class="contact-links">
-        <a href="https://linkedin.com/in/aasifiqbalj" class="social-icon linkedin-icon" aria-label="LinkedIn"></a>
-        <a href="https://x.com/theaasifj" class="social-icon x-icon" aria-label="X / Twitter"></a>
-      </div>
+    <section class="connect">
+      <p>Connect with me on <a href="https://linkedin.com/in/aasifiqbalj">LinkedIn</a> or <a href="https://x.com/theaasifj">X</a>.</p>
+      <p>Read my essays on <a href="https://aasifj.substack.com/">Substack</a>.</p>
     </section>
 
     <footer>
