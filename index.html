@@ -130,28 +130,91 @@
       box-shadow: 0 15px 50px rgba(232, 74, 56, 0.25), 0 5px 20px rgba(0,0,0,0.1);
     }
 
-    .testimonial {
-      max-width: 480px;
+    .testimonials {
+      max-width: 520px;
       margin: 0 auto 48px;
       text-align: center;
     }
 
-    .testimonial blockquote {
-      font-family: 'EB Garamond', serif;
-      font-size: 1.25rem;
-      font-style: italic;
-      line-height: 1.6;
-      color: var(--text-dark);
-      margin: 0 0 12px 0;
+    .testimonial-track {
+      position: relative;
+      min-height: 200px;
     }
 
-    .testimonial cite {
+    .testimonial-card {
+      background-color: rgba(255,255,255,0.9);
+      padding: 32px 28px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      pointer-events: none;
+    }
+
+    .testimonial-card.active {
+      opacity: 1;
+      position: relative;
+      pointer-events: auto;
+    }
+
+    .testimonial-card blockquote {
+      font-family: 'EB Garamond', serif;
+      font-size: 1.375rem;
+      font-style: italic;
+      line-height: 1.5;
+      color: var(--text-dark);
+      margin: 0 0 16px 0;
+    }
+
+    .testimonial-card cite {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       font-size: 0.875rem;
       font-style: normal;
       font-weight: 600;
       color: var(--text-dark);
       letter-spacing: 0.05em;
+      display: block;
+    }
+
+    .cite-detail {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 0.813rem;
+      font-style: normal;
+      color: var(--text-muted);
+      display: block;
+      margin-top: 4px;
+    }
+
+    .testimonial-dots {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      border: none;
+      background-color: var(--dot-color);
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+      padding: 0;
+    }
+
+    .dot:hover {
+      background-color: var(--coral-red);
+      opacity: 0.6;
+    }
+
+    .dot.active {
+      background-color: var(--coral-red);
     }
 
     .book-link {
@@ -390,8 +453,12 @@
         max-width: 220px;
       }
 
-      .testimonial blockquote {
-        font-size: 1.125rem;
+      .testimonial-card {
+        padding: 24px 20px;
+      }
+
+      .testimonial-card blockquote {
+        font-size: 1.188rem;
       }
     }
   </style>
@@ -409,12 +476,28 @@
         <img src="cover.jpg" alt="Doomscroller to Reader Book Cover" class="book-cover">
       </div>
 
-      <!-- Testimonial -->
-      <div class="testimonial">
-        <blockquote>
-          "Aasif shows you how to turn the same instinct that makes you reach for your phone into a lifelong reading habit that actually sticks."
-        </blockquote>
-        <cite>— ANKUR WARIKOO</cite>
+      <!-- Testimonials Carousel -->
+      <div class="testimonials">
+        <div class="testimonial-track">
+          <div class="testimonial-card active">
+            <blockquote>
+              "Aasif shows you how to turn the same instinct that makes you reach for your phone into a lifelong reading habit that actually sticks."
+            </blockquote>
+            <cite>— ANKUR WARIKOO</cite>
+            <span class="cite-detail">Entrepreneur</span>
+          </div>
+          <div class="testimonial-card">
+            <blockquote>
+              "Doomscroller to Reader is simple, straightforward and surprisingly hopeful."
+            </blockquote>
+            <cite>— MEETHA RAGHUNATH</cite>
+            <span class="cite-detail">Actor-Writer</span>
+          </div>
+        </div>
+        <div class="testimonial-dots">
+          <button class="dot active" data-index="0" aria-label="Testimonial 1"></button>
+          <button class="dot" data-index="1" aria-label="Testimonial 2"></button>
+        </div>
       </div>
       
       <!-- Email Capture -->
@@ -478,7 +561,7 @@
     </div>
 
     <section class="connect">
-      <p>Connect with me on <a href="https://linkedin.com/in/aasifiqbalj">LinkedIn</a> or <a href="https://x.com/theaasifj">X</a>.</p>
+      <p>Connect with me on <a href="https://linkedin.com/in/aasifiqbalj">LinkedIn</a>, <a href="https://www.instagram.com/theaasifj/">Instagram</a>, or <a href="https://x.com/theaasifj">X</a>.</p>
       <p>Read my essays on <a href="https://aasifj.substack.com/">Substack</a>.</p>
     </section>
 
@@ -490,6 +573,31 @@
 
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Testimonial carousel
+    const cards = document.querySelectorAll('.testimonial-card');
+    const dots = document.querySelectorAll('.dot');
+    let currentIndex = 0;
+
+    function showTestimonial(index) {
+      cards.forEach((card, i) => {
+        card.classList.toggle('active', i === index);
+      });
+      dots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === index);
+      });
+      currentIndex = index;
+    }
+
+    dots.forEach((dot, i) => {
+      dot.addEventListener('click', () => showTestimonial(i));
+    });
+
+    // Auto-scroll every 5 seconds
+    setInterval(() => {
+      const nextIndex = (currentIndex + 1) % cards.length;
+      showTestimonial(nextIndex);
+    }, 5000);
   </script>
 </body>
 </html>
