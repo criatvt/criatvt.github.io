@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Resources - Doomscroller to Reader</title>
+  <meta name="description" content="Access your book resources for Doomscroller to Reader">
+  
+  <!-- Google Fonts - EB Garamond for title, Inter for body -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --coral-red: #E84A38;
+      --coral-red-hover: #D43E2D;
+      --bg: #F5F0E6;
+      --bg-light: #FAF7F2;
+      --text-dark: #1A1A1A;
+      --text-muted: #6B6B6B;
+      --dot-color: #E0DAD0;
+      --border-color: #DDD8CE;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background-color: var(--bg-light);
+      color: var(--text-dark);
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Wrapper for content section with dotted grid */
+    .content-bg {
+      background: radial-gradient(circle, var(--dot-color) 2px, transparent 2px);
+      background-size: 30px 30px;
+      background-color: var(--bg-light);
+      position: relative;
+      min-height: 100vh;
+    }
+
+    .content-bg::before {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background-color: var(--bg-light);
+      opacity: 0.8;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .content-section {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 80px 20px 120px;
+      position: relative;
+      z-index: 1;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 56px;
+      padding-bottom: 40px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .book-label {
+      font-size: 0.813rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--coral-red);
+      margin-bottom: 16px;
+      font-weight: 600;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    h1 {
+      font-size: clamp(2.5rem, 5vw, 3.5rem);
+      font-weight: 500;
+      margin-bottom: 16px;
+      color: var(--text-dark);
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      font-family: 'EB Garamond', serif;
+    }
+
+    .intro-text {
+      max-width: 600px;
+      margin: 0 auto 40px;
+    }
+
+    .intro-text p {
+      margin-bottom: 18px;
+      color: var(--text-dark);
+      line-height: 1.7;
+      font-size: 1.125rem;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    .intro-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .form-container {
+      background-color: rgba(255, 255, 255, 0.95);
+      padding: 40px 32px;
+      border-radius: 12px;
+      max-width: 580px;
+      margin: 0 auto;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      border: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    .form-heading {
+      font-size: 0.813rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+      font-weight: 500;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    /* Hide "Built with Kit" branding */
+    .formkit-powered-by-convertkit-container {
+      display: none !important;
+    }
+
+    /* Input field styling */
+    .formkit-form[data-uid="17d2ab237e"] .formkit-input {
+      background: #FFFFFF !important;
+      border: 2px solid #E0E0E0 !important;
+      border-radius: 6px !important;
+      padding: 14px 16px !important;
+      font-size: 1.063rem !important;
+      color: var(--text-dark) !important;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+      transition: border-color 0.2s ease !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+      margin-bottom: 16px !important;
+    }
+
+    .formkit-form[data-uid="17d2ab237e"] .formkit-input:focus {
+      outline: none !important;
+      border-color: var(--coral-red) !important;
+    }
+
+    .formkit-form[data-uid="17d2ab237e"] .formkit-input::placeholder {
+      color: var(--text-muted) !important;
+      opacity: 0.7 !important;
+    }
+
+    /* Button styling - Coral red to match main site */
+    .formkit-form[data-uid="17d2ab237e"] .formkit-submit {
+      background-color: var(--coral-red) !important;
+      color: #FFFFFF !important;
+      border: none !important;
+      border-radius: 6px !important;
+      padding: 14px 24px !important;
+      font-size: 1rem !important;
+      font-weight: 500 !important;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+      cursor: pointer !important;
+      transition: all 0.2s ease !important;
+      margin-bottom: 0 !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+    }
+
+    .formkit-form[data-uid="17d2ab237e"] .formkit-submit:hover {
+      background-color: var(--coral-red-hover) !important;
+    }
+
+    /* Success message styling */
+    .formkit-form[data-uid="17d2ab237e"] .formkit-alert-success {
+      background-color: #FEF3F2 !important;
+      border-color: var(--coral-red) !important;
+      color: var(--text-dark) !important;
+      border-radius: 6px !important;
+      padding: 16px !important;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+      margin-bottom: 16px !important;
+    }
+
+    /* Error message styling */
+    .formkit-form[data-uid="17d2ab237e"] .formkit-alert-error {
+      background-color: #fde8e2 !important;
+      border: 2px solid #f2643b !important;
+      color: #ea4110 !important;
+      border-radius: 6px !important;
+      padding: 16px !important;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+      margin-bottom: 16px !important;
+    }
+
+    /* Hide error alert when empty to prevent red bar */
+    .formkit-form[data-uid="17d2ab237e"] .formkit-alert-error:empty {
+      display: none !important;
+    }
+
+    /* Form layout adjustments */
+    .formkit-form[data-uid="17d2ab237e"] .formkit-fields {
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 0 !important;
+    }
+
+    .formkit-form[data-uid="17d2ab237e"] .formkit-field {
+      width: 100% !important;
+      flex: none !important;
+      margin: 0 0 16px 0 !important;
+    }
+
+    footer {
+      margin-top: 80px;
+      padding-top: 36px;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-muted);
+      font-size: 0.938rem;
+      text-align: center;
+    }
+
+    @media (max-width: 640px) {
+      .content-section {
+        padding: 60px 20px 80px;
+      }
+
+      .form-container {
+        padding: 32px 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="content-bg">
+    <div class="content-section">
+      <header>
+        <p class="book-label">Book Resources</p>
+        <h1>Doomscroller to Reader</h1>
+        <div class="intro-text">
+          <p>Congratulations on finishing <em>Doomscroller to Reader</em>! You made it through the book, which means you're already ahead of most people who buy books but never finish them.</p>
+          <p>Enter your details below to access your book resources. We'll verify your order and send you the resources within 8 hours.</p>
+        </div>
+      </header>
+
+      <div class="form-container">
+        <p class="form-heading">Access Your Resources</p>
+        
+        <script src="https://f.convertkit.com/ckjs/ck.5.js"></script>
+        <form action="https://app.kit.com/forms/8775589/subscriptions" class="seva-form formkit-form" method="post" data-sv-form="8775589" data-uid="17d2ab237e" data-format="inline" data-version="5" data-options="{&quot;settings&quot;:{&quot;after_subscribe&quot;:{&quot;action&quot;:&quot;message&quot;,&quot;success_message&quot;:&quot;Success! We will verify the order details and share the resources within the next 8 hours.&quot;,&quot;redirect_url&quot;:&quot;&quot;},&quot;analytics&quot;:{&quot;google&quot;:null,&quot;fathom&quot;:null,&quot;facebook&quot;:null,&quot;segment&quot;:null,&quot;pinterest&quot;:null,&quot;sparkloop&quot;:null,&quot;googletagmanager&quot;:null},&quot;modal&quot;:{&quot;trigger&quot;:&quot;timer&quot;,&quot;scroll_percentage&quot;:null,&quot;timer&quot;:5,&quot;devices&quot;:&quot;all&quot;,&quot;show_once_every&quot;:15},&quot;powered_by&quot;:{&quot;show&quot;:false},&quot;recaptcha&quot;:{&quot;enabled&quot;:false},&quot;return_visitor&quot;:{&quot;action&quot;:&quot;show&quot;,&quot;custom_content&quot;:&quot;&quot;},&quot;slide_in&quot;:{&quot;display_in&quot;:&quot;bottom_right&quot;,&quot;trigger&quot;:&quot;timer&quot;,&quot;scroll_percentage&quot;:null,&quot;timer&quot;:5,&quot;devices&quot;:&quot;all&quot;,&quot;show_once_every&quot;:15},&quot;sticky_bar&quot;:{&quot;display_in&quot;:&quot;top&quot;,&quot;trigger&quot;:&quot;timer&quot;,&quot;scroll_percentage&quot;:null,&quot;timer&quot;:5,&quot;devices&quot;:&quot;all&quot;,&quot;show_once_every&quot;:15}},&quot;version&quot;:&quot;5&quot;}" min-width="400 500 600 700 800">
+          <div data-style="clean">
+            <ul class="formkit-alert formkit-alert-error" data-element="errors" data-group="alert"></ul>
+            <div data-element="fields" data-stacked="false" class="seva-fields formkit-fields">
+              <div class="formkit-field">
+                <input class="formkit-input" name="fields[first_name]" aria-label="First Name" placeholder="First Name" type="text" required>
+              </div>
+              <div class="formkit-field">
+                <input class="formkit-input" name="email_address" aria-label="Email Address" placeholder="Email Address" required type="email">
+              </div>
+              <div class="formkit-field">
+                <input class="formkit-input" name="fields[order_number]" aria-label="Order Number" placeholder="Order Number (e.g., Amazon Order ID)" type="text" required>
+              </div>
+              <button data-element="submit" class="formkit-submit formkit-submit">
+                <div class="formkit-spinner">
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                </div>
+                <span>Submit</span>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <footer>
+        <p>© <span id="year"></span> Aasif Iqbal J. All rights reserved.</p>
+      </footer>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
