@@ -6,3 +6,7 @@ coverage/
 *.log
 .env*
 !.env.example
+
+# Local reference / tooling — not part of the deployed site
+aasifj-build-brief.md
+.claude/

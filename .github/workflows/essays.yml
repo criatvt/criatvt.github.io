@@ -1,0 +1,27 @@
+name: Refresh Substack essays
+
+on:
+  schedule:
+    - cron: "0 1 * * *" # daily
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: node scripts/fetch-essays.mjs
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add public/essays.json
+          git diff --staged --quiet || git commit -m "chore: refresh essays"
+          git push

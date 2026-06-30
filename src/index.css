@@ -5,10 +5,11 @@
 @theme {
   --font-serif: "EB Garamond", serif;
   --font-body: "Spectral", serif;
-  
-  --color-prussian: #003153;
-  --color-umber: #826644;
-  --color-stone: #F5F0E8;
+
+  --color-ink: #131313;      /* primary text */
+  --color-paper: #FCFCFA;    /* page background */
+  --color-crimson: #C72B33;  /* single accent: links, marks, featured */
+  --color-muted: #6E6E6E;    /* secondary text */
   --color-card: #FFFFFF;
 }
 
@@ -17,7 +18,7 @@
     scroll-behavior: smooth;
   }
   body {
-    @apply bg-stone text-prussian antialiased selection:bg-umber/20;
+    @apply bg-paper text-ink antialiased selection:bg-crimson/15;
     font-family: var(--font-body);
   }
   h1, h2, h3, h4, h5, h6 {
