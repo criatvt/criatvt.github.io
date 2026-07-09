@@ -2,18 +2,6 @@ import {ArrowUpRight} from "lucide-react";
 
 const tools = [
   {
-    name: "Next Read",
-    url: "https://nextread.aasifj.com",
-    blurb:
-      "A simple tool to help you decide what to read next, based on your current mood and interest. No algorithms, just intention.",
-  },
-  {
-    name: "Reading Run",
-    url: "https://readingrun.aasifj.com",
-    blurb:
-      "Tracking the literature that moves us. A minimal digital shelf designed for deep readers who care about the journey.",
-  },
-  {
     name: "Policy Wonk",
     url: "https://policywonkgame.aasifj.com",
     blurb:
