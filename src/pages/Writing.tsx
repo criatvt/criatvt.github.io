@@ -60,11 +60,38 @@ export default function Writing() {
           Writing
         </h1>
 
+        {/* Journalism — manual list, shown as cards (op-eds in the press) */}
+        <h2 className="font-serif text-sm uppercase tracking-[0.3em] text-muted mb-8">
+          Journalism
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-16">
+          {journalism.map((j) => (
+            <a
+              key={j.url}
+              href={j.url}
+              target="_blank"
+              rel="noreferrer"
+              className="group flex flex-col border border-ink/10 p-6 transition-colors hover:bg-card"
+            >
+              <div className="flex items-start justify-between gap-4">
+                <span className="font-body text-[11px] uppercase tracking-widest text-muted">
+                  {j.publication}
+                  {formatDate(j.date) ? ` · ${formatDate(j.date)}` : ""}
+                </span>
+                <ArrowUpRight className="w-5 h-5 text-muted shrink-0 transition-all group-hover:text-crimson group-hover:translate-x-1 group-hover:-translate-y-1" />
+              </div>
+              <h3 className="font-serif text-xl text-ink group-hover:text-crimson transition-colors mt-3 leading-snug">
+                {j.title}
+              </h3>
+            </a>
+          ))}
+        </div>
+
         {/* Essays — auto from Substack RSS */}
         <h2 className="font-serif text-sm uppercase tracking-[0.3em] text-muted mb-8">
           Essays
         </h2>
-        <div className="mb-16">
+        <div>
           {essays === null && !error && (
             <p className="font-body text-muted italic">Loading essays…</p>
           )}
@@ -123,34 +150,6 @@ export default function Writing() {
             </p>
           )}
         </div>
-
-        {/* Journalism — manual list */}
-        <h2 className="font-serif text-sm uppercase tracking-[0.3em] text-muted mb-8">
-          Journalism
-        </h2>
-        <ul className="divide-y divide-ink/10 border-y border-ink/10">
-          {journalism.map((j) => (
-            <li key={j.url}>
-              <a
-                href={j.url}
-                target="_blank"
-                rel="noreferrer"
-                className="group flex items-start justify-between gap-4 py-5"
-              >
-                <span>
-                  <span className="font-serif text-xl text-ink group-hover:text-crimson transition-colors block leading-snug">
-                    {j.title}
-                  </span>
-                  <span className="font-body text-sm text-muted">
-                    {j.publication}
-                    {formatDate(j.date) ? ` · ${formatDate(j.date)}` : ""}
-                  </span>
-                </span>
-                <ArrowUpRight className="w-5 h-5 text-muted shrink-0 mt-1 transition-all group-hover:text-crimson group-hover:translate-x-1 group-hover:-translate-y-1" />
-              </a>
-            </li>
-          ))}
-        </ul>
       </div>
     </section>
   );
