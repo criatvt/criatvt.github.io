@@ -1,5 +1,4 @@
 import {Link} from "react-router-dom";
-import {ArrowUpRight} from "lucide-react";
 
 // Numbered superscript footnote link (Hank-style). The number is the link;
 // hovering/focusing reveals a tooltip describing the destination, and the
@@ -50,24 +49,10 @@ function Foot({
   );
 }
 
-const featured = [
-  {
-    label: "App",
-    title: "Ploca",
-    blurb: "A private, on-device dictation app for Mac.",
-    href: "https://ploca.app",
-    cta: "Visit Ploca",
-    external: true,
-  },
-  {
-    label: "Book",
-    title: "Doomscroller to Reader",
-    blurb: "My first book — build a reading habit without giving up your phone.",
-    to: "/book",
-    cta: "Read more",
-    external: false,
-  },
-];
+// Shared style for the verb-links in the opening line — they double as the
+// primary directory into the three main sections.
+const verb =
+  "underline decoration-crimson/40 underline-offset-4 transition-colors hover:text-crimson hover:decoration-crimson";
 
 export default function Home() {
   return (
@@ -88,145 +73,77 @@ export default function Home() {
           Hi, I'm <span className="text-crimson">Aasif</span>.
         </h1>
 
-        {/* Bio — locked copy, verbatim. One thought per paragraph; numbered
-            superscript links on the nouns (bound to the preceding word so the
-            number never orphans to a new line). */}
+        {/* Bio — compact intro. The longer career narrative lives on /story;
+            numbered superscript links cite the nouns worth chasing. */}
         <div className="font-body text-base md:text-lg leading-snug tracking-tight text-ink space-y-4">
-          <p>I would like to call myself a builder, writer and educator.</p>
-
-          <p>I started my career, of course in IT, in 2010.</p>
-
           <p>
-            Got bored after 6+ years of grind, so I went on a 4,000km solo
-            motorcycle journey across East India for a month.
-          </p>
-
-          <p>Came back with a decision to work in education.</p>
-
-          <p>
-            Joined a K-12 EdTech startup and did everything from teaching to
-            cold-calling.
-          </p>
-
-          <p>
-            In 2020 I joined the founding team of iamneo, helped it scale 10x
-            and became COO.
-          </p>
-
-          <p>The company was acquired by NIIT in 2025.</p>
-
-          <p>
-            The author in me came alive in January 2026 when I launched my first
-            book, Doomscroller to{" "}
-            <span className="whitespace-nowrap">
-              Reader
-              <Foot n={1} label="My first book" to="/book" />.
-            </span>
-          </p>
-
-          <p>It has great reviews. Check it out.</p>
-
-          <p>
-            Today I spend most of my time building products with{" "}
-            <span className="whitespace-nowrap">
-              AI
-              <Foot n={2} label="What I build" to="/build" />.
-            </span>
+            I{" "}
+            <Link to="/build" className={verb}>
+              build
+            </Link>
+            ,{" "}
+            <Link to="/writing" className={verb}>
+              write
+            </Link>
+            , and{" "}
+            <Link to="/story" className={verb}>
+              educate
+            </Link>
+            .
           </p>
 
           <p>
-            The one I've truly enjoyed building is{" "}
+            Currently building{" "}
             <span className="whitespace-nowrap">
               Ploca
-              <Foot n={3} label="ploca.app ↗" href="https://ploca.app" />,
+              <Foot n={1} label="ploca.app ↗" href="https://ploca.app" />,
             </span>{" "}
-            a private dictation app for Mac.
+            a voice-to-text macOS app that&rsquo;s truly private.
           </p>
 
           <p>
-            The rest of the time, I write without AI (mostly 😉) about
-            technology, attention and{" "}
+            I regularly write about learning, technology, and policy in
+            newspapers like The Hindu and Deccan{" "}
             <span className="whitespace-nowrap">
-              learning
-              <Foot n={4} label="My essays" to="/writing" />.
+              Herald
+              <Foot n={2} label="My writing" to="/writing" />.
             </span>
           </p>
 
-          <p>Public policy is a quieter interest I take seriously.</p>
+          <p>
+            I published my first book,{" "}
+            <span className="whitespace-nowrap">
+              Doomscroller to Reader
+              <Foot n={3} label="My book" to="/book" />,
+            </span>{" "}
+            which helps people build a reading habit without giving up their
+            phone.
+          </p>
 
           <p>
-            I studied it at the Takshashila Institution, wrote op-eds in The{" "}
+            I was a co-founder and COO of iamneo, an edtech company, and helped
+            scale it 10x, culminating in its acquisition by{" "}
             <span className="whitespace-nowrap">
-              Hindu
-              <Foot n={5} label="Journalism" to="/writing" />,
-            </span>{" "}
-            and even built a game to test{" "}
-            <span className="whitespace-nowrap">
-              it
+              NIIT
               <Foot
-                n={6}
-                label="Policy Wonk ↗"
-                href="https://policywonkgame.aasifj.com"
-              />.
-            </span>
+                n={4}
+                label="Business Standard ↗"
+                href="https://www.business-standard.com/industry/news/niit-acquires-coimbatore-based-deep-skilling-training-provider-iamneo-125041701208_1.html"
+              />
+            </span>{" "}
+            in 2025.
           </p>
 
           <p>
-            A camera usually comes along for the{" "}
-            <span className="whitespace-nowrap">
-              ride
-              <Foot n={7} label="Photography" to="/photography" />.
-            </span>
+            You can read more about my story{" "}
+            <Link
+              to="/story"
+              className="text-crimson underline decoration-crimson/40 underline-offset-4 transition-colors hover:decoration-crimson"
+            >
+              here
+            </Link>
+            .
           </p>
-        </div>
-
-        {/* Featured cards — Hank-style block under the bio */}
-        <div className="mt-16 pt-10 border-t border-ink/10">
-          <h2 className="font-serif text-xs uppercase tracking-[0.35em] text-crimson mb-6">
-            Featured
-          </h2>
-          <div className="grid grid-cols-1 gap-4">
-            {featured.map((f) => {
-              const inner = (
-                <>
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <span className="font-body text-[11px] uppercase tracking-widest text-muted">
-                        {f.label}
-                      </span>
-                      <h3 className="font-serif text-2xl text-ink group-hover:text-crimson transition-colors mt-1">
-                        {f.title}
-                      </h3>
-                    </div>
-                    <ArrowUpRight className="w-5 h-5 text-muted shrink-0 mt-1 transition-all group-hover:text-crimson group-hover:translate-x-1 group-hover:-translate-y-1" />
-                  </div>
-                  <p className="font-body text-base text-muted leading-relaxed mt-3">
-                    {f.blurb}
-                  </p>
-                  <span className="inline-block font-body text-sm text-crimson mt-4">
-                    {f.cta} &rarr;
-                  </span>
-                </>
-              );
-              const cls =
-                "group block border border-ink/10 p-6 transition-colors hover:bg-card";
-              return f.external ? (
-                <a
-                  key={f.title}
-                  href={f.href}
-                  target="_blank"
-                  rel="noreferrer"
-                  className={cls}
-                >
-                  {inner}
-                </a>
-              ) : (
-                <Link key={f.title} to={f.to!} className={cls}>
-                  {inner}
-                </Link>
-              );
-            })}
-          </div>
         </div>
       </div>
     </section>

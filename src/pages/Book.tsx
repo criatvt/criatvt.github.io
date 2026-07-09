@@ -63,7 +63,7 @@ export default function Book() {
             >
               "{r.quote}"
               <footer className="mt-3 font-body text-xs uppercase tracking-widest not-italic text-ink">
-                &mdash; {r.by}
+                &ndash; {r.by}
               </footer>
             </blockquote>
           ))}

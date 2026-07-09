@@ -110,7 +110,7 @@ export default function Writing() {
           )}
           {essays && essays.length === 0 && (
             <p className="font-body text-muted italic">
-              No essays yet — check{" "}
+              No essays yet. Check{" "}
               <a
                 href="https://aasifj.substack.com"
                 target="_blank"
