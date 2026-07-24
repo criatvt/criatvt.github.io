@@ -1,30 +1,52 @@
 import {useEffect, useState} from "react";
 import {ArrowUpRight} from "lucide-react";
 
-type Essay = {title: string; url: string; date?: string};
+type Essay = {
+  title: string;
+  url: string;
+  date?: string;
+  subtitle?: string;
+  image?: string;
+};
 
 // Journalism — manual list. Pre-filled from Aasif's published op-eds.
-// TODO(Aasif): confirm titles/URLs and add publication dates if you want them shown.
+// Images and subtitles are the articles' OpenGraph cover/description,
+// captured from each publication so the cards match the essay cards.
+// TODO(Aasif): add publication dates if you want them shown.
 const journalism: {
   title: string;
   publication: string;
   url: string;
   date?: string;
+  subtitle?: string;
+  image?: string;
 }[] = [
   {
     title: "India's tech education crisis: When engineers can't code",
     publication: "The Hindu",
     url: "https://www.thehindu.com/education/indias-tech-education-crisis-when-computer-engineers-cant-code/article69243098.ece",
+    subtitle:
+      "Infosys layoffs spark debate on Indian graduates' programming skills; calls for a hybrid assessment framework in higher education.",
+    image:
+      "https://th-i.thgim.com/public/incoming/oqcs7d/article69243145.ece/alternates/LANDSCAPE_1200/iStock-1354205521.jpg",
   },
   {
     title: "CBSE's future-ready AI curriculum, but are students ready?",
     publication: "The Hindu",
     url: "https://www.thehindu.com/education/cbses-future-ready-ai-curriculum-but-are-students-ready/article70823388.ece",
+    subtitle:
+      "New AI curriculum launches in India but overlooks essential literacy skills, risking effective learning for young students.",
+    image:
+      "https://th-i.thgim.com/public/education/2mmdj2/article70823593.ece/alternates/LANDSCAPE_1200/iStock-2139297549.jpg",
   },
   {
     title: "Lessons about social media usage from the idiot-box era",
     publication: "Deccan Herald",
     url: "https://www.deccanherald.com/education/lessons-about-social-media-usage-from-the-idiot-box-era-2-3958121",
+    subtitle:
+      "Short-form video's grip on children echoes an earlier era's anxieties about television — and what that history suggests about balanced use.",
+    image:
+      "https://media.assettype.com/deccanherald%2F2026-04-07%2Fyy3ksxvx%2FiStock-1413735503.jpg?w=1200&ar=40%3A21&auto=format%2Ccompress&ogImage=true&mode=crop",
   },
 ];
 
@@ -54,7 +76,64 @@ function parseFeed(xml: string): Essay[] {
     title: item.querySelector("title")?.textContent?.trim() ?? "",
     url: item.querySelector("link")?.textContent?.trim() ?? "",
     date: item.querySelector("pubDate")?.textContent?.trim() || undefined,
+    subtitle: item.querySelector("description")?.textContent?.trim() || undefined,
+    image: item.querySelector("enclosure")?.getAttribute("url") || undefined,
   }));
+}
+
+// A single link card: cover image, meta row, title, subtitle. Shared by both
+// the journalism and essay grids so the two sections look identical.
+//   - `label`  → small uppercase eyebrow (essays use the date here)
+//   - `brand`  → publication name, rendered as a serif masthead wordmark with a
+//                crimson underline so journalism cards read as authentic press.
+// Props are typed `any` on purpose: this project ships without @types/react, so
+// React runs untyped and a concrete props type would reject the `key` prop that
+// React strips at runtime (there's no LibraryManagedAttributes to handle it).
+function ArticleCard({url, image, label, brand, title, subtitle}: any) {
+  return (
+    <a
+      href={url}
+      target="_blank"
+      rel="noreferrer"
+      className="group flex flex-col border border-ink/10 overflow-hidden transition-colors hover:bg-card"
+    >
+      {image && (
+        <div className="aspect-[16/10] overflow-hidden bg-card">
+          <img
+            src={image}
+            alt=""
+            loading="lazy"
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+            onError={(ev) => {
+              ev.currentTarget.parentElement?.remove();
+            }}
+          />
+        </div>
+      )}
+      <div className="flex flex-1 flex-col p-6">
+        <div className="flex items-start justify-between gap-4">
+          {brand ? (
+            <span className="font-serif text-lg leading-none text-ink tracking-tight border-b-2 border-crimson/50 pb-1 group-hover:border-crimson transition-colors">
+              {brand}
+            </span>
+          ) : label ? (
+            <span className="font-body text-[11px] uppercase tracking-widest text-muted">
+              {label}
+            </span>
+          ) : null}
+          <ArrowUpRight className="w-5 h-5 text-muted shrink-0 ml-auto transition-all group-hover:text-crimson group-hover:translate-x-1 group-hover:-translate-y-1" />
+        </div>
+        <h3 className="font-serif text-xl text-ink group-hover:text-crimson transition-colors mt-4 leading-snug">
+          {title}
+        </h3>
+        {subtitle && (
+          <p className="font-body text-sm text-muted mt-2 leading-relaxed">
+            {subtitle}
+          </p>
+        )}
+      </div>
+    </a>
+  );
 }
 
 export default function Writing() {
@@ -107,24 +186,14 @@ export default function Writing() {
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-16">
           {journalism.map((j) => (
-            <a
+            <ArticleCard
               key={j.url}
-              href={j.url}
-              target="_blank"
-              rel="noreferrer"
-              className="group flex flex-col border border-ink/10 p-6 transition-colors hover:bg-card"
-            >
-              <div className="flex items-start justify-between gap-4">
-                <span className="font-body text-[11px] uppercase tracking-widest text-muted">
-                  {j.publication}
-                  {formatDate(j.date) ? ` · ${formatDate(j.date)}` : ""}
-                </span>
-                <ArrowUpRight className="w-5 h-5 text-muted shrink-0 transition-all group-hover:text-crimson group-hover:translate-x-1 group-hover:-translate-y-1" />
-              </div>
-              <h3 className="font-serif text-xl text-ink group-hover:text-crimson transition-colors mt-3 leading-snug">
-                {j.title}
-              </h3>
-            </a>
+              url={j.url}
+              image={j.image}
+              brand={j.publication}
+              title={j.title}
+              subtitle={j.subtitle}
+            />
           ))}
         </div>
 
@@ -151,30 +220,18 @@ export default function Writing() {
             </p>
           )}
           {essays && essays.length > 0 && (
-            <ul className="divide-y divide-ink/10 border-y border-ink/10">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {essays.map((e) => (
-                <li key={e.url}>
-                  <a
-                    href={e.url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="group flex items-start justify-between gap-4 py-5"
-                  >
-                    <span>
-                      <span className="font-serif text-xl text-ink group-hover:text-crimson transition-colors block leading-snug">
-                        {e.title}
-                      </span>
-                      {formatDate(e.date) && (
-                        <span className="font-body text-sm text-muted">
-                          {formatDate(e.date)}
-                        </span>
-                      )}
-                    </span>
-                    <ArrowUpRight className="w-5 h-5 text-muted shrink-0 mt-1 transition-all group-hover:text-crimson group-hover:translate-x-1 group-hover:-translate-y-1" />
-                  </a>
-                </li>
+                <ArticleCard
+                  key={e.url}
+                  url={e.url}
+                  image={e.image}
+                  label={formatDate(e.date) || undefined}
+                  title={e.title}
+                  subtitle={e.subtitle}
+                />
               ))}
-            </ul>
+            </div>
           )}
           {essays && essays.length === 0 && (
             <p className="font-body text-muted italic">
