@@ -28,6 +28,13 @@ const journalism: {
   },
 ];
 
+const SUBSTACK_FEED = "https://aasifj.substack.com/feed";
+// Substack's RSS feed sends no CORS header, so the browser can't read it
+// directly — we route it through a read-only public proxy and parse it here.
+const FEED_PROXY = `https://corsproxy.io/?url=${encodeURIComponent(
+  SUBSTACK_FEED,
+)}`;
+
 function formatDate(raw?: string): string {
   if (!raw) return "";
   const d = new Date(raw);
@@ -39,18 +46,52 @@ function formatDate(raw?: string): string {
   });
 }
 
+// Parse a Substack RSS feed into essays using the browser's built-in parser.
+function parseFeed(xml: string): Essay[] {
+  const doc = new DOMParser().parseFromString(xml, "text/xml");
+  if (doc.querySelector("parsererror")) throw new Error("bad feed");
+  return Array.from(doc.querySelectorAll("item")).map((item) => ({
+    title: item.querySelector("title")?.textContent?.trim() ?? "",
+    url: item.querySelector("link")?.textContent?.trim() ?? "",
+    date: item.querySelector("pubDate")?.textContent?.trim() || undefined,
+  }));
+}
+
 export default function Writing() {
   const [essays, setEssays] = useState<Essay[] | null>(null);
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    fetch("/essays.json")
-      .then((r) => {
-        if (!r.ok) throw new Error("not found");
-        return r.json();
-      })
-      .then((data: Essay[]) => setEssays(Array.isArray(data) ? data : []))
-      .catch(() => setError(true));
+    let cancelled = false;
+
+    // Prefer the live Substack feed so new essays appear without a rebuild;
+    // fall back to the bundled snapshot if the proxy is unreachable.
+    async function load() {
+      try {
+        const res = await fetch(FEED_PROXY);
+        if (!res.ok) throw new Error("proxy error");
+        const parsed = parseFeed(await res.text());
+        if (parsed.length === 0) throw new Error("empty feed");
+        if (!cancelled) setEssays(parsed);
+        return;
+      } catch {
+        // Fall through to the bundled snapshot.
+      }
+
+      try {
+        const res = await fetch("/essays.json");
+        if (!res.ok) throw new Error("not found");
+        const data = (await res.json()) as Essay[];
+        if (!cancelled) setEssays(Array.isArray(data) ? data : []);
+      } catch {
+        if (!cancelled) setError(true);
+      }
+    }
+
+    load();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   return (
