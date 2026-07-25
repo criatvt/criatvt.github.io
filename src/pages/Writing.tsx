@@ -25,8 +25,9 @@ const journalism: {
     title: "India's tech education crisis: When engineers can't code",
     publication: "The Hindu",
     url: "https://www.thehindu.com/education/indias-tech-education-crisis-when-computer-engineers-cant-code/article69243098.ece",
+    date: "2025-02-20T19:33:55+05:30",
     subtitle:
-      "Infosys layoffs spark debate on Indian graduates' programming skills; calls for a hybrid assessment framework in higher education.",
+      "Infosys layoffs spark debate on Indian graduates' programming skills, and the case for a hybrid assessment framework in higher education.",
     image:
       "https://th-i.thgim.com/public/incoming/oqcs7d/article69243145.ece/alternates/LANDSCAPE_1200/iStock-1354205521.jpg",
   },
@@ -34,6 +35,7 @@ const journalism: {
     title: "CBSE's future-ready AI curriculum, but are students ready?",
     publication: "The Hindu",
     url: "https://www.thehindu.com/education/cbses-future-ready-ai-curriculum-but-are-students-ready/article70823388.ece",
+    date: "2026-04-06T08:00:00+05:30",
     subtitle:
       "New AI curriculum launches in India but overlooks essential literacy skills, risking effective learning for young students.",
     image:
@@ -43,8 +45,9 @@ const journalism: {
     title: "Lessons about social media usage from the idiot-box era",
     publication: "Deccan Herald",
     url: "https://www.deccanherald.com/education/lessons-about-social-media-usage-from-the-idiot-box-era-2-3958121",
+    date: "2026-04-07T09:28:11+05:30",
     subtitle:
-      "Short-form video's grip on children echoes an earlier era's anxieties about television — and what that history suggests about balanced use.",
+      "Short-form video's grip on children echoes an earlier era's fears about television, and what that history suggests about balanced use.",
     image:
       "https://media.assettype.com/deccanherald%2F2026-04-07%2Fyy3ksxvx%2FiStock-1413735503.jpg?w=1200&ar=40%3A21&auto=format%2Ccompress&ogImage=true&mode=crop",
   },
@@ -112,15 +115,18 @@ function ArticleCard({url, image, label, brand, title, subtitle}: any) {
       )}
       <div className="flex flex-1 flex-col p-6">
         <div className="flex items-start justify-between gap-4">
-          {brand ? (
-            <span className="font-serif text-lg leading-none text-ink tracking-tight border-b-2 border-crimson/50 pb-1 group-hover:border-crimson transition-colors">
-              {brand}
-            </span>
-          ) : label ? (
-            <span className="font-body text-[11px] uppercase tracking-widest text-muted">
-              {label}
-            </span>
-          ) : null}
+          <span className="flex flex-col gap-2">
+            {brand && (
+              <span className="font-serif text-lg leading-none text-ink tracking-tight border-b-2 border-crimson/50 pb-1 self-start group-hover:border-crimson transition-colors">
+                {brand}
+              </span>
+            )}
+            {label && (
+              <span className="font-body text-[11px] uppercase tracking-widest text-muted">
+                {label}
+              </span>
+            )}
+          </span>
           <ArrowUpRight className="w-5 h-5 text-muted shrink-0 ml-auto transition-all group-hover:text-crimson group-hover:translate-x-1 group-hover:-translate-y-1" />
         </div>
         <h3 className="font-serif text-xl text-ink group-hover:text-crimson transition-colors mt-4 leading-snug">
@@ -176,9 +182,15 @@ export default function Writing() {
   return (
     <section className="px-6 py-16 md:py-24">
       <div className="max-w-2xl mx-auto">
-        <h1 className="font-serif text-4xl md:text-6xl tracking-tight text-ink mb-12">
+        <h1 className="font-serif text-4xl md:text-6xl tracking-tight text-ink mb-6">
           Writing
         </h1>
+        <p className="font-body text-lg text-muted leading-relaxed max-w-xl mb-16">
+          I write about education, attention, and the subtle ways technology is
+          changing how we think. Much of it returns to the analog. Books and
+          paperbacks. Handwriting. Slower ways of reading. Mostly I ask what we
+          quietly trade away as our tools grow smarter.
+        </p>
 
         {/* Journalism — manual list, shown as cards (op-eds in the press) */}
         <h2 className="font-serif text-sm uppercase tracking-[0.3em] text-muted mb-8">
@@ -191,6 +203,7 @@ export default function Writing() {
               url={j.url}
               image={j.image}
               brand={j.publication}
+              label={formatDate(j.date) || undefined}
               title={j.title}
               subtitle={j.subtitle}
             />
