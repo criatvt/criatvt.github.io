@@ -2,6 +2,18 @@ import {ArrowUpRight} from "lucide-react";
 
 const tools = [
   {
+    name: "Next Read",
+    url: "https://nextread.aasifj.com",
+    blurb:
+      "A free tool that recommends your next book, matched to your taste and reading level.",
+  },
+  {
+    name: "Reading Run",
+    url: "https://readingrun.aasifj.com",
+    blurb:
+      "A browser game about going from doomscroller to reader, one dodged distraction at a time.",
+  },
+  {
     name: "Policy Wonk",
     url: "https://policywonkgame.aasifj.com",
     blurb:
