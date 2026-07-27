@@ -86,7 +86,7 @@ export default function Home() {
               write
             </Link>
             , and{" "}
-            <Link to="/story" className={verb}>
+            <Link to="/educate" className={verb}>
               educate
             </Link>
             .

@@ -6,6 +6,7 @@ import Writing from "./pages/Writing";
 import Book from "./pages/Book";
 import Photography from "./pages/Photography";
 import Story from "./pages/Story";
+import Educate from "./pages/Educate";
 import NotFound from "./pages/NotFound";
 
 export default function App() {
@@ -18,6 +19,7 @@ export default function App() {
         <Route path="/book" element={<Book />} />
         <Route path="/photography" element={<Photography />} />
         <Route path="/story" element={<Story />} />
+        <Route path="/educate" element={<Educate />} />
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
