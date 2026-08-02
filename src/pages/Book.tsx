@@ -45,7 +45,7 @@ export default function Book() {
             </div>
           </div>
           <span className="font-serif text-lg text-ink">4.8/5</span>
-          <span className="font-body text-xs uppercase tracking-widest text-muted">
+          <span className="font-mono text-xs uppercase tracking-widest text-muted">
             Reader Reviews
           </span>
         </div>
@@ -62,7 +62,7 @@ export default function Book() {
               className="font-body italic text-lg text-muted leading-relaxed"
             >
               "{r.quote}"
-              <footer className="mt-3 font-body text-xs uppercase tracking-widest not-italic text-ink">
+              <footer className="mt-3 font-mono text-xs uppercase tracking-widest not-italic text-ink">
                 &ndash; {r.by}
               </footer>
             </blockquote>

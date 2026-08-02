@@ -30,7 +30,7 @@ export default function Nav() {
         </Link>
 
         {/* Desktop links */}
-        <div className="hidden md:flex gap-10 font-serif text-[11px] uppercase tracking-[0.3em] text-muted">
+        <div className="hidden md:flex gap-10 font-mono text-[11px] uppercase tracking-[0.2em] text-muted">
           {links.map((l) => (
             <NavLink
               key={l.to}

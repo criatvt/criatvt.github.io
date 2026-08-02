@@ -51,7 +51,7 @@ export function ArticleCard({url, image, label, brand, title, subtitle}: any) {
               </span>
             )}
             {label && (
-              <span className="font-body text-[11px] uppercase tracking-widest text-muted">
+              <span className="font-mono text-[11px] uppercase tracking-widest text-muted">
                 {label}
               </span>
             )}
