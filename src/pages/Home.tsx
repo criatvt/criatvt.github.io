@@ -1,150 +1,96 @@
 import {Link} from "react-router-dom";
+import {ArrowUpRight} from "lucide-react";
 
-// Numbered superscript footnote link (Hank-style). The number is the link;
-// hovering/focusing reveals a tooltip describing the destination, and the
-// padding gives it a usable tap target despite the small visual size.
-const numClass =
-  "text-crimson font-body text-[0.85em] align-super font-bold inline-block px-2 py-1.5 -my-1.5 -mx-1.5 rounded group-hover:bg-crimson/10 transition-colors";
+// One shared inline-link style for the intro line.
+const link =
+  "underline decoration-crimson/40 underline-offset-4 transition-colors hover:text-crimson hover:decoration-crimson";
 
-// Tooltip is a hover-only desktop enhancement. Tailwind gates `group-hover`
-// behind `@media (hover: hover)`, so it never fires on touch — on mobile the
-// superscript is simply a redirect link (tap navigates), no tooltip flash.
-const tipClass =
-  "pointer-events-none absolute left-1/2 bottom-full z-30 mb-1 -translate-x-1/2 whitespace-nowrap rounded-md bg-ink px-2.5 py-1.5 font-body text-[13px] not-italic leading-none text-paper opacity-0 shadow-lg transition-opacity duration-150 group-hover:opacity-100";
+// Ploca's brand navy, used only for its logo mark so the card carries a real
+// touch of the product while the rest stays in the site palette.
+const PLOCA_NAVY = "#1C2A4A";
 
-function Foot({
-  n,
-  label,
-  to,
-  href,
-}: {
-  n: number;
-  label: string;
-  to?: string;
-  href?: string;
-}) {
-  const num = href ? (
+function PlocaCard() {
+  return (
     <a
-      href={href}
+      href="https://ploca.app"
       target="_blank"
       rel="noreferrer"
-      className={numClass}
-      title={label}
-      aria-label={`${label} (opens in new tab)`}
+      className="group block rounded-2xl border border-ink/10 bg-card p-6 md:p-8 transition-colors hover:border-crimson/30"
     >
-      {n}
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex items-center gap-3">
+          {/* ploca mark — concentric dot, rebuilt from the product site */}
+          <svg viewBox="0 0 32 32" aria-hidden="true" className="w-8 h-8 shrink-0">
+            <circle cx="16" cy="16" r="16" fill="#E1E7F2" />
+            <circle cx="16" cy="16" r="10.5" fill="#AEBDD8" />
+            <circle cx="16" cy="16" r="6.5" fill={PLOCA_NAVY} />
+          </svg>
+          <span className="font-serif text-3xl text-ink leading-none">ploca</span>
+        </div>
+        <ArrowUpRight className="w-5 h-5 text-muted transition-colors group-hover:text-crimson" />
+      </div>
+
+      <p className="font-serif text-xl md:text-2xl text-ink mt-5 leading-snug">
+        Write at the speed of thought,{" "}
+        <span className="italic">privately.</span>
+      </p>
+      <p className="font-body text-base text-muted mt-3 leading-relaxed">
+        A fast, accurate voice-to-text app for Mac that is truly private.
+      </p>
+
+      <div className="mt-6 font-mono text-[11px] uppercase tracking-widest text-muted">
+        Free public beta · Apple Silicon · macOS 13+
+      </div>
     </a>
-  ) : (
-    <Link to={to!} className={numClass} title={label} aria-label={label}>
-      {n}
-    </Link>
-  );
-  return (
-    <span className="relative inline-block group">
-      {num}
-      <span role="tooltip" className={tipClass}>
-        {label}
-      </span>
-    </span>
   );
 }
-
-// Shared style for the verb-links in the opening line — they double as the
-// primary directory into the three main sections.
-const verb =
-  "underline decoration-crimson/40 underline-offset-4 transition-colors hover:text-crimson hover:decoration-crimson";
 
 export default function Home() {
   return (
     <section className="px-6 py-12 md:py-20">
       <div className="max-w-2xl mx-auto">
-        {/* Hero photo — placeholder until Aasif supplies one (public/hero.jpg) */}
+        {/* Hero portrait — large and centered, given room to breathe like the
+            reference sites. Served from public/hero.jpg; hides until it exists. */}
         <img
           src="/hero.jpg"
           alt="Aasif Iqbal J."
-          className="w-24 h-24 md:w-28 md:h-28 rounded-full object-cover mb-8 border border-ink/10"
+          className="w-44 h-44 md:w-56 md:h-56 rounded-full object-cover object-[center_30%] mx-auto mb-10 ring-1 ring-ink/10"
           onError={(e) => {
             (e.currentTarget as HTMLImageElement).style.display = "none";
           }}
         />
 
-        {/* Display heading — name in crimson */}
-        <h1 className="font-serif text-5xl md:text-7xl font-bold tracking-tight text-ink leading-[1.05] mb-10">
+        {/* Display heading — name in crimson, centered under the portrait */}
+        <h1 className="font-serif text-5xl md:text-7xl font-bold tracking-tight text-ink leading-[1.05] mb-8 text-center">
           Hi, I'm <span className="text-crimson">Aasif</span>.
         </h1>
 
-        {/* Bio — compact intro. The longer career narrative lives on /story;
-            numbered superscript links cite the nouns worth chasing. */}
-        <div className="font-body text-base md:text-lg leading-snug tracking-tight text-ink space-y-4">
-          <p>
-            I{" "}
-            <Link to="/build" className={verb}>
-              build
-            </Link>
-            ,{" "}
-            <Link to="/writing" className={verb}>
-              write
-            </Link>
-            , and{" "}
-            <Link to="/educate" className={verb}>
-              educate
-            </Link>
-            .
-          </p>
+        {/* One-line intro; the full narrative lives on /story */}
+        <p className="font-body text-lg md:text-xl leading-relaxed text-ink mb-14 text-center max-w-lg mx-auto">
+          I{" "}
+          <Link to="/build" className={link}>
+            build
+          </Link>
+          ,{" "}
+          <Link to="/writing" className={link}>
+            write
+          </Link>
+          , and{" "}
+          <Link to="/educate" className={link}>
+            educate
+          </Link>
+          . Read the long version{" "}
+          <Link to="/story" className={link}>
+            here
+          </Link>
+          .
+        </p>
 
-          <p>
-            Currently building{" "}
-            <span className="whitespace-nowrap">
-              Ploca
-              <Foot n={1} label="ploca.app ↗" href="https://ploca.app" />,
-            </span>{" "}
-            a voice-to-text macOS app that&rsquo;s truly private.
-          </p>
-
-          <p>
-            I regularly write about learning, technology, and policy in
-            newspapers like The Hindu and Deccan{" "}
-            <span className="whitespace-nowrap">
-              Herald
-              <Foot n={2} label="My writing" to="/writing" />.
-            </span>
-          </p>
-
-          <p>
-            I published my first book,{" "}
-            <span className="whitespace-nowrap">
-              Doomscroller to Reader
-              <Foot n={3} label="My book" to="/book" />,
-            </span>{" "}
-            which helps people build a reading habit without giving up their
-            phone.
-          </p>
-
-          <p>
-            I was a co-founder and COO of iamneo, an edtech company, and helped
-            scale it 10x, culminating in its acquisition by{" "}
-            <span className="whitespace-nowrap">
-              NIIT
-              <Foot
-                n={4}
-                label="Business Standard ↗"
-                href="https://www.business-standard.com/industry/news/niit-acquires-coimbatore-based-deep-skilling-training-provider-iamneo-125041701208_1.html"
-              />
-            </span>{" "}
-            in 2025.
-          </p>
-
-          <p>
-            You can read more about my story{" "}
-            <Link
-              to="/story"
-              className="text-crimson underline decoration-crimson/40 underline-offset-4 transition-colors hover:decoration-crimson"
-            >
-              here
-            </Link>
-            .
-          </p>
-        </div>
+        {/* Current priority — the thing getting most of my time right now */}
+        <h2 className="font-mono text-sm uppercase tracking-[0.2em] text-muted mb-5">
+          Current priority
+        </h2>
+        <PlocaCard />
       </div>
     </section>
   );
