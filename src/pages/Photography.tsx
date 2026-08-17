@@ -1,103 +1,106 @@
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 
 const ALBUM_ID = "72157687588601032";
 const USER_PATH = "criatvt";
-const API_KEY = import.meta.env.VITE_FLICKR_API_KEY as string | undefined;
 
+// Photos come from public/photos.json, refreshed by scripts/fetch-photos.mjs
+// (see prebuild). If that file is missing or empty, the page falls back to the
+// Flickr album player so there is always something to look at.
 type Photo = {
   id: string;
   title: string;
-  url_q?: string; // square thumb
-  url_m?: string; // medium fallback
+  description?: string;
+  thumb: string;
+  large: string;
+  width?: number;
+  height?: number;
+  link: string;
 };
 
-async function flickr(method: string, params: Record<string, string>) {
-  const qs = new URLSearchParams({
-    method,
-    api_key: API_KEY as string,
-    format: "json",
-    nojsoncallback: "1",
-    ...params,
-  });
-  const res = await fetch(`https://api.flickr.com/services/rest/?${qs}`);
-  if (!res.ok) throw new Error(`Flickr ${method} failed`);
-  return res.json();
-}
+// One photo per screen. The page is its own scroll container — a viewport
+// minus the fixed nav (5rem) — with mandatory y-snapping, so a scroll settles
+// on the next photo instead of stopping halfway. It has to be a local
+// container rather than the document: Layout's `overflow-x-hidden` wrapper
+// captures the snap areas, which silently kills document-level snapping.
+const FRAME = "h-[calc(100svh-5rem)] overflow-y-auto snap-y snap-mandatory";
+const SECTION =
+  "snap-start h-full flex flex-col items-center justify-center px-4 md:px-8 py-8";
 
 export default function Photography() {
   const [photos, setPhotos] = useState<Photo[] | null>(null);
   const [failed, setFailed] = useState(false);
+  const [current, setCurrent] = useState<number | null>(null);
+  const frame = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    if (!API_KEY) return; // fall back to iframe
+    let cancelled = false;
     (async () => {
       try {
-        const lookup = await flickr("flickr.urls.lookupUser", {
-          url: `https://www.flickr.com/photos/${USER_PATH}`,
-        });
-        const nsid = lookup?.user?.id;
-        if (!nsid) throw new Error("no nsid");
-        const data = await flickr("flickr.photosets.getPhotos", {
-          photoset_id: ALBUM_ID,
-          user_id: nsid,
-          extras: "url_q,url_m",
-        });
-        const list: Photo[] = data?.photoset?.photo ?? [];
-        setPhotos(list);
+        const res = await fetch("/photos.json");
+        if (!res.ok) throw new Error("not found");
+        const data = (await res.json()) as Photo[];
+        if (!Array.isArray(data) || data.length === 0) throw new Error("empty");
+        if (!cancelled) setPhotos(data);
       } catch {
-        setFailed(true);
+        if (!cancelled) setFailed(true);
       }
     })();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
-  const showGrid = API_KEY && !failed;
+  // Track which photo is on screen, for the counter in the corner. The title
+  // and closing screens carry index -1, which clears the counter.
+  useEffect(() => {
+    const root = frame.current;
+    if (!photos || !root) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (!e.isIntersecting) continue;
+          const i = Number((e.target as HTMLElement).dataset.index);
+          setCurrent(i >= 0 ? i : null);
+        }
+      },
+      {root, threshold: 0.55},
+    );
+    root.querySelectorAll("section[data-index]").forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, [photos]);
 
   return (
-    <section className="px-6 py-16 md:py-24">
-      <div className="max-w-2xl mx-auto">
-        <h1 className="font-serif text-4xl md:text-6xl tracking-tight text-ink mb-4">
-          Photography
-        </h1>
-        <p className="font-body text-lg text-muted mb-12">
-          A camera usually comes along for the ride.
-        </p>
-      </div>
-
-      {showGrid ? (
-        <div className="max-w-5xl mx-auto">
-          {photos === null ? (
-            <p className="max-w-2xl mx-auto font-body text-muted italic">
-              Loading photos…
-            </p>
-          ) : photos.length === 0 ? (
-            <p className="max-w-2xl mx-auto font-body text-muted italic">
-              No photos found.
-            </p>
-          ) : (
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-              {photos.map((p) => (
-                <a
-                  key={p.id}
-                  href={`https://www.flickr.com/photos/${USER_PATH}/${p.id}/in/album-${ALBUM_ID}/`}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="block aspect-square overflow-hidden bg-ink/5"
-                >
-                  <img
-                    src={p.url_q ?? p.url_m}
-                    alt={p.title || "Photograph"}
-                    loading="lazy"
-                    className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-                  />
-                </a>
-              ))}
-            </div>
-          )}
+    <div ref={frame} className={FRAME}>
+      {/* Opening screen: the page's own title card. */}
+      <section data-index={-1} className={`${SECTION} text-center`}>
+        <div className="max-w-2xl">
+          <h1 className="font-serif text-4xl md:text-6xl tracking-tight text-ink mb-6">
+            Photography
+          </h1>
+          <p className="font-body text-lg text-muted leading-relaxed mb-6">
+            Photography is more than a hobby. It helps me slow down time and be
+            in the moment. I took it up in the late 2000s at college, borrowing
+            cameras from friends. I bought one for myself in the mid-2010s, once
+            I started earning enough. My photos have been shown at exhibitions
+            in Bengaluru, and I have won cash prizes in contests. While I did
+            take up professional engagements, it wasn't as fun as doing it for
+            myself. I learnt more about photography when I started teaching it
+            to children.
+          </p>
+          <p className="font-body text-lg text-muted leading-relaxed">
+            This page shows some of my favourite published shots. There are
+            thousands more that I may publish... someday :)
+          </p>
+          <p className="mt-10 font-mono text-[11px] uppercase tracking-[0.2em] text-muted/70">
+            Scroll ↓
+          </p>
         </div>
-      ) : (
-        // Fallback: album-player iframe (no API key, or Flickr request failed).
-        <div className="max-w-5xl mx-auto">
-          <div className="aspect-[4/5] md:aspect-video bg-card overflow-hidden border border-ink/5">
+      </section>
+
+      {failed ? (
+        // Fallback: album player (photos.json missing or empty).
+        <section className={SECTION}>
+          <div className="w-full max-w-5xl aspect-[4/5] md:aspect-video bg-card overflow-hidden border border-ink/5">
             <iframe
               src={`https://www.flickr.com/photos/${USER_PATH}/albums/${ALBUM_ID}/player/`}
               width="100%"
@@ -108,18 +111,70 @@ export default function Photography() {
               allowFullScreen
             />
           </div>
-          <p className="mt-4 font-body text-sm text-muted">
-            <a
-              href={`https://www.flickr.com/photos/${USER_PATH}/albums/${ALBUM_ID}/`}
-              target="_blank"
-              rel="noreferrer"
-              className="text-crimson underline decoration-1 underline-offset-4 decoration-crimson/40 hover:decoration-crimson"
-            >
-              View the full album on Flickr →
-            </a>
-          </p>
-        </div>
+        </section>
+      ) : photos === null ? (
+        <section className={SECTION}>
+          <p className="font-body text-muted italic">Loading photos…</p>
+        </section>
+      ) : (
+        photos.map((p, i) => (
+          <section
+            key={p.id}
+            data-index={i}
+            className={`${SECTION} gap-5`}
+          >
+            {/* The image takes most of the frame, contained so nothing is ever
+                cropped; the rest is left for the caption below it. */}
+            <img
+              src={p.large}
+              alt={p.title || "Photograph"}
+              width={p.width}
+              height={p.height}
+              loading={i < 2 ? "eager" : "lazy"}
+              decoding="async"
+              // min-h-0 lets a tall photo give way to a long caption on short
+              // screens instead of spilling past the frame.
+              className="max-h-[78%] min-h-0 w-auto max-w-full object-contain"
+            />
+            {(p.title || p.description) && (
+              <figcaption className="shrink-0 max-w-xl text-center">
+                {p.title && (
+                  <h2 className="font-serif text-xl md:text-2xl text-ink">
+                    {p.title}
+                  </h2>
+                )}
+                {p.description && (
+                  <p className="mt-1 font-body text-sm text-muted leading-relaxed">
+                    {p.description}
+                  </p>
+                )}
+              </figcaption>
+            )}
+          </section>
+        ))
       )}
-    </section>
+
+      {/* Closing screen. */}
+      <section data-index={-1} className={`${SECTION} text-center`}>
+        <p className="font-serif text-2xl md:text-3xl text-ink mb-4">
+          That's the album.
+        </p>
+        <a
+          href={`https://www.flickr.com/photos/${USER_PATH}/albums/${ALBUM_ID}/`}
+          target="_blank"
+          rel="noreferrer"
+          className="font-body text-crimson underline decoration-1 underline-offset-4 decoration-crimson/40 hover:decoration-crimson"
+        >
+          View the full album on Flickr →
+        </a>
+      </section>
+
+      {/* Position in the album, pinned out of the way. */}
+      {photos && current !== null && (
+        <p className="fixed bottom-5 right-5 z-40 font-mono text-[11px] tracking-[0.2em] text-muted/70 tabular-nums pointer-events-none">
+          {String(current + 1).padStart(2, "0")} / {photos.length}
+        </p>
+      )}
+    </div>
   );
 }

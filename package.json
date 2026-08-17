@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite --port=3000 --host=0.0.0.0",
     "essays": "node scripts/fetch-essays.mjs",
-    "prebuild": "node scripts/fetch-essays.mjs",
+    "photos": "node scripts/fetch-photos.mjs",
+    "prebuild": "node scripts/fetch-essays.mjs && node scripts/fetch-photos.mjs",
     "build": "vite build",
     "preview": "vite preview",
     "clean": "rm -rf dist",

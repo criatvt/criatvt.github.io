@@ -30,6 +30,11 @@ jobs:
           cache: 'npm'
 
       - name: Install and Build 🔧
+        env:
+          # Optional. When set, scripts/fetch-photos.mjs pulls the whole Flickr
+          # album; without it, the build falls back to scraping the album page
+          # (first 25 photos only).
+          FLICKR_API_KEY: ${{ secrets.FLICKR_API_KEY }}
         run: |
           npm ci
           npm run build
