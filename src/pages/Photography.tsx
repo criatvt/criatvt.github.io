@@ -91,7 +91,7 @@ export default function Photography() {
             This page shows some of my favourite published shots. There are
             thousands more that I may publish... someday :)
           </p>
-          <p className="mt-10 font-mono text-[11px] uppercase tracking-[0.2em] text-muted/70">
+          <p className="eyebrow mt-10">
             Scroll ↓
           </p>
         </div>
@@ -100,7 +100,7 @@ export default function Photography() {
       {failed ? (
         // Fallback: album player (photos.json missing or empty).
         <section className={SECTION}>
-          <div className="w-full max-w-5xl aspect-[4/5] md:aspect-video bg-card overflow-hidden border border-ink/5">
+          <div className="w-full max-w-5xl aspect-[4/5] md:aspect-video bg-card overflow-hidden rounded-[9px] border border-line">
             <iframe
               src={`https://www.flickr.com/photos/${USER_PATH}/albums/${ALBUM_ID}/player/`}
               width="100%"
@@ -139,7 +139,7 @@ export default function Photography() {
             {(p.title || p.description) && (
               <figcaption className="shrink-0 max-w-xl text-center">
                 {p.title && (
-                  <h2 className="font-serif text-xl md:text-2xl text-ink">
+                  <h2 className="text-lg md:text-xl text-ink">
                     {p.title}
                   </h2>
                 )}
@@ -163,7 +163,7 @@ export default function Photography() {
           href={`https://www.flickr.com/photos/${USER_PATH}/albums/${ALBUM_ID}/`}
           target="_blank"
           rel="noreferrer"
-          className="font-body text-crimson underline decoration-1 underline-offset-4 decoration-crimson/40 hover:decoration-crimson"
+          className="btn"
         >
           View the full album on Flickr →
         </a>
@@ -171,7 +171,7 @@ export default function Photography() {
 
       {/* Position in the album, pinned out of the way. */}
       {photos && current !== null && (
-        <p className="fixed bottom-5 right-5 z-40 font-mono text-[11px] tracking-[0.2em] text-muted/70 tabular-nums pointer-events-none">
+        <p className="eyebrow fixed bottom-5 right-5 z-40 tabular-nums pointer-events-none">
           {String(current + 1).padStart(2, "0")} / {photos.length}
         </p>
       )}

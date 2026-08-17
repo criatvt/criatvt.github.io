@@ -67,7 +67,7 @@ const CTA_EMAIL = "aasif@aasifj.com";
 function TalkCard({talk}: any) {
   return (
     <article className="flex flex-col">
-      <div className="aspect-video overflow-hidden border border-ink/10 bg-card">
+      <div className="aspect-video overflow-hidden rounded-[9px] border border-line bg-card">
         <iframe
           className="h-full w-full"
           src={`https://www.youtube-nocookie.com/embed/${talk.youtubeId}`}
@@ -78,10 +78,10 @@ function TalkCard({talk}: any) {
         />
       </div>
       <div className="mt-4">
-        <span className="font-mono text-[11px] uppercase tracking-widest text-muted">
+        <span className="eyebrow">
           {talk.host} · {formatDate(talk.date)}
         </span>
-        <h3 className="font-serif text-2xl text-ink mt-2 leading-snug">
+        <h3 className="text-xl text-ink mt-2 leading-snug">
           {talk.title}
         </h3>
         <p className="font-body text-base text-muted mt-3 leading-relaxed">
@@ -110,7 +110,7 @@ export default function Educate() {
         </p>
 
         {/* Talks — embedded panels and webinars */}
-        <h2 className="font-mono text-sm uppercase tracking-[0.2em] text-muted mb-8">
+        <h2 className="eyebrow mb-8">
           Talks
         </h2>
         <div className="flex flex-col gap-12 mb-16">
@@ -120,7 +120,7 @@ export default function Educate() {
         </div>
 
         {/* Writing — the AI-in-education press pieces (also on /writing) */}
-        <h2 className="font-mono text-sm uppercase tracking-[0.2em] text-muted mb-8">
+        <h2 className="eyebrow mb-8">
           Writing
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-16">
@@ -138,7 +138,7 @@ export default function Educate() {
         </div>
 
         {/* CTA */}
-        <h2 className="font-mono text-sm uppercase tracking-[0.2em] text-muted mb-8">
+        <h2 className="eyebrow mb-8">
           Let&rsquo;s talk
         </h2>
         <p className="font-body text-lg text-ink leading-relaxed max-w-xl">

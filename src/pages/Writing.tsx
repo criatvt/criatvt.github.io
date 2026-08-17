@@ -124,7 +124,7 @@ export default function Writing() {
         </p>
 
         {/* Journalism — manual list, shown as cards (op-eds in the press) */}
-        <h2 className="font-mono text-sm uppercase tracking-[0.2em] text-muted mb-8">
+        <h2 className="eyebrow mb-8">
           Journalism
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-16">
@@ -142,7 +142,7 @@ export default function Writing() {
         </div>
 
         {/* Essays — auto from Substack RSS */}
-        <h2 className="font-mono text-sm uppercase tracking-[0.2em] text-muted mb-8">
+        <h2 className="eyebrow mb-8">
           Essays
         </h2>
         <div>

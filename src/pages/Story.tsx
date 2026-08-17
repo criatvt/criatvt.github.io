@@ -73,10 +73,10 @@ export default function Story() {
           </p>
         </div>
 
-        <div className="mt-16 pt-10 border-t border-ink/10">
+        <div className="mt-16 pt-10 border-t border-line">
           <Link
             to="/"
-            className="font-serif text-sm text-crimson hover:underline underline-offset-4"
+            className="link font-sans text-sm font-semibold"
           >
             &larr; Back home
           </Link>

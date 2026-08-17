@@ -27,7 +27,7 @@ export function ArticleCard({url, image, label, brand, title, subtitle}: any) {
       href={url}
       target="_blank"
       rel="noreferrer"
-      className="group flex flex-col border border-ink/10 overflow-hidden transition-colors hover:bg-card"
+      className="card-lift group flex flex-col rounded-[9px] overflow-hidden"
     >
       {image && (
         <div className="aspect-[16/10] overflow-hidden bg-card">
@@ -50,15 +50,11 @@ export function ArticleCard({url, image, label, brand, title, subtitle}: any) {
                 {brand}
               </span>
             )}
-            {label && (
-              <span className="font-mono text-[11px] uppercase tracking-widest text-muted">
-                {label}
-              </span>
-            )}
+            {label && <span className="eyebrow">{label}</span>}
           </span>
           <ArrowUpRight className="w-5 h-5 text-muted shrink-0 ml-auto transition-all group-hover:text-crimson group-hover:translate-x-1 group-hover:-translate-y-1" />
         </div>
-        <h3 className="font-serif text-xl text-ink group-hover:text-crimson transition-colors mt-4 leading-snug">
+        <h3 className="text-lg text-ink group-hover:text-crimson transition-colors mt-4 leading-snug">
           {title}
         </h3>
         {subtitle && (

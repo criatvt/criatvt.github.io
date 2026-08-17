@@ -20,8 +20,8 @@ export default function Nav() {
   }, [location.pathname]);
 
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 bg-paper/80 backdrop-blur-md border-b border-ink/5">
-      <div className="max-w-5xl mx-auto px-6 md:px-12 py-5 flex justify-between items-center">
+    <nav className="fixed top-0 left-0 w-full z-50 bg-paper/85 backdrop-blur-md border-b border-line">
+      <div className="max-w-5xl mx-auto px-6 md:px-12 py-4 flex justify-between items-center">
         <Link
           to="/"
           className="font-serif text-2xl tracking-tight text-ink hover:text-crimson transition-colors"
@@ -29,17 +29,15 @@ export default function Nav() {
           Aasif Iqbal J.
         </Link>
 
-        {/* Desktop links */}
-        <div className="hidden md:flex gap-10 font-mono text-[11px] uppercase tracking-[0.2em] text-muted">
+        {/* Desktop links, as a row of tabs that lift under the cursor. */}
+        <div className="hidden md:flex gap-2">
           {links.map((l) => (
             <NavLink
               key={l.to}
               to={l.to}
               end={l.to === "/"}
               className={({isActive}) =>
-                `transition-colors hover:text-crimson ${
-                  isActive ? "text-crimson" : ""
-                }`
+                `btn px-3 py-1.5 text-[11px] ${isActive ? "btn-active" : ""}`
               }
             >
               {l.label}
@@ -61,7 +59,7 @@ export default function Nav() {
 
       {/* Mobile menu panel */}
       {open && (
-        <div className="md:hidden border-t border-ink/5 bg-paper/95 backdrop-blur-md">
+        <div className="md:hidden border-t border-line bg-paper/95 backdrop-blur-md">
           <div className="px-6 py-4 flex flex-col">
             {links.map((l) => (
               <NavLink
@@ -69,7 +67,7 @@ export default function Nav() {
                 to={l.to}
                 end={l.to === "/"}
                 className={({isActive}) =>
-                  `font-serif text-lg py-3 border-b border-ink/5 last:border-0 transition-colors hover:text-crimson ${
+                  `font-sans font-semibold text-base py-3 border-b border-line last:border-0 transition-colors hover:text-crimson ${
                     isActive ? "text-crimson" : "text-ink"
                   }`
                 }

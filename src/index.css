@@ -1,17 +1,27 @@
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..600&family=Figtree:ital,wght@0,300..700;1,300..600&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400..700;1,8..60,400..600&family=Figtree:ital,wght@0,300..700;1,300..600&display=swap');
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
 @theme {
-  --font-serif: "Fraunces", serif;      /* display: hero, headings, wordmark */
-  --font-body: "Figtree", sans-serif;   /* body copy, buttons, nav */
-  --font-mono: "JetBrains Mono", monospace; /* uppercase micro-labels: eyebrows, kickers */
+  /* Type: a serif page with a sans voice for anything you click or scan.
+     Display serif for page titles and the wordmark, text serif for reading,
+     sans for section headings, card titles, nav, buttons and micro-labels.
+     No monospace anywhere. */
+  --font-serif: "Fraunces", Georgia, serif;                    /* display */
+  --font-body: "Source Serif 4", Georgia, "Times New Roman", serif; /* reading */
+  --font-sans: "Figtree", system-ui, sans-serif;               /* interface */
 
-  --color-ink: #131313;      /* primary text */
-  --color-paper: #FCFCFA;    /* page background */
-  --color-crimson: #C72B33;  /* single accent: links, marks, featured */
-  --color-muted: #6E6E6E;    /* secondary text */
+  --color-ink: #2B2620;      /* primary text: warm near-black */
+  --color-paper: #FAF7F1;    /* page background: warm cream */
   --color-card: #FFFFFF;
+  --color-line: #D8D2C6;     /* hairlines, borders, button shadows */
+  --color-muted: #7A7264;    /* secondary text */
+  --color-crimson: #C72B33;  /* single accent: links, marks, featured */
+  --color-crimson-dark: #A3232A; /* accent, pressed or hovered */
+
+  /* Buttons and cards rise on hover and settle when pressed. The overshoot in
+     this curve is what gives that motion its spring. */
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 @layer base {
@@ -21,15 +31,145 @@
   body {
     @apply bg-paper text-ink antialiased selection:bg-crimson/15;
     font-family: var(--font-body);
+    font-size: 1.0625rem;
+    line-height: 1.75;
+    /* Faint dot grid, like the ruling on a sheet of graph paper. Fixed so it
+       reads as the paper the site sits on rather than something that scrolls. */
+    background-image: radial-gradient(
+      color-mix(in srgb, var(--color-ink) 14%, transparent) 1px,
+      transparent 1px
+    );
+    background-size: 22px 22px;
+    background-position: -1px -1px;
+    background-attachment: fixed;
   }
-  h1, h2, h3, h4, h5, h6 {
+  /* h1 is the display serif; every smaller heading is sans, so section
+     headings and card titles read as interface rather than prose. */
+  h1 {
     font-family: var(--font-serif);
     font-optical-sizing: auto;
+  }
+  h2, h3, h4, h5, h6 {
+    font-family: var(--font-sans);
+    @apply font-semibold tracking-tight;
+  }
+}
+
+@layer components {
+  /* Small uppercase label: kickers, dates, section eyebrows. */
+  .eyebrow {
+    font-family: var(--font-sans);
+    @apply text-[11px] font-bold uppercase tracking-[0.14em] text-muted;
+  }
+
+  /* Button: a hairline outline sitting on a hard offset shadow. Hover lifts it
+     and deepens the shadow; pressing sets it back down. */
+  .btn {
+    font-family: var(--font-sans);
+    @apply inline-flex items-center justify-center gap-2 rounded-[9px] border
+      border-line bg-card px-5 py-2.5 text-[13px] font-bold uppercase
+      tracking-[0.1em] text-muted;
+    box-shadow: 0 2px 0 var(--color-line);
+    transition:
+      color 0.15s,
+      background 0.2s,
+      border-color 0.2s,
+      transform 0.2s var(--ease-spring),
+      box-shadow 0.2s;
+  }
+  .btn:hover {
+    @apply text-crimson border-crimson bg-crimson/5;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 0 color-mix(in srgb, var(--color-crimson) 45%, transparent);
+  }
+  .btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 0 color-mix(in srgb, var(--color-crimson) 45%, transparent);
+  }
+  .btn:focus {
+    outline: none;
+  }
+  .btn:focus-visible {
+    outline: 2px solid var(--color-crimson);
+    outline-offset: 2px;
+  }
+
+  /* Where you already are: marked in the accent, and it stays put on hover. */
+  .btn-active {
+    @apply text-crimson border-crimson bg-crimson/5;
+    box-shadow: 0 2px 0 color-mix(in srgb, var(--color-crimson) 45%, transparent);
+  }
+  .btn-active:hover {
+    transform: none;
+    box-shadow: 0 2px 0 color-mix(in srgb, var(--color-crimson) 45%, transparent);
+  }
+
+  /* The same motion, inked in for a page's primary action. */
+  .btn-solid {
+    @apply border-ink bg-ink text-paper;
+    box-shadow: 0 2px 0 var(--color-muted);
+  }
+  .btn-solid:hover {
+    @apply border-crimson bg-crimson text-paper;
+    box-shadow: 0 4px 0 var(--color-crimson-dark);
+  }
+  .btn-solid:active {
+    box-shadow: 0 2px 0 var(--color-crimson-dark);
+  }
+
+  /* Card: the button's motion at a larger scale, plus a soft cast shadow. */
+  .card-lift {
+    @apply border border-line bg-card;
+    transition:
+      border-color 0.2s,
+      transform 0.2s var(--ease-spring),
+      box-shadow 0.2s;
+  }
+  .card-lift:hover,
+  .card-lift:focus-visible {
+    @apply border-crimson/40;
+    transform: translateY(-4px);
+    box-shadow:
+      0 6px 0 var(--color-line),
+      0 10px 24px rgb(43 38 32 / 0.12);
+  }
+  .card-lift:focus {
+    outline: none;
+  }
+  .card-lift:focus-visible {
+    outline: 2px solid var(--color-crimson);
+    outline-offset: 2px;
+  }
+
+  /* Inline text link. */
+  .link {
+    @apply text-crimson underline decoration-1 underline-offset-4
+      decoration-crimson/40 transition-colors;
+  }
+  .link:hover {
+    @apply text-crimson-dark decoration-crimson;
+  }
+}
+
+/* Nothing should move for readers who would rather it didn't. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .btn,
+  .card-lift {
+    transition: color 0.15s, background 0.2s, border-color 0.2s;
+  }
+  .btn:hover,
+  .btn:active,
+  .card-lift:hover {
+    transform: none;
   }
 }
 
 .markdown-body {
-  @apply prose prose-slate max-w-none prose-headings:font-serif prose-p:font-body;
+  @apply prose max-w-none prose-headings:font-sans prose-h1:font-serif
+    prose-p:font-body prose-a:text-crimson;
 }
 
 .section-full {

@@ -1,9 +1,9 @@
 import {Link} from "react-router-dom";
 import {ArrowUpRight} from "lucide-react";
+import {sparkleFromEvent} from "../components/sparkle";
 
 // One shared inline-link style for the intro line.
-const link =
-  "underline decoration-crimson/40 underline-offset-4 transition-colors hover:text-crimson hover:decoration-crimson";
+const link = "link";
 
 // Ploca's brand navy, used only for its logo mark so the card carries a real
 // touch of the product while the rest stays in the site palette.
@@ -15,7 +15,7 @@ function PlocaCard() {
       href="https://ploca.app"
       target="_blank"
       rel="noreferrer"
-      className="group block rounded-2xl border border-ink/10 bg-card p-6 md:p-8 transition-colors hover:border-crimson/30"
+      className="card-lift group block rounded-[9px] p-6 md:p-8"
     >
       <div className="flex items-start justify-between gap-4">
         <div className="flex items-center gap-3">
@@ -34,11 +34,11 @@ function PlocaCard() {
         Write at the speed of thought,{" "}
         <span className="italic">privately.</span>
       </p>
-      <p className="font-body text-base text-muted mt-3 leading-relaxed">
+      <p className="font-sans text-base text-muted mt-3 leading-relaxed">
         A fast, accurate voice-to-text app for Mac that is truly private.
       </p>
 
-      <div className="mt-6 font-mono text-[11px] uppercase tracking-widest text-muted">
+      <div className="eyebrow mt-6">
         Free public beta · Apple Silicon · macOS 13+
       </div>
     </a>
@@ -49,47 +49,49 @@ export default function Home() {
   return (
     <section className="px-6 py-12 md:py-20">
       <div className="max-w-2xl mx-auto">
-        {/* Hero portrait — large and centered, given room to breathe like the
-            reference sites. Served from public/hero.jpg; hides until it exists. */}
-        <img
-          src="/hero.jpg"
-          alt="Aasif Iqbal J."
-          className="w-44 h-44 md:w-56 md:h-56 rounded-full object-cover object-[center_30%] mx-auto mb-10 ring-1 ring-ink/10"
-          onError={(e) => {
-            (e.currentTarget as HTMLImageElement).style.display = "none";
-          }}
-        />
+        {/* Photo and name share a line: a small portrait plate on the left,
+            the greeting and intro beside it. Stacks on narrow screens. */}
+        <div className="flex flex-col sm:flex-row sm:items-center gap-6 sm:gap-8 mb-14">
+          <img
+            src="/hero.jpg"
+            alt="Aasif Iqbal J."
+            className="w-24 h-28 sm:w-28 sm:h-32 shrink-0 rounded-[9px] object-cover object-[center_25%] border border-line bg-card shadow-[0_2px_0_var(--color-line)]"
+            onError={(e) => {
+              (e.currentTarget as HTMLImageElement).style.display = "none";
+            }}
+          />
 
-        {/* Display heading — name in crimson, centered under the portrait */}
-        <h1 className="font-serif text-5xl md:text-7xl font-bold tracking-tight text-ink leading-[1.05] mb-8 text-center">
-          Hi, I'm <span className="text-crimson">Aasif</span>.
-        </h1>
-
-        {/* One-line intro; the full narrative lives on /story */}
-        <p className="font-body text-lg md:text-xl leading-relaxed text-ink mb-14 text-center max-w-lg mx-auto">
-          I{" "}
-          <Link to="/build" className={link}>
-            build
-          </Link>
-          ,{" "}
-          <Link to="/writing" className={link}>
-            write
-          </Link>
-          , and{" "}
-          <Link to="/educate" className={link}>
-            educate
-          </Link>
-          . Read the long version{" "}
-          <Link to="/story" className={link}>
-            here
-          </Link>
-          .
-        </p>
+          <div>
+            <h1
+              onClick={sparkleFromEvent}
+              className="font-serif text-4xl md:text-5xl font-bold tracking-tight text-ink leading-[1.1] mb-4 cursor-default"
+            >
+              Hi, I'm <span className="text-crimson">Aasif</span>.
+            </h1>
+            <p className="font-body text-lg md:text-xl leading-relaxed text-ink">
+              I{" "}
+              <Link to="/build" className={link}>
+                build
+              </Link>
+              ,{" "}
+              <Link to="/writing" className={link}>
+                write
+              </Link>
+              , and{" "}
+              <Link to="/educate" className={link}>
+                educate
+              </Link>
+              . Read the long version{" "}
+              <Link to="/story" className={link}>
+                here
+              </Link>
+              .
+            </p>
+          </div>
+        </div>
 
         {/* Current priority — the thing getting most of my time right now */}
-        <h2 className="font-mono text-sm uppercase tracking-[0.2em] text-muted mb-5">
-          Current priority
-        </h2>
+        <h2 className="eyebrow mb-5">Current priority</h2>
         <PlocaCard />
       </div>
     </section>
