@@ -49,13 +49,14 @@ export default function Home() {
   return (
     <section className="px-6 py-12 md:py-20">
       <div className="max-w-2xl mx-auto">
-        {/* Photo and name share a line: a small portrait plate on the left,
-            the greeting and intro beside it. Stacks on narrow screens. */}
-        <div className="flex flex-col sm:flex-row sm:items-center gap-6 sm:gap-8 mb-14">
+        {/* Photo and name share a line: a round portrait on the left, the
+            greeting and intro beside it. On narrow screens it stacks and
+            centres, so the portrait sits above the greeting. */}
+        <div className="flex flex-col items-center text-center sm:flex-row sm:items-start sm:text-left gap-6 sm:gap-8 mb-14">
           <img
             src="/hero.jpg"
             alt="Aasif Iqbal J."
-            className="w-24 h-28 sm:w-28 sm:h-32 shrink-0 rounded-[9px] object-cover object-[center_25%] border border-line bg-card shadow-[0_2px_0_var(--color-line)]"
+            className="w-32 h-32 sm:w-28 sm:h-28 shrink-0 rounded-full object-cover object-[center_25%] bg-card ring-1 ring-line sm:mt-1"
             onError={(e) => {
               (e.currentTarget as HTMLImageElement).style.display = "none";
             }}
@@ -68,34 +69,46 @@ export default function Home() {
             >
               Hi, I'm <span className="text-crimson">Aasif</span>.
             </h1>
-            <p className="font-body text-lg md:text-xl leading-relaxed text-ink">
-              I am a recovering dessert addict and a professional breather. I
-              also{" "}
-              <Link to="/build" className={link}>
-                build software
-              </Link>
-              ,{" "}
-              <Link to="/writing" className={link}>
-                write
-              </Link>
-              , and{" "}
-              <Link to="/educate" className={link}>
-                educate
-              </Link>
-              . When I am not doing any of these, I{" "}
-              <Link to="/photography" className={link}>
-                take photographs
-              </Link>{" "}
-              with a real camera and process them all myself, sometimes
-              attempting to colour-correct at the pixel level.
-            </p>
-            <p className="font-body text-lg md:text-xl leading-relaxed text-ink mt-4">
-              More about me{" "}
-              <Link to="/story" className={link}>
-                here
-              </Link>
-              .
-            </p>
+            {/* One sentence per paragraph — the intro reads better with air
+                between the lines than as a single block. */}
+            <div className="font-body text-lg md:text-xl leading-relaxed text-ink space-y-4">
+              <p>
+                I am a recovering dessert addict and a professional breather.
+              </p>
+
+              <p>
+                I also{" "}
+                <Link to="/build" className={link}>
+                  build software
+                </Link>
+                ,{" "}
+                <Link to="/writing" className={link}>
+                  write
+                </Link>
+                , and{" "}
+                <Link to="/educate" className={link}>
+                  educate
+                </Link>
+                .
+              </p>
+
+              <p>
+                When I am not doing any of these, I{" "}
+                <Link to="/photography" className={link}>
+                  take photographs
+                </Link>{" "}
+                with a real camera and process them all myself, sometimes
+                attempting to colour-correct at the pixel level.
+              </p>
+
+              <p>
+                More about me{" "}
+                <Link to="/story" className={link}>
+                  here
+                </Link>
+                .
+              </p>
+            </div>
           </div>
         </div>
 
