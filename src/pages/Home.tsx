@@ -69,9 +69,10 @@ export default function Home() {
               Hi, I'm <span className="text-crimson">Aasif</span>.
             </h1>
             <p className="font-body text-lg md:text-xl leading-relaxed text-ink">
-              I{" "}
+              I am a recovering dessert addict and a professional breather. I
+              also{" "}
               <Link to="/build" className={link}>
-                build
+                build software
               </Link>
               ,{" "}
               <Link to="/writing" className={link}>
@@ -81,7 +82,15 @@ export default function Home() {
               <Link to="/educate" className={link}>
                 educate
               </Link>
-              . Read the long version{" "}
+              . When I am not doing any of these, I{" "}
+              <Link to="/photography" className={link}>
+                take photographs
+              </Link>{" "}
+              with a real camera and process them all myself, sometimes
+              attempting to colour-correct at the pixel level.
+            </p>
+            <p className="font-body text-lg md:text-xl leading-relaxed text-ink mt-4">
+              More about me{" "}
               <Link to="/story" className={link}>
                 here
               </Link>
