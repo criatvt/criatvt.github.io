@@ -7,8 +7,7 @@ const OUT = "public/essays.json";
 // Substack blocks default/datacenter clients (e.g. CI runners), which used to
 // silently produce an empty feed. Send a browser User-Agent to look like a
 // normal reader, and — crucially — never overwrite a good essays.json with an
-// empty result. This file is only a fallback; the site fetches the feed live in
-// the browser, so a blocked CI fetch should preserve the last known-good data
+// empty result. A blocked fetch should preserve the last known-good data
 // rather than wipe it.
 function bail(reason) {
   console.warn(`fetch-essays: ${reason}; keeping existing ${OUT}.`);
@@ -16,20 +15,39 @@ function bail(reason) {
   process.exit(0); // exit 0 so `npm run build` / deploy is not blocked
 }
 
+// The direct fetch works from a residential machine but Substack 403s GitHub's
+// runner IPs, so from CI the feed has to come through a public read proxy —
+// the proxy's own server does the fetch, and Substack sees its IP, not the
+// runner's. Same proxy list the Writing page uses in the browser.
+const SOURCES = [
+  FEED,
+  `https://corsproxy.io/?url=${encodeURIComponent(FEED)}`,
+  `https://api.allorigins.win/raw?url=${encodeURIComponent(FEED)}`,
+  `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(FEED)}`,
+];
+
 let xml = "";
-try {
-  const res = await fetch(FEED, {
-    headers: {
-      "user-agent":
-        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-      accept: "application/rss+xml, application/xml, text/xml, */*",
-    },
-  });
-  if (!res.ok) bail(`feed returned HTTP ${res.status}`);
-  xml = await res.text();
-} catch (err) {
-  bail(`feed fetch failed (${err.message})`);
+const failures = [];
+for (const url of SOURCES) {
+  try {
+    const res = await fetch(url, {
+      headers: {
+        "user-agent":
+          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        accept: "application/rss+xml, application/xml, text/xml, */*",
+      },
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const body = await res.text();
+    if (!body.includes("<item")) throw new Error("no <item> in response");
+    xml = body;
+    console.log(`fetch-essays: got feed via ${new URL(url).host}`);
+    break;
+  } catch (err) {
+    failures.push(`${new URL(url).host}: ${err.message}`);
+  }
 }
+if (!xml) bail(`all sources failed (${failures.join("; ")})`);
 
 // Pull in the parser transiently — no permanent dependency.
 execSync("npm i --no-save fast-xml-parser", {stdio: "inherit"});

@@ -1,7 +1,7 @@
 import {useEffect} from "react";
 import {Outlet} from "react-router-dom";
 import Nav from "./Nav";
-import {sparkleAt} from "./sparkle";
+import {burstAt, type BurstKind} from "./sparkle";
 
 // Brand glyphs (single-path, 24x24) from simple-icons — solid marks read far
 // stronger than hairline line-icons, and give Substack a real logo lucide lacks.
@@ -29,15 +29,21 @@ const socials = [
 ];
 
 export default function Layout() {
-  // Every link and button on the site sparkles when it is clicked. Handled
-  // once here rather than per element, so anything added later gets it too.
-  // The stars live on document.body, outside React, so a burst survives the
-  // navigation it just triggered.
+  // Hyperlinks — and only hyperlinks — burst when clicked. Handled once here
+  // rather than per element, so any link added later gets it too. The glyphs
+  // live on document.body, outside React, so a burst survives the navigation
+  // it just triggered. Links to ploca.app get tiny hearts; everything else
+  // gets stars.
   useEffect(() => {
     const hit = (e: Event) =>
-      (e.target as HTMLElement | null)?.closest?.("a[href], .btn") as
-        | HTMLElement
-        | null;
+      (e.target as HTMLElement | null)?.closest?.(
+        "a[href]",
+      ) as HTMLAnchorElement | null;
+
+    const kindFor = (el: HTMLAnchorElement): BurstKind =>
+      el.hostname === "ploca.app" || el.hostname.endsWith(".ploca.app")
+        ? "hearts"
+        : "stars";
 
     // Fire on press, not on click. Links that open a new tab hand the window
     // over the moment the click lands, so a burst started then plays in a tab
@@ -46,7 +52,7 @@ export default function Layout() {
     const onPointerDown = (e: PointerEvent) => {
       if (e.button !== 0) return;
       const el = hit(e);
-      if (el) sparkleAt(el, e.clientX, e.clientY);
+      if (el) burstAt(el, e.clientX, e.clientY, kindFor(el));
     };
 
     // Keyboard activation never sends a pointer event. Those clicks arrive
@@ -54,7 +60,7 @@ export default function Layout() {
     const onClick = (e: MouseEvent) => {
       if (e.detail !== 0) return;
       const el = hit(e);
-      if (el) sparkleAt(el, e.clientX, e.clientY);
+      if (el) burstAt(el, e.clientX, e.clientY, kindFor(el));
     };
 
     // Capture, not bubble: react-router's Link calls preventDefault on its way

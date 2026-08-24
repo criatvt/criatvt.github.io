@@ -55,10 +55,14 @@ const journalism: {
 
 const SUBSTACK_FEED = "https://aasifj.substack.com/feed";
 // Substack's RSS feed sends no CORS header, so the browser can't read it
-// directly — we route it through a read-only public proxy and parse it here.
-const FEED_PROXY = `https://corsproxy.io/?url=${encodeURIComponent(
-  SUBSTACK_FEED,
-)}`;
+// directly — it has to go through a read-only public proxy. Any one proxy
+// dies or starts rate-limiting eventually (corsproxy.io already has), so try
+// several in order and take the first that yields a parseable feed.
+const FEED_PROXIES = [
+  (u: string) => `https://corsproxy.io/?url=${encodeURIComponent(u)}`,
+  (u: string) => `https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`,
+  (u: string) => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(u)}`,
+];
 
 // Parse a Substack RSS feed into essays using the browser's built-in parser.
 function parseFeed(xml: string): Essay[] {
@@ -81,17 +85,20 @@ export default function Writing() {
     let cancelled = false;
 
     // Prefer the live Substack feed so new essays appear without a rebuild;
-    // fall back to the bundled snapshot if the proxy is unreachable.
+    // fall back to the bundled snapshot if every proxy is unreachable.
     async function load() {
-      try {
-        const res = await fetch(FEED_PROXY);
-        if (!res.ok) throw new Error("proxy error");
-        const parsed = parseFeed(await res.text());
-        if (parsed.length === 0) throw new Error("empty feed");
-        if (!cancelled) setEssays(parsed);
-        return;
-      } catch {
-        // Fall through to the bundled snapshot.
+      for (const proxy of FEED_PROXIES) {
+        try {
+          const res = await fetch(proxy(SUBSTACK_FEED));
+          if (!res.ok) throw new Error("proxy error");
+          const parsed = parseFeed(await res.text());
+          if (parsed.length === 0) throw new Error("empty feed");
+          if (!cancelled) setEssays(parsed);
+          return;
+        } catch {
+          // Try the next proxy; fall through to the snapshot after the last.
+        }
+        if (cancelled) return;
       }
 
       try {
