@@ -16,38 +16,69 @@ function bail(reason) {
 }
 
 // The direct fetch works from a residential machine but Substack 403s GitHub's
-// runner IPs, so from CI the feed has to come through a public read proxy —
-// the proxy's own server does the fetch, and Substack sees its IP, not the
-// runner's. Same proxy list the Writing page uses in the browser.
+// runner IPs, so from CI the feed has to come through an intermediary whose
+// own server does the fetch — Substack sees its IP, not the runner's. Plain
+// CORS proxies (corsproxy.io, allorigins, codetabs) are blocked or dead too,
+// so the reliable sources are the feed services: openrss.org re-serves the
+// feed as RSS XML from its cache, and rss2json.com converts it to JSON. Same
+// source list the Writing page uses in the browser.
 const SOURCES = [
-  FEED,
-  `https://corsproxy.io/?url=${encodeURIComponent(FEED)}`,
-  `https://api.allorigins.win/raw?url=${encodeURIComponent(FEED)}`,
-  `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(FEED)}`,
+  {url: FEED, kind: "xml"},
+  {url: `https://openrss.org/aasifj.substack.com`, kind: "xml"},
+  {
+    url: `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(FEED)}`,
+    kind: "json",
+  },
+  {url: `https://corsproxy.io/?url=${encodeURIComponent(FEED)}`, kind: "xml"},
+  {url: `https://api.allorigins.win/raw?url=${encodeURIComponent(FEED)}`, kind: "xml"},
 ];
 
 let xml = "";
+let jsonEssays = null;
 const failures = [];
-for (const url of SOURCES) {
+for (const {url, kind} of SOURCES) {
   try {
     const res = await fetch(url, {
       headers: {
         "user-agent":
           "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-        accept: "application/rss+xml, application/xml, text/xml, */*",
+        accept: "application/rss+xml, application/xml, text/xml, application/json, */*",
       },
     });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const body = await res.text();
-    if (!body.includes("<item")) throw new Error("no <item> in response");
-    xml = body;
+    if (kind === "json") {
+      // rss2json envelope: {status: "ok", items: [{title, link, pubDate,
+      // description, enclosure: {link}, thumbnail}, ...]}
+      const data = JSON.parse(body);
+      if (data.status !== "ok" || !Array.isArray(data.items) || !data.items.length)
+        throw new Error("no items in JSON response");
+      jsonEssays = data.items
+        .filter((i) => i && i.link)
+        .map((i) => ({
+          title: i.title || "",
+          url: i.link,
+          date: i.pubDate || undefined,
+          subtitle: (i.description || "").trim() || undefined,
+          image: i.enclosure?.link || i.thumbnail || undefined,
+        }));
+    } else {
+      if (!body.includes("<item")) throw new Error("no <item> in response");
+      xml = body;
+    }
     console.log(`fetch-essays: got feed via ${new URL(url).host}`);
     break;
   } catch (err) {
     failures.push(`${new URL(url).host}: ${err.message}`);
   }
 }
-if (!xml) bail(`all sources failed (${failures.join("; ")})`);
+if (!xml && !jsonEssays) bail(`all sources failed (${failures.join("; ")})`);
+
+if (jsonEssays) {
+  writeFileSync(OUT, JSON.stringify(jsonEssays, null, 2) + "\n");
+  console.log(`Wrote ${jsonEssays.length} essays to ${OUT}`);
+  process.exit(0);
+}
 
 // Pull in the parser transiently — no permanent dependency.
 execSync("npm i --no-save fast-xml-parser", {stdio: "inherit"});
