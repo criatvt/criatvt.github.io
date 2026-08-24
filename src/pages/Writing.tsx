@@ -259,18 +259,32 @@ export default function Writing() {
             </p>
           )}
           {essays && essays.length > 0 && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {essays.map((e) => (
-                <ArticleCard
-                  key={e.url}
-                  url={e.url}
-                  image={e.image}
-                  label={formatDate(e.date) || undefined}
-                  title={e.title}
-                  subtitle={e.subtitle}
-                />
-              ))}
-            </div>
+            <>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {essays.map((e) => (
+                  <ArticleCard
+                    key={e.url}
+                    url={e.url}
+                    image={e.image}
+                    label={formatDate(e.date) || undefined}
+                    title={e.title}
+                    subtitle={e.subtitle}
+                  />
+                ))}
+              </div>
+              {/* Same pattern as Photography's Flickr button: the cards are a
+                  mirror, Substack is the source. */}
+              <div className="mt-10 text-center">
+                <a
+                  href="https://aasifj.substack.com"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="btn"
+                >
+                  Check more essays on Substack →
+                </a>
+              </div>
+            </>
           )}
           {essays && essays.length === 0 && (
             <p className="font-body text-muted italic">
