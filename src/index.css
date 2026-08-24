@@ -141,6 +141,26 @@
     outline-offset: 2px;
   }
 
+  /* A card that reads as a pressable button. Layered on .card-lift: it rests
+     on the same hard offset shadow the buttons use, the hover lift picks up
+     the crimson underside, and pressing settles it back down. Home's Ploca
+     card wears this. */
+  .card-btn {
+    box-shadow: 0 3px 0 var(--color-line);
+  }
+  .card-btn:hover,
+  .card-btn:focus-visible {
+    box-shadow:
+      0 7px 0 color-mix(in srgb, var(--color-crimson) 45%, transparent),
+      0 10px 24px rgb(43 38 32 / 0.12);
+  }
+  .card-btn:active {
+    transform: translateY(-1px);
+    box-shadow:
+      0 3px 0 color-mix(in srgb, var(--color-crimson) 45%, transparent),
+      0 4px 12px rgb(43 38 32 / 0.1);
+  }
+
   /* Inline text link. */
   .link {
     @apply text-crimson underline decoration-1 underline-offset-4
@@ -162,7 +182,8 @@
   }
   .btn:hover,
   .btn:active,
-  .card-lift:hover {
+  .card-lift:hover,
+  .card-btn:active {
     transform: none;
   }
 }

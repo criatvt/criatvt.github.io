@@ -14,7 +14,7 @@ function PlocaCard() {
       href="https://ploca.app"
       target="_blank"
       rel="noreferrer"
-      className="card-lift group block rounded-[9px] p-6 md:p-8"
+      className="card-lift card-btn group block rounded-[9px] p-6 md:p-8"
     >
       <div className="flex items-start justify-between gap-4">
         <div className="flex items-center gap-3">
