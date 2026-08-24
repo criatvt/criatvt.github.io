@@ -1,6 +1,5 @@
 import {Link} from "react-router-dom";
 import {ArrowUpRight} from "lucide-react";
-import {sparkleFromEvent} from "../components/sparkle";
 
 // One shared inline-link style for the intro line.
 const link = "link";
@@ -63,10 +62,7 @@ export default function Home() {
           />
 
           <div>
-            <h1
-              onClick={sparkleFromEvent}
-              className="font-serif text-4xl md:text-5xl font-bold tracking-tight text-ink leading-[1.1] mb-4 cursor-default"
-            >
+            <h1 className="font-serif text-4xl md:text-5xl font-bold tracking-tight text-ink leading-[1.1] mb-4">
               Hi, I'm <span className="text-crimson">Aasif</span>.
             </h1>
             {/* One sentence per paragraph — the intro reads better with air

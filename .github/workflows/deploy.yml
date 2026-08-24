@@ -3,6 +3,10 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
+  # The nightly essays refresh dispatches this workflow when it commits new
+  # essays: its push is made with GITHUB_TOKEN, which never fires `on: push`,
+  # so without the dispatch the site would keep serving the old build.
+  workflow_dispatch:
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:

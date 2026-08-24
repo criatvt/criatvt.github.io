@@ -55,10 +55,60 @@ const journalism: {
 
 const SUBSTACK_FEED = "https://aasifj.substack.com/feed";
 // Substack's RSS feed sends no CORS header, so the browser can't read it
-// directly — we route it through a read-only public proxy and parse it here.
-const FEED_PROXY = `https://corsproxy.io/?url=${encodeURIComponent(
-  SUBSTACK_FEED,
-)}`;
+// directly — and Substack also blocks the servers behind most plain CORS
+// proxies (corsproxy.io, allorigins), which is how the page ended up stuck on
+// the bundled snapshot. Feed services fare better: rss2json converts the feed
+// to JSON with CORS enabled, and openrss re-serves it as RSS from its cache.
+// Try them in order and take the first that yields a parseable feed, with the
+// plain proxies kept as a tail-end long shot.
+const FEED_SOURCES: {url: string; kind: "xml" | "json"}[] = [
+  {
+    url: `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(
+      SUBSTACK_FEED,
+    )}`,
+    kind: "json",
+  },
+  {url: "https://openrss.org/aasifj.substack.com", kind: "xml"},
+  {
+    url: `https://corsproxy.io/?url=${encodeURIComponent(SUBSTACK_FEED)}`,
+    kind: "xml",
+  },
+  {
+    url: `https://api.allorigins.win/raw?url=${encodeURIComponent(SUBSTACK_FEED)}`,
+    kind: "xml",
+  },
+];
+
+// Parse rss2json's JSON envelope into essays.
+function parseJsonFeed(body: string): Essay[] {
+  const data = JSON.parse(body) as {
+    status?: string;
+    items?: {
+      title?: string;
+      link?: string;
+      pubDate?: string;
+      description?: string;
+      enclosure?: {link?: string};
+      thumbnail?: string;
+    }[];
+  };
+  if (data.status !== "ok" || !Array.isArray(data.items)) throw new Error("bad feed");
+  // rss2json reports pubDate as "YYYY-MM-DD HH:mm:ss" in UTC — a format
+  // Safari's Date parser rejects — so normalise it to ISO.
+  const iso = (d?: string) =>
+    /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(d ?? "")
+      ? (d as string).replace(" ", "T") + "Z"
+      : d || undefined;
+  return data.items
+    .filter((i) => i && i.link)
+    .map((i) => ({
+      title: i.title ?? "",
+      url: i.link as string,
+      date: iso(i.pubDate),
+      subtitle: (i.description ?? "").trim() || undefined,
+      image: i.enclosure?.link || i.thumbnail || undefined,
+    }));
+}
 
 // Parse a Substack RSS feed into essays using the browser's built-in parser.
 function parseFeed(xml: string): Essay[] {
@@ -81,17 +131,21 @@ export default function Writing() {
     let cancelled = false;
 
     // Prefer the live Substack feed so new essays appear without a rebuild;
-    // fall back to the bundled snapshot if the proxy is unreachable.
+    // fall back to the bundled snapshot if every source is unreachable.
     async function load() {
-      try {
-        const res = await fetch(FEED_PROXY);
-        if (!res.ok) throw new Error("proxy error");
-        const parsed = parseFeed(await res.text());
-        if (parsed.length === 0) throw new Error("empty feed");
-        if (!cancelled) setEssays(parsed);
-        return;
-      } catch {
-        // Fall through to the bundled snapshot.
+      for (const {url, kind} of FEED_SOURCES) {
+        try {
+          const res = await fetch(url);
+          if (!res.ok) throw new Error("source error");
+          const body = await res.text();
+          const parsed = kind === "json" ? parseJsonFeed(body) : parseFeed(body);
+          if (parsed.length === 0) throw new Error("empty feed");
+          if (!cancelled) setEssays(parsed);
+          return;
+        } catch {
+          // Try the next source; fall through to the snapshot after the last.
+        }
+        if (cancelled) return;
       }
 
       try {
