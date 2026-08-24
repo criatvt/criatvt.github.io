@@ -123,6 +123,62 @@ function parseFeed(xml: string): Essay[] {
   }));
 }
 
+// A post's canonical address, for deduping the same essay across sources —
+// feed links can carry tracking params the archive's links don't.
+function canonical(url: string): string {
+  try {
+    const u = new URL(url);
+    return u.origin + u.pathname.replace(/\/$/, "");
+  } catch {
+    return url;
+  }
+}
+
+function timeOf(date?: string): number {
+  const t = date ? Date.parse(date) : NaN;
+  return Number.isNaN(t) ? 0 : t;
+}
+
+// Union essays by URL, earlier lists winning on duplicates, newest first.
+function mergeEssays(...lists: Essay[][]): Essay[] {
+  const byUrl = new Map<string, Essay>();
+  for (const list of lists)
+    for (const e of list) {
+      if (!e?.url) continue;
+      const key = canonical(e.url);
+      if (!byUrl.has(key)) byUrl.set(key, e);
+    }
+  return [...byUrl.values()].sort((a, b) => timeOf(b.date) - timeOf(a.date));
+}
+
+// The live Substack feed, via the first reachable source. Null if none work.
+async function loadLive(): Promise<Essay[] | null> {
+  for (const {url, kind} of FEED_SOURCES) {
+    try {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error("source error");
+      const body = await res.text();
+      const parsed = kind === "json" ? parseJsonFeed(body) : parseFeed(body);
+      if (parsed.length > 0) return parsed;
+    } catch {
+      // Try the next source.
+    }
+  }
+  return null;
+}
+
+// The bundled snapshot, refreshed nightly by scripts/fetch-essays.mjs.
+async function loadSnapshot(): Promise<Essay[] | null> {
+  try {
+    const res = await fetch("/essays.json");
+    if (!res.ok) throw new Error("not found");
+    const data = (await res.json()) as Essay[];
+    return Array.isArray(data) ? data : [];
+  } catch {
+    return null;
+  }
+}
+
 export default function Writing() {
   const [essays, setEssays] = useState<Essay[] | null>(null);
   const [error, setError] = useState(false);
@@ -130,32 +186,17 @@ export default function Writing() {
   useEffect(() => {
     let cancelled = false;
 
-    // Prefer the live Substack feed so new essays appear without a rebuild;
-    // fall back to the bundled snapshot if every source is unreachable.
+    // The feed alone can't show everything: Substack's RSS only carries the
+    // newest posts, and rss2json trims that further (ten items on the free
+    // tier) — using it as the sole source is how the page once shrank to ten
+    // essays. So merge the live feed (fresh posts, appear without a rebuild)
+    // with the bundled snapshot (the accumulated back-catalogue), live data
+    // winning where the same essay appears in both.
     async function load() {
-      for (const {url, kind} of FEED_SOURCES) {
-        try {
-          const res = await fetch(url);
-          if (!res.ok) throw new Error("source error");
-          const body = await res.text();
-          const parsed = kind === "json" ? parseJsonFeed(body) : parseFeed(body);
-          if (parsed.length === 0) throw new Error("empty feed");
-          if (!cancelled) setEssays(parsed);
-          return;
-        } catch {
-          // Try the next source; fall through to the snapshot after the last.
-        }
-        if (cancelled) return;
-      }
-
-      try {
-        const res = await fetch("/essays.json");
-        if (!res.ok) throw new Error("not found");
-        const data = (await res.json()) as Essay[];
-        if (!cancelled) setEssays(Array.isArray(data) ? data : []);
-      } catch {
-        if (!cancelled) setError(true);
-      }
+      const [live, snapshot] = await Promise.all([loadLive(), loadSnapshot()]);
+      if (cancelled) return;
+      if (live === null && snapshot === null) setError(true);
+      else setEssays(mergeEssays(live ?? [], snapshot ?? []));
     }
 
     load();

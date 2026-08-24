@@ -1,7 +1,8 @@
 import {writeFileSync, existsSync, readFileSync} from "node:fs";
 import {execSync} from "node:child_process";
 
-const FEED = "https://aasifj.substack.com/feed";
+const SUBSTACK = "https://aasifj.substack.com";
+const FEED = `${SUBSTACK}/feed`;
 const OUT = "public/essays.json";
 
 // Substack blocks default/datacenter clients (e.g. CI runners), which used to
@@ -13,6 +14,93 @@ function bail(reason) {
   console.warn(`fetch-essays: ${reason}; keeping existing ${OUT}.`);
   if (!existsSync(OUT)) writeFileSync(OUT, "[]\n"); // never leave the file missing
   process.exit(0); // exit 0 so `npm run build` / deploy is not blocked
+}
+
+const HEADERS = {
+  "user-agent":
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+  accept: "application/rss+xml, application/xml, text/xml, application/json, */*",
+};
+
+// A post's canonical address, for deduping the same essay across sources —
+// feed links can carry tracking params the archive's links don't.
+const canonical = (url) => {
+  try {
+    const u = new URL(url);
+    return u.origin + u.pathname.replace(/\/$/, "");
+  } catch {
+    return url;
+  }
+};
+
+const timeOf = (date) => {
+  const t = date ? Date.parse(date) : NaN;
+  return Number.isNaN(t) ? 0 : t;
+};
+
+// The feed only carries Substack's newest posts (and rss2json trims it to ten
+// on the free tier), so a plain overwrite loses every essay older than the
+// current feed window — which is how essays.json once shrank to ten entries.
+// Union the fetch into the existing file instead: fetched entries win on
+// duplicates, nothing already recorded is ever dropped. (The flip side: a post
+// deleted on Substack lingers here until removed from essays.json by hand.)
+function writeMerged(fetched, source) {
+  let existing = [];
+  try {
+    const data = JSON.parse(readFileSync(OUT, "utf8"));
+    if (Array.isArray(data)) existing = data;
+  } catch {
+    // Missing or malformed snapshot: start from the fetch alone.
+  }
+  const byUrl = new Map();
+  for (const e of [...fetched, ...existing]) {
+    if (!e?.url) continue;
+    const key = canonical(e.url);
+    if (!byUrl.has(key)) byUrl.set(key, e);
+  }
+  const merged = [...byUrl.values()].sort((a, b) => timeOf(b.date) - timeOf(a.date));
+  writeFileSync(OUT, JSON.stringify(merged, null, 2) + "\n");
+  console.log(
+    `fetch-essays: ${fetched.length} essays via ${source}, ${merged.length} total in ${OUT}`,
+  );
+}
+
+// Substack's archive API returns every post, not just the feed window, so it
+// is the preferred source. Like the feed it 403s datacenter IPs, so from CI
+// this usually fails and the feed sources below take over — but a local
+// `npm run essays` from a residential connection backfills the full archive.
+async function fetchArchive() {
+  const essays = [];
+  const limit = 50;
+  for (let offset = 0; ; offset += limit) {
+    const res = await fetch(
+      `${SUBSTACK}/api/v1/archive?sort=new&offset=${offset}&limit=${limit}`,
+      {headers: HEADERS},
+    );
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const posts = await res.json();
+    if (!Array.isArray(posts)) throw new Error("unexpected archive response");
+    for (const p of posts) {
+      if (!p?.canonical_url) continue;
+      essays.push({
+        title: p.title || "",
+        url: p.canonical_url,
+        date: p.post_date || undefined,
+        subtitle: (p.subtitle || p.description || "").trim() || undefined,
+        image: p.cover_image || undefined,
+      });
+    }
+    if (posts.length < limit) break;
+  }
+  if (essays.length === 0) throw new Error("archive returned 0 posts");
+  return essays;
+}
+
+try {
+  writeMerged(await fetchArchive(), "archive API");
+  process.exit(0);
+} catch (err) {
+  console.warn(`fetch-essays: archive API failed (${err.message}); trying the feed.`);
 }
 
 // The direct fetch works from a residential machine but Substack 403s GitHub's
@@ -34,17 +122,12 @@ const SOURCES = [
 ];
 
 let xml = "";
+let xmlHost = "";
 let jsonEssays = null;
 const failures = [];
 for (const {url, kind} of SOURCES) {
   try {
-    const res = await fetch(url, {
-      headers: {
-        "user-agent":
-          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-        accept: "application/rss+xml, application/xml, text/xml, application/json, */*",
-      },
-    });
+    const res = await fetch(url, {headers: HEADERS});
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const body = await res.text();
     if (kind === "json") {
@@ -71,6 +154,7 @@ for (const {url, kind} of SOURCES) {
     } else {
       if (!body.includes("<item")) throw new Error("no <item> in response");
       xml = body;
+      xmlHost = new URL(url).host;
     }
     console.log(`fetch-essays: got feed via ${new URL(url).host}`);
     break;
@@ -81,8 +165,7 @@ for (const {url, kind} of SOURCES) {
 if (!xml && !jsonEssays) bail(`all sources failed (${failures.join("; ")})`);
 
 if (jsonEssays) {
-  writeFileSync(OUT, JSON.stringify(jsonEssays, null, 2) + "\n");
-  console.log(`Wrote ${jsonEssays.length} essays to ${OUT}`);
+  writeMerged(jsonEssays, "rss2json");
   process.exit(0);
 }
 
@@ -109,5 +192,4 @@ const essays = items
 
 if (essays.length === 0) bail("parsed 0 essays from feed");
 
-writeFileSync(OUT, JSON.stringify(essays, null, 2) + "\n");
-console.log(`Wrote ${essays.length} essays to ${OUT}`);
+writeMerged(essays, xmlHost || "feed");
