@@ -36,10 +36,6 @@ function PlocaCard() {
       <p className="font-sans text-base text-muted mt-3 leading-relaxed">
         A fast, accurate voice-to-text app for Mac that is truly private.
       </p>
-
-      <div className="eyebrow mt-6">
-        Free public beta · Apple Silicon · macOS 13+
-      </div>
     </a>
   );
 }

@@ -31,9 +31,13 @@ export default function Build() {
   return (
     <section className="px-6 py-16 md:py-24">
       <div className="max-w-2xl mx-auto">
-        <h1 className="font-serif text-4xl md:text-6xl tracking-tight text-ink mb-12">
+        <h1 className="font-serif text-4xl md:text-6xl tracking-tight text-ink mb-6">
           Build
         </h1>
+        <p className="font-body text-lg text-muted leading-relaxed max-w-xl mb-16">
+          I enjoy building softwares with AI. Here is a curated list of tools
+          and games that you can use too.
+        </p>
 
         {/* Tier 1 — Ploca, featured */}
         <a

@@ -33,12 +33,15 @@ export default function Layout() {
   // rather than per element, so any link added later gets it too. The glyphs
   // live on document.body, outside React, so a burst survives the navigation
   // it just triggered. Links to ploca.app get tiny hearts; everything else
-  // gets stars.
+  // gets stars. The title bar is chrome rather than content, so its tabs and
+  // wordmark stay quiet.
   useEffect(() => {
-    const hit = (e: Event) =>
-      (e.target as HTMLElement | null)?.closest?.(
+    const hit = (e: Event) => {
+      const el = (e.target as HTMLElement | null)?.closest?.(
         "a[href]",
       ) as HTMLAnchorElement | null;
+      return el && !el.closest("nav") ? el : null;
+    };
 
     const kindFor = (el: HTMLAnchorElement): BurstKind =>
       el.hostname === "ploca.app" || el.hostname.endsWith(".ploca.app")
