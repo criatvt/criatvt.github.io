@@ -93,12 +93,18 @@ function parseJsonFeed(body: string): Essay[] {
     }[];
   };
   if (data.status !== "ok" || !Array.isArray(data.items)) throw new Error("bad feed");
+  // rss2json reports pubDate as "YYYY-MM-DD HH:mm:ss" in UTC — a format
+  // Safari's Date parser rejects — so normalise it to ISO.
+  const iso = (d?: string) =>
+    /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(d ?? "")
+      ? (d as string).replace(" ", "T") + "Z"
+      : d || undefined;
   return data.items
     .filter((i) => i && i.link)
     .map((i) => ({
       title: i.title ?? "",
       url: i.link as string,
-      date: i.pubDate || undefined,
+      date: iso(i.pubDate),
       subtitle: (i.description ?? "").trim() || undefined,
       image: i.enclosure?.link || i.thumbnail || undefined,
     }));

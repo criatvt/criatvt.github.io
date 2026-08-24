@@ -53,12 +53,18 @@ for (const {url, kind} of SOURCES) {
       const data = JSON.parse(body);
       if (data.status !== "ok" || !Array.isArray(data.items) || !data.items.length)
         throw new Error("no items in JSON response");
+      // rss2json reports pubDate as "YYYY-MM-DD HH:mm:ss" in UTC — a format
+      // Safari's Date parser rejects — so normalise it to ISO.
+      const iso = (d) =>
+        /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(d || "")
+          ? d.replace(" ", "T") + "Z"
+          : d || undefined;
       jsonEssays = data.items
         .filter((i) => i && i.link)
         .map((i) => ({
           title: i.title || "",
           url: i.link,
-          date: i.pubDate || undefined,
+          date: iso(i.pubDate),
           subtitle: (i.description || "").trim() || undefined,
           image: i.enclosure?.link || i.thumbnail || undefined,
         }));
