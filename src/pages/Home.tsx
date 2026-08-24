@@ -48,19 +48,7 @@ export default function Home() {
   return (
     <section className="px-6 py-12 md:py-20">
       <div className="max-w-2xl mx-auto">
-        {/* Photo and name share a line: a round portrait on the left, the
-            greeting and intro beside it. On narrow screens it stacks and
-            centres, so the portrait sits above the greeting. */}
-        <div className="flex flex-col items-center text-center sm:flex-row sm:items-start sm:text-left gap-6 sm:gap-8 mb-14">
-          <img
-            src="/hero.jpg"
-            alt="Aasif Iqbal J."
-            className="w-32 h-32 sm:w-28 sm:h-28 shrink-0 rounded-full object-cover object-[center_25%] bg-card ring-1 ring-line sm:mt-1"
-            onError={(e) => {
-              (e.currentTarget as HTMLImageElement).style.display = "none";
-            }}
-          />
-
+        <div className="mb-14">
           <div>
             <h1 className="font-serif text-4xl md:text-5xl font-bold tracking-tight text-ink leading-[1.1] mb-4">
               Hi, I'm <span className="text-crimson">Aasif</span>.
