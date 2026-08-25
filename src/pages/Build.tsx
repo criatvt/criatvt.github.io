@@ -1,5 +1,3 @@
-import {ArrowUpRight} from "lucide-react";
-
 const tools = [
   {
     name: "Next Read",
@@ -29,54 +27,60 @@ const tools = [
 
 export default function Build() {
   return (
-    <section className="px-6 py-16 md:py-24">
+    <section className="px-6 py-14 md:py-20">
       <div className="max-w-2xl mx-auto">
-        <h1 className="font-serif text-4xl md:text-6xl tracking-tight text-ink mb-6">
+        <h1 className="text-[30px] md:text-[38px] font-bold uppercase tracking-[0.04em]">
           Build
         </h1>
-        <p className="font-body text-lg text-muted leading-relaxed max-w-xl mb-16">
+        <div className="typed-rule mt-1 mb-9" aria-hidden="true"></div>
+
+        <p className="text-[17px] leading-[1.9] mb-12">
           I enjoy building softwares with AI. Here is a curated list of tools
           and games that you can use too.
         </p>
 
-        {/* Tier 1 — Ploca, featured */}
-        <a
-          href="https://ploca.app"
-          target="_blank"
-          rel="noreferrer"
-          className="group block border-l-4 border-crimson bg-crimson/5 pl-8 pr-6 py-10 mb-16 transition-colors hover:bg-crimson/10"
-        >
-          <div className="flex items-start justify-between gap-4">
-            <h2 className="text-2xl md:text-3xl text-ink mb-3 group-hover:text-crimson transition-colors">
-              Ploca
-            </h2>
-            <ArrowUpRight className="w-6 h-6 text-crimson shrink-0 mt-1 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
-          </div>
-          <p className="font-body text-lg md:text-xl text-muted leading-relaxed">
-            A private, on-device dictation app for Mac.
-          </p>
-        </a>
-
-        {/* Tier 2 — tool grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-line border border-line rounded-[9px] overflow-hidden">
-          {tools.map((t) => (
+        {/* Featured — Ploca in a tagged box */}
+        <div className="relative border border-ink px-7 py-8 md:px-9 mb-16">
+          <span className="eyebrow absolute -top-[9px] left-7 bg-paper px-2.5">
+            Featured
+          </span>
+          <div className="flex flex-col gap-2.5">
+            <span className="text-[22px] font-bold">ploca</span>
+            <span className="text-[15px] leading-[1.8] text-muted">
+              A private, on-device dictation app for Mac.
+            </span>
             <a
-              key={t.name}
-              href={t.url}
+              href="https://ploca.app"
               target="_blank"
               rel="noreferrer"
-              className="group block bg-paper/60 p-8 transition-colors hover:bg-card"
+              className="link text-sm mt-1 self-start"
             >
-              <div className="flex items-start justify-between gap-4 mb-4">
-                <h3 className="text-xl text-ink group-hover:text-crimson transition-colors">
-                  {t.name}
-                </h3>
-                <ArrowUpRight className="w-5 h-5 text-muted shrink-0 mt-1 transition-all group-hover:text-crimson group-hover:translate-x-1 group-hover:-translate-y-1" />
-              </div>
-              <p className="font-body text-base text-muted leading-relaxed">
-                {t.blurb}
-              </p>
+              -&gt; ploca.app
             </a>
+          </div>
+        </div>
+
+        {/* Numbered index of tools and games */}
+        <div className="flex flex-col gap-10">
+          {tools.map((t, i) => (
+            <div key={t.name} className="flex gap-6">
+              <span className="text-[15px] font-bold text-crimson pt-0.5 min-w-8">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <div className="flex flex-col gap-1.5">
+                <a
+                  href={t.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-[19px] font-bold text-ink hover:text-crimson transition-colors"
+                >
+                  {t.name}
+                </a>
+                <p className="text-[15px] leading-[1.8] text-muted">
+                  {t.blurb}
+                </p>
+              </div>
+            </div>
           ))}
         </div>
       </div>

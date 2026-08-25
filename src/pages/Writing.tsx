@@ -1,5 +1,12 @@
 import {useEffect, useState} from "react";
-import {ArticleCard, formatDate} from "../components/ArticleCard";
+
+// Render a date as its ISO day (2026-08-20), the typed index style.
+function isoDay(raw?: string): string {
+  if (!raw) return "";
+  const t = Date.parse(raw);
+  if (Number.isNaN(t)) return "";
+  return new Date(t).toISOString().slice(0, 10);
+}
 
 type Essay = {
   title: string;
@@ -206,52 +213,54 @@ export default function Writing() {
   }, []);
 
   return (
-    <section className="px-6 py-16 md:py-24">
+    <section className="px-6 py-14 md:py-20">
       <div className="max-w-2xl mx-auto">
-        <h1 className="font-serif text-4xl md:text-6xl tracking-tight text-ink mb-6">
+        <h1 className="text-[30px] md:text-[38px] font-bold uppercase tracking-[0.04em]">
           Writing
         </h1>
-        <p className="font-body text-lg text-muted leading-relaxed max-w-xl mb-16">
+        <div className="typed-rule mt-1 mb-9" aria-hidden="true"></div>
+
+        <p className="text-base leading-[1.9] text-ink/80 mb-14">
           I write about education, attention, and the subtle ways technology is
           changing how we think. Much of it returns to the analog. Books and
           paperbacks. Handwriting. Slower ways of reading. Mostly I ask what we
           quietly trade away as our tools grow smarter.
         </p>
 
-        {/* Journalism — manual list, shown as cards (op-eds in the press) */}
-        <h2 className="eyebrow mb-8">
-          Journalism
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-16">
+        {/* Journalism — typed entries (op-eds in the press) */}
+        <h2 className="eyebrow mb-6">Journalism</h2>
+        <div className="flex flex-col gap-7 mb-16">
           {journalism.map((j) => (
-            <ArticleCard
-              key={j.url}
-              url={j.url}
-              image={j.image}
-              brand={j.publication}
-              label={formatDate(j.date) || undefined}
-              title={j.title}
-              subtitle={j.subtitle}
-            />
+            <div key={j.url} className="flex flex-col gap-1">
+              <span className="text-[13px] text-muted">
+                {isoDay(j.date)}&#160;&#160;{j.publication}
+              </span>
+              <a
+                href={j.url}
+                target="_blank"
+                rel="noreferrer"
+                className="text-[19px] font-bold leading-[1.5] text-ink hover:text-crimson transition-colors"
+              >
+                {j.title}
+              </a>
+            </div>
           ))}
         </div>
 
-        {/* Essays — auto from Substack RSS */}
-        <h2 className="eyebrow mb-8">
-          Essays
-        </h2>
+        {/* Essays — auto from Substack RSS, as a typed index */}
+        <h2 className="eyebrow mb-6">Essays</h2>
         <div>
           {essays === null && !error && (
-            <p className="font-body text-muted italic">Loading essays…</p>
+            <p className="text-muted italic">Loading essays&#8230;</p>
           )}
           {error && (
-            <p className="font-body text-muted italic">
+            <p className="text-muted italic">
               Essays are published on{" "}
               <a
                 href="https://aasifj.substack.com"
                 target="_blank"
                 rel="noreferrer"
-                className="text-crimson underline decoration-1 underline-offset-4 decoration-crimson/40 hover:decoration-crimson"
+                className="link"
               >
                 Substack
               </a>
@@ -260,40 +269,43 @@ export default function Writing() {
           )}
           {essays && essays.length > 0 && (
             <>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="flex flex-col gap-4">
                 {essays.map((e) => (
-                  <ArticleCard
-                    key={e.url}
-                    url={e.url}
-                    image={e.image}
-                    label={formatDate(e.date) || undefined}
-                    title={e.title}
-                    subtitle={e.subtitle}
-                  />
+                  <div key={e.url} className="flex gap-4 sm:gap-6">
+                    <span className="text-sm text-muted pt-0.5 whitespace-nowrap">
+                      {isoDay(e.date) || "—"}
+                    </span>
+                    <a
+                      href={e.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="font-bold text-ink hover:text-crimson transition-colors"
+                    >
+                      {e.title}
+                    </a>
+                  </div>
                 ))}
               </div>
-              {/* Same pattern as Photography's Flickr button: the cards are a
-                  mirror, Substack is the source. */}
-              <div className="mt-10 text-center">
+              <div className="mt-12 text-[15px]">
                 <a
                   href="https://aasifj.substack.com"
                   target="_blank"
                   rel="noreferrer"
-                  className="btn"
+                  className="text-crimson hover:text-crimson-dark transition-colors"
                 >
-                  Check more essays on Substack →
+                  [ <span className="underline decoration-1 underline-offset-4">Check more essays on Substack</span> -&gt; ]
                 </a>
               </div>
             </>
           )}
           {essays && essays.length === 0 && (
-            <p className="font-body text-muted italic">
+            <p className="text-muted italic">
               No essays yet. Check{" "}
               <a
                 href="https://aasifj.substack.com"
                 target="_blank"
                 rel="noreferrer"
-                className="text-crimson underline decoration-1 underline-offset-4 decoration-crimson/40 hover:decoration-crimson"
+                className="link"
               >
                 Substack
               </a>

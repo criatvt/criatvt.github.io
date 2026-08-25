@@ -7,6 +7,14 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="alternate icon" type="image/jpeg" href="/favicon.jpg" />
     <link rel="apple-touch-icon" href="/favicon.jpg" />
+    <!-- Apply a saved dark-mode choice before first paint, so there is no
+         light flash. Light is the default; only an explicit "dark" flips it. -->
+    <script>
+      try {
+        if (localStorage.getItem('theme') === 'dark')
+          document.documentElement.classList.add('dark');
+      } catch (e) {}
+    </script>
     <!-- Single Page Apps for GitHub Pages — restore the deep link the 404.html redirect encoded. -->
     <!-- https://github.com/rafgraph/spa-github-pages -->
     <script type="text/javascript">
