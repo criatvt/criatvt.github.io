@@ -32,7 +32,7 @@ export default function Book() {
           <img
             src="https://m.media-amazon.com/images/P/B0GH73Z8RP.01.LZZZZZZZ.jpg"
             alt="Doomscroller to Reader"
-            className="w-full border border-ink shadow-[10px_10px_0_#D9D6CF]"
+            className="w-full border border-ink shadow-[10px_10px_0_var(--color-line)]"
             referrerPolicy="no-referrer"
           />
         </a>

@@ -19,6 +19,28 @@
   --color-crimson-dark: #8F1F18; /* pressed or hovered */
 }
 
+/* Dark mode is the darkroom: the safelight-red-on-near-black palette from the
+   design exploration. Every component paints with the tokens above, so
+   re-valuing them here flips the whole site; the .dark class lives on <html>,
+   set by the nav toggle (and pre-paint by index.html so there is no flash).
+   Light is the default — only an explicit choice turns the lights off. */
+.dark {
+  --color-ink: #ECE6DB;
+  --color-paper: #131110;
+  --color-card: #1C1916;
+  --color-line: #2A2622;
+  --color-muted: #9A928A;
+  --color-crimson: #E04E38;
+  --color-crimson-dark: #F2705C;
+}
+
+html {
+  color-scheme: light;
+}
+html.dark {
+  color-scheme: dark;
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;

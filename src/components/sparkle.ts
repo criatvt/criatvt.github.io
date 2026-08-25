@@ -19,7 +19,9 @@ const SHAPES: Record<
 > = {
   stars: {
     path: STAR,
-    colors: ["#C22B21", "#6E6B66", "#1B1A18"],
+    // Resolved against the live theme at burst time (see colorsFor): an
+    // ink-coloured star must follow the ink, or it vanishes in dark mode.
+    colors: ["var(--color-crimson)", "var(--color-muted)", "var(--color-ink)"],
     minSize: 8,
     sizeJitter: 11,
     spin: 1,
@@ -33,11 +35,23 @@ const SHAPES: Record<
   },
 };
 
+// SVG fill doesn't resolve var() reliably across the glyphs we create outside
+// the document's style flow, so read the current token values off <html>.
+function colorsFor(shape: {colors: string[]}): string[] {
+  const style = getComputedStyle(document.documentElement);
+  return shape.colors.map((c) => {
+    const m = /^var\((--[\w-]+)\)$/.exec(c);
+    if (!m) return c;
+    return style.getPropertyValue(m[1]).trim() || "#C22B21";
+  });
+}
+
 export function burst(kind: BurstKind, x: number, y: number, count = 9) {
   if (typeof window === "undefined") return;
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
   const shape = SHAPES[kind];
+  const colors = colorsFor(shape);
 
   const layer = document.createElement("div");
   layer.style.cssText = `position:fixed;left:${x}px;top:${y}px;width:0;height:0;z-index:60;pointer-events:none`;
@@ -57,7 +71,7 @@ export function burst(kind: BurstKind, x: number, y: number, count = 9) {
 
     const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
     path.setAttribute("d", shape.path);
-    path.setAttribute("fill", shape.colors[i % shape.colors.length]);
+    path.setAttribute("fill", colors[i % colors.length]);
     glyph.appendChild(path);
     layer.appendChild(glyph);
 
