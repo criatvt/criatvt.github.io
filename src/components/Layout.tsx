@@ -78,24 +78,21 @@ export default function Layout() {
   }, []);
 
   return (
-    // No background colour here: the body's dot grid shows through.
-    <div className="min-h-screen flex flex-col text-ink overflow-x-hidden">
+    <div className="min-h-screen flex flex-col bg-paper text-ink overflow-x-hidden">
       <Nav />
       <main className="flex-1 pt-20">
         <Outlet />
       </main>
-      <footer className="border-t border-line px-6 py-12">
-        <div className="max-w-2xl mx-auto flex flex-col items-center gap-6 text-center sm:flex-row sm:justify-between sm:text-left">
-          <div className="flex flex-col gap-1">
+      <footer className="border-t border-line px-6 py-10">
+        <div className="max-w-2xl mx-auto flex flex-col items-center gap-5 text-center sm:flex-row sm:justify-between sm:text-left">
+          <div className="flex flex-col gap-1 text-[13px] text-muted">
             {/* Written with [at] so scrapers can't harvest it as a live mailto. */}
-            <span className="font-serif text-lg text-ink">
-              aasif [at] aasifj.com
-            </span>
-            <span className="font-sans text-xs text-muted">
+            <span>aasif [at] aasifj.com</span>
+            <span className="uppercase tracking-[0.08em]">
               &copy; {new Date().getFullYear()} Aasif Iqbal J.
             </span>
           </div>
-          <div className="flex gap-3">
+          <div className="flex gap-5">
             {socials.map(({href, label, path}) => (
               <a
                 key={label}
@@ -103,13 +100,13 @@ export default function Layout() {
                 target="_blank"
                 rel="noreferrer"
                 aria-label={label}
-                className="btn w-10 h-10 rounded-full p-0 text-ink/70"
+                className="text-muted hover:text-crimson transition-colors"
               >
                 <svg
                   viewBox="0 0 24 24"
                   fill="currentColor"
                   aria-hidden="true"
-                  className="w-[18px] h-[18px]"
+                  className="w-[17px] h-[17px]"
                 >
                   <path d={path} />
                 </svg>

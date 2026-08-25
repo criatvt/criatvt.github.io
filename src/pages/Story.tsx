@@ -1,18 +1,18 @@
 import {Link} from "react-router-dom";
 
 // Inline link style shared across the narrative — matches the "here" link on Home.
-const link =
-  "text-crimson underline decoration-crimson/40 underline-offset-4 transition-colors hover:decoration-crimson";
+const link = "link";
 
 export default function Story() {
   return (
-    <section className="px-6 py-12 md:py-20">
+    <section className="px-6 py-14 md:py-20">
       <div className="max-w-2xl mx-auto">
-        <h1 className="font-serif text-4xl md:text-6xl font-bold tracking-tight text-ink leading-[1.05] mb-10">
-          My <span className="text-crimson">story</span>.
+        <h1 className="text-[30px] md:text-[38px] font-bold uppercase tracking-[0.04em]">
+          My story
         </h1>
+        <div className="typed-rule mt-1 mb-10" aria-hidden="true"></div>
 
-        <div className="font-body text-base md:text-lg leading-relaxed tracking-tight text-ink space-y-5">
+        <div className="flex flex-col gap-6 text-[17px] leading-[1.9]">
           <p>I started my career in IT, in 2010.</p>
 
           <p>
@@ -73,12 +73,9 @@ export default function Story() {
           </p>
         </div>
 
-        <div className="mt-16 pt-10 border-t border-line">
-          <Link
-            to="/"
-            className="link font-sans text-sm font-semibold"
-          >
-            &larr; Back home
+        <div className="mt-14 pt-7 border-t border-line text-[15px]">
+          <Link to="/" className="text-crimson hover:text-crimson-dark transition-colors">
+            &lt;- <span className="underline decoration-1 underline-offset-4">Back home</span>
           </Link>
         </div>
       </div>

@@ -74,10 +74,11 @@ export default function Photography() {
       {/* Opening screen: the page's own title card. */}
       <section data-index={-1} className={`${SECTION} text-center`}>
         <div className="max-w-2xl">
-          <h1 className="font-serif text-4xl md:text-6xl tracking-tight text-ink mb-6">
+          <h1 className="text-[30px] md:text-[38px] font-bold uppercase tracking-[0.04em] text-ink">
             Photography
           </h1>
-          <p className="font-body text-lg text-muted leading-relaxed mb-6">
+          <div className="typed-rule mt-1 mb-8 text-left" aria-hidden="true"></div>
+          <p className="text-base text-ink/80 leading-[1.9] mb-6 text-left">
             Photography is more than a hobby. It helps me slow down time and be
             in the moment. I took it up in the late 2000s at college, borrowing
             cameras from friends. I bought one for myself in the mid-2010s, once
@@ -87,7 +88,7 @@ export default function Photography() {
             myself. I learnt more about photography when I started teaching it
             to children.
           </p>
-          <p className="font-body text-lg text-muted leading-relaxed">
+          <p className="text-base text-ink/80 leading-[1.9] text-left">
             This page shows some of my favourite published shots. There are
             thousands more that I may publish... someday :)
           </p>
@@ -134,17 +135,17 @@ export default function Photography() {
               decoding="async"
               // min-h-0 lets a tall photo give way to a long caption on short
               // screens instead of spilling past the frame.
-              className="max-h-[78%] min-h-0 w-auto max-w-full object-contain"
+              className="max-h-[78%] min-h-0 w-auto max-w-full object-contain border border-ink"
             />
             {(p.title || p.description) && (
               <figcaption className="shrink-0 max-w-xl text-center">
                 {p.title && (
-                  <h2 className="text-lg md:text-xl text-ink">
+                  <h2 className="text-base md:text-lg font-bold text-ink">
                     {p.title}
                   </h2>
                 )}
                 {p.description && (
-                  <p className="mt-1 font-body text-sm text-muted leading-relaxed">
+                  <p className="mt-1 text-sm text-muted leading-[1.8]">
                     {p.description}
                   </p>
                 )}
@@ -156,7 +157,7 @@ export default function Photography() {
 
       {/* Closing screen. */}
       <section data-index={-1} className={`${SECTION} text-center`}>
-        <p className="font-serif text-2xl md:text-3xl text-ink mb-4">
+        <p className="text-xl md:text-2xl font-bold text-ink mb-5">
           That's the album.
         </p>
         <a
@@ -171,7 +172,7 @@ export default function Photography() {
 
       {/* Position in the album, pinned out of the way. */}
       {photos && current !== null && (
-        <p className="eyebrow fixed bottom-5 right-5 z-40 tabular-nums pointer-events-none">
+        <p className="fixed bottom-5 right-5 z-40 text-[13px] text-muted tabular-nums pointer-events-none">
           {String(current + 1).padStart(2, "0")} / {photos.length}
         </p>
       )}

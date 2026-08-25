@@ -19,7 +19,7 @@ const SHAPES: Record<
 > = {
   stars: {
     path: STAR,
-    colors: ["#C72B33", "#E7B416", "#2B2620"],
+    colors: ["#C22B21", "#6E6B66", "#1B1A18"],
     minSize: 8,
     sizeJitter: 11,
     spin: 1,
