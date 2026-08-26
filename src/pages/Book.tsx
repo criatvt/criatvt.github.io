@@ -55,7 +55,7 @@ export default function Book() {
                 &#8220;{r.quote}&#8221;
               </p>
               <footer className="text-[13px] uppercase tracking-[0.12em] text-muted">
-                &mdash; {r.by}
+                {r.by}
               </footer>
             </blockquote>
           ))}

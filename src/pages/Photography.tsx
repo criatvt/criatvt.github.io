@@ -25,6 +25,12 @@ type Photo = {
 const FRAME = "h-[calc(100svh-5rem)] overflow-y-auto snap-y snap-mandatory";
 const SECTION =
   "snap-start h-full flex flex-col items-center justify-center px-4 md:px-8 py-8";
+// The intro write-up runs longer than a phone screen. It needs min-h-full
+// rather than h-full: a centered flex column clips the top of anything taller
+// than itself, so the section must be allowed to grow with its text and let
+// the frame scroll through it.
+const INTRO_SECTION =
+  "snap-start min-h-full flex flex-col items-center justify-center px-5 md:px-8 py-10";
 
 export default function Photography() {
   const [photos, setPhotos] = useState<Photo[] | null>(null);
@@ -72,13 +78,13 @@ export default function Photography() {
   return (
     <div ref={frame} className={FRAME}>
       {/* Opening screen: the page's own title card. */}
-      <section data-index={-1} className={`${SECTION} text-center`}>
+      <section data-index={-1} className={`${INTRO_SECTION} text-center`}>
         <div className="max-w-2xl">
           <h1 className="text-[30px] md:text-[38px] font-bold uppercase tracking-[0.04em] text-ink">
             Photography
           </h1>
-          <div className="typed-rule mt-1 mb-8 text-left" aria-hidden="true"></div>
-          <p className="text-base text-ink/80 leading-[1.9] mb-6 text-left">
+          <div className="typed-rule mt-1 mb-6 md:mb-8 text-left" aria-hidden="true"></div>
+          <p className="text-[15px] md:text-base text-ink/80 leading-[1.8] md:leading-[1.9] mb-6 text-left">
             Photography is more than a hobby. It helps me slow down time and be
             in the moment. I took it up in the late 2000s at college, borrowing
             cameras from friends. I bought one for myself in the mid-2010s, once
@@ -88,11 +94,11 @@ export default function Photography() {
             myself. I learnt more about photography when I started teaching it
             to children.
           </p>
-          <p className="text-base text-ink/80 leading-[1.9] text-left">
+          <p className="text-[15px] md:text-base text-ink/80 leading-[1.8] md:leading-[1.9] text-left">
             This page shows some of my favourite published shots. There are
             thousands more that I may publish... someday :)
           </p>
-          <p className="eyebrow mt-10">
+          <p className="eyebrow mt-8 md:mt-10">
             Scroll ↓
           </p>
         </div>

@@ -32,7 +32,7 @@ export default function Home() {
             <a href="https://iamneo.ai" target="_blank" rel="noreferrer" className={link}>
               iamneo
             </a>
-            , an edtech startup, by 10x &mdash; culminating in a majority-stake
+            , an edtech startup, by 10x, culminating in a majority-stake
             acquisition by NIIT Limited in 2025.
           </p>
 
