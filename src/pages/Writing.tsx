@@ -273,7 +273,7 @@ export default function Writing() {
                 {essays.map((e) => (
                   <div key={e.url} className="flex gap-4 sm:gap-6">
                     <span className="text-sm text-muted pt-0.5 whitespace-nowrap">
-                      {isoDay(e.date) || "—"}
+                      {isoDay(e.date) || "--"}
                     </span>
                     <a
                       href={e.url}
@@ -293,7 +293,7 @@ export default function Writing() {
                   rel="noreferrer"
                   className="text-crimson hover:text-crimson-dark transition-colors"
                 >
-                  [ <span className="underline decoration-1 underline-offset-4">Check more essays on Substack</span> -&gt; ]
+                  [ <span className="underline decoration-1 underline-offset-4">More on Substack</span> -&gt; ]
                 </a>
               </div>
             </>

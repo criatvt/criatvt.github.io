@@ -1,7 +1,5 @@
-import {useEffect} from "react";
 import {Outlet} from "react-router-dom";
 import Nav from "./Nav";
-import {burstAt, type BurstKind} from "./sparkle";
 
 // Brand glyphs (single-path, 24x24) from simple-icons — solid marks read far
 // stronger than hairline line-icons, and give Substack a real logo lucide lacks.
@@ -29,54 +27,6 @@ const socials = [
 ];
 
 export default function Layout() {
-  // Hyperlinks — and only hyperlinks — burst when clicked. Handled once here
-  // rather than per element, so any link added later gets it too. The glyphs
-  // live on document.body, outside React, so a burst survives the navigation
-  // it just triggered. Links to ploca.app get tiny hearts; everything else
-  // gets stars. The title bar is chrome rather than content, so its tabs and
-  // wordmark stay quiet.
-  useEffect(() => {
-    const hit = (e: Event) => {
-      const el = (e.target as HTMLElement | null)?.closest?.(
-        "a[href]",
-      ) as HTMLAnchorElement | null;
-      return el && !el.closest("nav") ? el : null;
-    };
-
-    const kindFor = (el: HTMLAnchorElement): BurstKind =>
-      el.hostname === "ploca.app" || el.hostname.endsWith(".ploca.app")
-        ? "hearts"
-        : "stars";
-
-    // Fire on press, not on click. Links that open a new tab hand the window
-    // over the moment the click lands, so a burst started then plays in a tab
-    // nobody is looking at. Starting on pointerdown means it is already
-    // running before the browser switches away.
-    const onPointerDown = (e: PointerEvent) => {
-      if (e.button !== 0) return;
-      const el = hit(e);
-      if (el) burstAt(el, e.clientX, e.clientY, kindFor(el));
-    };
-
-    // Keyboard activation never sends a pointer event. Those clicks arrive
-    // with detail 0, which is also how we avoid double-bursting mouse clicks.
-    const onClick = (e: MouseEvent) => {
-      if (e.detail !== 0) return;
-      const el = hit(e);
-      if (el) burstAt(el, e.clientX, e.clientY, kindFor(el));
-    };
-
-    // Capture, not bubble: react-router's Link calls preventDefault on its way
-    // to a client-side navigation, and a bubbling listener that skipped
-    // cancelled clicks would then miss every internal link on the site.
-    document.addEventListener("pointerdown", onPointerDown, true);
-    document.addEventListener("click", onClick, true);
-    return () => {
-      document.removeEventListener("pointerdown", onPointerDown, true);
-      document.removeEventListener("click", onClick, true);
-    };
-  }, []);
-
   return (
     <div className="min-h-screen flex flex-col bg-paper text-ink overflow-x-hidden">
       <Nav />
