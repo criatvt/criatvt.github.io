@@ -32,6 +32,16 @@ const SECTION =
 const INTRO_SECTION =
   "snap-start min-h-full flex flex-col items-center justify-center px-5 md:px-8 py-10";
 
+// The write-up, two sentences to a paragraph: short beats carry better on a
+// phone than one long block.
+const INTRO_PARAS = [
+  "Photography is more than a hobby. It helps me slow down time and be in the moment.",
+  "I took it up in the late 2000s at college, borrowing cameras from friends. I bought one for myself in the mid-2010s, once I started earning enough.",
+  "My photos have been shown at exhibitions in Bengaluru, and I have won cash prizes in contests. While I did take up professional engagements, it wasn't as fun as doing it for myself.",
+  "I learnt more about photography when I started teaching it to children.",
+  "This page shows some of my favourite published shots. There are thousands more that I may publish... someday :)",
+];
+
 export default function Photography() {
   const [photos, setPhotos] = useState<Photo[] | null>(null);
   const [failed, setFailed] = useState(false);
@@ -87,20 +97,16 @@ export default function Photography() {
             Photography
           </h1>
           <div className="typed-rule mt-1 mb-6 md:mb-8 text-left" aria-hidden="true"></div>
-          <p className="text-[15px] md:text-base text-ink/80 leading-[1.8] md:leading-[1.9] mb-6 text-left">
-            Photography is more than a hobby. It helps me slow down time and be
-            in the moment. I took it up in the late 2000s at college, borrowing
-            cameras from friends. I bought one for myself in the mid-2010s, once
-            I started earning enough. My photos have been shown at exhibitions
-            in Bengaluru, and I have won cash prizes in contests. While I did
-            take up professional engagements, it wasn't as fun as doing it for
-            myself. I learnt more about photography when I started teaching it
-            to children.
-          </p>
-          <p className="text-[15px] md:text-base text-ink/80 leading-[1.8] md:leading-[1.9] text-left">
-            This page shows some of my favourite published shots. There are
-            thousands more that I may publish... someday :)
-          </p>
+          <div className="space-y-5 md:space-y-6">
+            {INTRO_PARAS.map((text) => (
+              <p
+                key={text}
+                className="text-[15px] md:text-base text-ink/80 leading-[1.8] md:leading-[1.9] text-left"
+              >
+                {text}
+              </p>
+            ))}
+          </div>
           <p className="eyebrow mt-8 md:mt-10">
             Scroll ↓
           </p>
