@@ -40,7 +40,7 @@ export default function Book() {
         <h1 className="text-[26px] md:text-[36px] font-bold uppercase tracking-[0.03em] leading-[1.35]">
           Doomscroller to <span className="text-crimson">Reader</span>
         </h1>
-        <div className="typed-rule mt-1 mb-8" aria-hidden="true"></div>
+        <div className="title-rule mt-1 mb-8" aria-hidden="true"></div>
 
         <p className="text-lg leading-[1.9] mb-12">
           Build a reading habit without giving up your phone.

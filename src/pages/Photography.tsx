@@ -87,16 +87,15 @@ export default function Photography() {
 
   return (
     <div ref={frame} className={FRAME}>
-      {/* Opening screen: the page's own title card. w-full matters: as a
-          non-stretched flex item, the wrapper would otherwise size itself to
-          the typed-rule's unwrappable run of = (min-content), pinning it at
-          max-w-2xl on phones and clipping the text on both sides. */}
+      {/* Opening screen: the page's own title card. w-full keeps this flex
+          item stretched to max-w-2xl instead of shrinking to its content's
+          width. */}
       <section data-index={-1} className={`${INTRO_SECTION} text-center`}>
         <div className="w-full max-w-2xl">
           <h1 className="text-[30px] md:text-[38px] font-bold uppercase tracking-[0.04em] text-ink">
             Photography
           </h1>
-          <div className="typed-rule mt-1 mb-6 md:mb-8 text-left" aria-hidden="true"></div>
+          <div className="title-rule mt-1 mb-6 md:mb-8" aria-hidden="true"></div>
           <div className="space-y-5 md:space-y-6">
             {INTRO_PARAS.map((text) => (
               <p

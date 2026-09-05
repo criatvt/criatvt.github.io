@@ -10,7 +10,7 @@ export default function Story() {
         <h1 className="text-[30px] md:text-[38px] font-bold uppercase tracking-[0.04em]">
           My story
         </h1>
-        <div className="typed-rule mt-1 mb-10" aria-hidden="true"></div>
+        <div className="title-rule mt-1 mb-10" aria-hidden="true"></div>
 
         <div className="flex flex-col gap-6 text-[17px] leading-[1.9]">
           <p>I started my career in IT, in 2010.</p>

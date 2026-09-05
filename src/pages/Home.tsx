@@ -1,4 +1,5 @@
 import {Link} from "react-router-dom";
+import {Mic} from "lucide-react";
 
 // One shared inline-link style for the intro.
 const link = "link";
@@ -9,7 +10,7 @@ export default function Home() {
       <div className="max-w-2xl mx-auto">
         <h1 className="text-[30px] md:text-[42px] font-bold leading-[1.2] mb-10">
           Hi, I&#39;m Aasif.
-          <span className="type-cursor" aria-hidden="true"></span>
+          <span className="pulse-dot" aria-hidden="true"></span>
         </h1>
 
         <div className="flex flex-col gap-6 text-[17px] leading-[1.9]">
@@ -53,13 +54,14 @@ export default function Home() {
           *&#160;*&#160;*
         </div>
 
-        {/* Current priority — a typed, tagged box */}
-        <div className="relative border border-ink px-7 py-8 md:px-10 md:py-9">
-          <span className="eyebrow absolute -top-[9px] left-7 bg-paper px-2.5">
-            Current priority
+        {/* Current priority — a soft callout, not a boxed one */}
+        <span className="eyebrow block mb-4">Current priority</span>
+        <div className="callout flex gap-4">
+          <span className="icon-tile" aria-hidden="true">
+            <Mic className="w-[18px] h-[18px]" />
           </span>
-          <div className="flex flex-col gap-3">
-            <span className="text-2xl font-bold">ploca</span>
+          <div className="flex flex-col gap-3 pt-0.5">
+            <span className="font-serif text-2xl font-bold">ploca</span>
             <span className="text-[19px] italic">
               Write at the speed of thought, privately.
             </span>

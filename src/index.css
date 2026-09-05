@@ -1,18 +1,18 @@
-@import url('https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Source+Serif+4:ital,wght@0,400;0,700;1,400&display=swap');
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
 @theme {
-  /* One face everywhere: the typewriter's. Weight, case, and letterspacing do
-     the hierarchy work that font pairings used to. The three font tokens stay
-     so existing font-* utilities keep resolving. */
-  --font-serif: "Courier Prime", "Courier New", monospace;
-  --font-body: "Courier Prime", "Courier New", monospace;
-  --font-sans: "Courier Prime", "Courier New", monospace;
+  /* Editorial pairing: Playfair Display for headings/titles (display serif),
+     Source Serif 4 for body copy. Playfair's thin hairlines get illegible at
+     small uppercase sizes, so small labels (.eyebrow, nav, footer, .btn) stay
+     on --font-body rather than inheriting a heading's serif. */
+  --font-serif: "Playfair Display", Georgia, serif;
+  --font-body: "Source Serif 4", Georgia, serif;
 
   --color-ink: #1B1A18;      /* typed ink: warm near-black */
   --color-paper: #FBFAF7;    /* bond paper: warm white, untextured */
-  --color-card: #FBFAF7;
+  --color-card: #F3EFE7;     /* soft callout fill: a shade deeper than paper */
   --color-line: #D9D6CF;     /* hairlines: faint rules and footers */
   --color-muted: #6E6B66;    /* secondary text */
   --color-crimson: #C22B21;  /* the red half of the ribbon: links, labels, accents */
@@ -52,40 +52,65 @@ html.dark {
     line-height: 1.9;
   }
   h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-body);
+    font-family: var(--font-serif);
     @apply font-bold;
   }
 }
 
 @layer components {
-  /* Small red label: section heads, kickers. The typewriter's second ink. */
+  /* Small red label: section heads, kickers. Pinned to the body face — see
+     the note by --font-body on why small labels don't inherit a heading's
+     serif. */
   .eyebrow {
+    font-family: var(--font-body);
     @apply text-xs font-bold uppercase tracking-[0.18em] text-crimson;
   }
 
-  /* The ruled line typed under a page title: a run of = clipped to width. */
-  .typed-rule {
-    @apply block overflow-hidden whitespace-nowrap text-base tracking-[0.02em] text-ink;
-  }
-  .typed-rule::after {
-    content: "================================================================================================================================";
+  /* A short accent rule under a page title. Replaces the typewriter's typed
+     "====" line with something that means the same thing (title, then a
+     mark, then the copy) without pretending to be typed. */
+  .title-rule {
+    @apply block bg-crimson;
+    width: 2.75rem;
+    height: 3px;
   }
 
-  /* The block cursor left mid-sentence. Steps, not fades: a cursor blinks. */
-  .type-cursor {
-    @apply inline-block bg-crimson;
-    width: 0.45em;
-    height: 0.78em;
-    margin-left: 0.3em;
-    animation: type-cursor-blink 1.1s steps(1) infinite;
+  /* A quiet, breathing dot — not a blinking cursor. Signals "in progress"
+     without the hard typewriter step-blink, which read oddly once the type
+     stopped looking typed. */
+  .pulse-dot {
+    @apply inline-block bg-crimson rounded-full align-middle;
+    width: 0.32em;
+    height: 0.32em;
+    margin-left: 0.35em;
+    margin-bottom: 0.15em;
+    animation: pulse-dot-breathe 2.6s ease-in-out infinite;
   }
-  @keyframes type-cursor-blink {
+  @keyframes pulse-dot-breathe {
+    0%, 100% {
+      opacity: 1;
+    }
     50% {
-      opacity: 0;
+      opacity: 0.22;
     }
   }
 
-  /* Button: a square, hard-edged typed box. No shadows, no lift. */
+  /* Soft callout: a featured item, tinted instead of boxed. The eyebrow
+     label sits above it as plain text now, not cut into a border. */
+  .callout {
+    @apply rounded-2xl bg-card px-7 py-8 md:px-9 md:py-9;
+  }
+
+  /* A small icon slot for an app/tool mark. bg-paper deliberately, not
+     bg-card: it needs to read as a distinct tile whether it's sitting on
+     the plain page or inside a tinted .callout, and paper and card are
+     always a shade apart from each other in both themes. */
+  .icon-tile {
+    @apply inline-flex items-center justify-center shrink-0 w-10 h-10
+      rounded-lg border border-line bg-paper text-ink;
+  }
+
+  /* Button: a square, hard-edged box. No shadows, no lift. */
   .btn {
     @apply inline-flex items-center justify-center gap-2 border border-ink
       bg-paper px-5 py-2.5 text-[13px] font-bold uppercase tracking-[0.12em]
@@ -124,7 +149,7 @@ html.dark {
   html {
     scroll-behavior: auto;
   }
-  .type-cursor {
+  .pulse-dot {
     animation: none;
   }
 }

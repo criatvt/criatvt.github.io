@@ -83,7 +83,7 @@ export default function Educate() {
         <h1 className="text-[30px] md:text-[38px] font-bold uppercase tracking-[0.04em]">
           Educate
         </h1>
-        <div className="typed-rule mt-1 mb-9" aria-hidden="true"></div>
+        <div className="title-rule mt-1 mb-9" aria-hidden="true"></div>
 
         <p className="text-base leading-[1.9] text-ink/80 mb-14">
           I speak and write about how children learn, and how technology is
@@ -112,7 +112,7 @@ export default function Educate() {
                 href={a.url}
                 target="_blank"
                 rel="noreferrer"
-                className="text-[19px] font-bold leading-[1.5] text-ink hover:text-crimson transition-colors"
+                className="font-serif text-[19px] font-bold leading-[1.5] text-crimson underline decoration-1 underline-offset-4 hover:text-crimson-dark transition-colors"
               >
                 {a.title}
               </a>

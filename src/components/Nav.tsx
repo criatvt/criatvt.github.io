@@ -25,7 +25,7 @@ export default function Nav() {
       <div className="max-w-5xl mx-auto px-6 md:px-12 py-5 flex justify-between items-center">
         <Link
           to="/"
-          className="text-[15px] md:text-[17px] font-bold uppercase tracking-[0.06em] text-ink hover:text-crimson transition-colors"
+          className="font-serif text-[15px] md:text-[17px] font-bold uppercase tracking-[0.06em] text-ink hover:text-crimson transition-colors"
         >
           Aasif Iqbal J.
         </Link>
