@@ -1,4 +1,5 @@
-import {BookOpen, Github, Mic, PersonStanding} from "lucide-react";
+import {BookOpen, Github, PersonStanding} from "lucide-react";
+import PlocaMark from "../components/PlocaMark";
 
 // Policy Wonk's own mark is a two-tone wordmark (black "Policy", teal
 // "Wonk."). Redrawn here as a two-letter monogram in the same colors and a
@@ -58,7 +59,7 @@ export default function Build() {
         <span className="eyebrow block mb-4">Featured</span>
         <div className="callout flex gap-4 mb-16">
           <span className="icon-tile" aria-hidden="true">
-            <Mic className="w-[18px] h-[18px]" />
+            <PlocaMark className="w-6 h-6" />
           </span>
           <div className="flex flex-col gap-2.5 pt-0.5">
             <span className="font-serif text-[22px] font-bold">ploca</span>
@@ -71,7 +72,7 @@ export default function Build() {
               rel="noreferrer"
               className="link text-sm mt-1 self-start"
             >
-              -&gt; ploca.app
+              ploca.app
             </a>
           </div>
         </div>

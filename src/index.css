@@ -17,6 +17,13 @@
   --color-muted: #6E6B66;    /* secondary text */
   --color-crimson: #C22B21;  /* the red half of the ribbon: links, labels, accents */
   --color-crimson-dark: #8F1F18; /* pressed or hovered */
+
+  /* ploca's mark: three concentric circles. Outer and inner swap in dark
+     mode (see .dark below) so the mark still reads against a dark tile;
+     the middle ring is a fixed bridge tone that works on both. */
+  --color-ploca-outer: #E6EAEE;
+  --color-ploca-mid: #93A2B3;
+  --color-ploca-inner: #003153; /* Prussian blue */
 }
 
 /* Dark mode is the darkroom: the safelight-red-on-near-black palette from the
@@ -32,6 +39,9 @@
   --color-muted: #9A928A;
   --color-crimson: #E04E38;
   --color-crimson-dark: #F2705C;
+
+  --color-ploca-outer: #003153; /* Prussian blue moves outward */
+  --color-ploca-inner: #E9ECEF; /* and the center goes light */
 }
 
 html {

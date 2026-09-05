@@ -1,12 +1,5 @@
 import {useEffect, useState} from "react";
-
-// Render a date as its ISO day (2026-08-20), the typed index style.
-function isoDay(raw?: string): string {
-  if (!raw) return "";
-  const t = Date.parse(raw);
-  if (Number.isNaN(t)) return "";
-  return new Date(t).toISOString().slice(0, 10);
-}
+import {formatDate} from "../lib/formatDate";
 
 type Essay = {
   title: string;
@@ -233,7 +226,7 @@ export default function Writing() {
           {journalism.map((j) => (
             <div key={j.url} className="flex flex-col gap-1">
               <span className="text-[13px] text-muted">
-                {isoDay(j.date)}&#160;&#160;{j.publication}
+                {formatDate(j.date)}&#160;&#160;{j.publication}
               </span>
               <a
                 href={j.url}
@@ -273,7 +266,7 @@ export default function Writing() {
                 {essays.map((e) => (
                   <div key={e.url} className="flex gap-4 sm:gap-6">
                     <span className="text-sm text-muted pt-0.5 whitespace-nowrap">
-                      {isoDay(e.date) || "--"}
+                      {formatDate(e.date) || "--"}
                     </span>
                     <a
                       href={e.url}

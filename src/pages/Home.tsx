@@ -1,5 +1,5 @@
 import {Link} from "react-router-dom";
-import {Mic} from "lucide-react";
+import PlocaMark from "../components/PlocaMark";
 
 // One shared inline-link style for the intro.
 const link = "link";
@@ -58,7 +58,7 @@ export default function Home() {
         <span className="eyebrow block mb-4">Current priority</span>
         <div className="callout flex gap-4">
           <span className="icon-tile" aria-hidden="true">
-            <Mic className="w-[18px] h-[18px]" />
+            <PlocaMark className="w-6 h-6" />
           </span>
           <div className="flex flex-col gap-3 pt-0.5">
             <span className="font-serif text-2xl font-bold">ploca</span>
@@ -74,7 +74,7 @@ export default function Home() {
               rel="noreferrer"
               className="link text-sm mt-1 self-start"
             >
-              -&gt; ploca.app
+              ploca.app
             </a>
           </div>
         </div>

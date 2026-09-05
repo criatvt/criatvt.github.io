@@ -1,3 +1,5 @@
+import {formatDate} from "../lib/formatDate";
+
 // Talks — public panels and webinars on AI in education. Each embeds a
 // responsive 16:9 YouTube player above its details.
 type Talk = {
@@ -67,7 +69,7 @@ function TalkCard({talk}: any) {
         />
       </div>
       <span className="text-[13px] text-muted">
-        {talk.date}&#160;&#160;{talk.host}
+        {formatDate(talk.date)}&#160;&#160;{talk.host}
       </span>
       <h3 className="text-xl font-bold leading-[1.5]">{talk.title}</h3>
       <p className="text-[15px] leading-[1.85] text-ink/75">{talk.blurb}</p>
@@ -106,7 +108,7 @@ export default function Educate() {
           {articles.map((a) => (
             <div key={a.url} className="flex flex-col gap-1">
               <span className="text-[13px] text-muted">
-                {a.date}&#160;&#160;{a.publication}
+                {formatDate(a.date)}&#160;&#160;{a.publication}
               </span>
               <a
                 href={a.url}
