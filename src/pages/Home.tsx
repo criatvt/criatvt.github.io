@@ -50,10 +50,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Current priority: a product tile, the way Apple presents one. */}
+      {/* Currently building: a product tile, the way Apple presents one. */}
       <section className="page">
         <div className="tile px-6 py-16 text-center sm:px-12 md:py-24">
-          <p className="label">Current priority</p>
+          <p className="label">Currently building</p>
           <h2 className="title-1 mt-3">ploca</h2>
           <p className="title-3 mt-4 font-normal text-ink/85">
             Write at the speed of thought, privately.

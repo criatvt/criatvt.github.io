@@ -65,7 +65,7 @@ Built from two references: Apple's Human Interface Guidelines
 ## Content rules
 
 - **Ploca is always featured at the top**: the first tile on the Build page,
-  above every other build, and the "Current priority" tile directly after the
+  above every other build, and the "Currently building" tile directly after the
   intro on Home.
 - The Build list is newest first, below Ploca. Each entry has a name, a kind
   (Game / Tool / Open source), a URL and a one-sentence blurb.

@@ -5,7 +5,7 @@ const builds = [
     kind: "Game",
     url: "https://rehalli.aasifj.com",
     blurb:
-      "A civic simulation game. As Chief Urban Planner of Marathahalli, Bengaluru’s most notorious traffic chokepoint, you weigh policies across a three-year term, and today’s shortcut becomes next quarter's crisis.",
+      "A civic simulation game. As Chief Urban Planner of Marathahalli, Bengaluru’s most notorious traffic chokepoint, you weigh policies across a three-year term, and today’s shortcut becomes next quarter’s crisis.",
   },
   {
     name: "Next Read",
