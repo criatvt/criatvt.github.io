@@ -49,7 +49,7 @@ export default function Build() {
         </p>
       </header>
 
-      {/* Featured: Ploca, as a product tile. */}
+      {/* Currently building: Ploca, as a product tile. */}
       <section className="page">
         <a
           href="https://ploca.app"
@@ -57,7 +57,7 @@ export default function Build() {
           rel="noreferrer"
           className="tile group block px-7 py-12 sm:px-12 md:py-16"
         >
-          <p className="label">Featured</p>
+          <p className="label">Currently building</p>
           <div className="mt-3 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
             <div>
               <h2 className="title-1">ploca</h2>
