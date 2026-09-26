@@ -1,11 +1,16 @@
 import {useEffect, useState} from "react";
 
-// Render a date as its ISO day (2026-08-20), the typed index style.
-function isoDay(raw?: string): string {
+// Render a date the way the rest of the site does: 20 Aug 2026.
+function shortDate(raw?: string): string {
   if (!raw) return "";
   const t = Date.parse(raw);
   if (Number.isNaN(t)) return "";
-  return new Date(t).toISOString().slice(0, 10);
+  return new Date(t).toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    timeZone: "Asia/Kolkata", // the same day for every visitor, wherever they are
+  });
 }
 
 type Essay = {
@@ -213,55 +218,67 @@ export default function Writing() {
   }, []);
 
   return (
-    <section className="px-6 py-14 md:py-20">
-      <div className="max-w-2xl mx-auto">
-        <h1 className="text-[30px] md:text-[38px] font-bold uppercase tracking-[0.04em]">
-          Writing
-        </h1>
-        <div className="typed-rule mt-1 mb-9" aria-hidden="true"></div>
-
-        <p className="text-base leading-[1.9] text-ink/80 mb-14">
+    <>
+      <header className="page pt-16 pb-14 md:pt-28 md:pb-20">
+        <h1 className="title-1 enter">Writing</h1>
+        <p className="lede enter-2 mt-5 max-w-[46ch]">
           I write about education, attention, and the subtle ways technology is
           changing how we think. Much of it returns to the analog. Books and
           paperbacks. Handwriting. Slower ways of reading. Mostly I ask what we
           quietly trade away as our tools grow smarter.
         </p>
+      </header>
 
-        {/* Journalism — typed entries (op-eds in the press) */}
-        <h2 className="eyebrow mb-6">Journalism</h2>
-        <div className="flex flex-col gap-7 mb-16">
+      {/* Journalism: op-eds in the press, as newsroom tiles. */}
+      <section className="page">
+        <h2 className="title-2">In the press</h2>
+        <ul className="mt-8 grid grid-cols-1 gap-5 md:grid-cols-[repeat(3,minmax(0,1fr))]">
           {journalism.map((j) => (
-            <div key={j.url} className="flex flex-col gap-1">
-              <span className="text-[13px] text-muted">
-                {isoDay(j.date)}&#160;&#160;{j.publication}
-              </span>
+            <li key={j.url}>
               <a
                 href={j.url}
                 target="_blank"
                 rel="noreferrer"
-                className="text-[19px] font-bold leading-[1.5] text-ink hover:text-crimson transition-colors"
+                className="tile group flex h-full flex-col overflow-hidden"
               >
-                {j.title}
+                {j.image && (
+                  <div className="aspect-[16/10] overflow-hidden bg-line">
+                    <img
+                      src={j.image}
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                      referrerPolicy="no-referrer"
+                      className="h-full w-full object-cover transition-transform duration-700 ease-apple group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+                    />
+                  </div>
+                )}
+                <div className="flex flex-1 flex-col gap-2 p-6">
+                  <span className="label">{j.publication}</span>
+                  <span className="font-display text-[1.25rem] font-semibold leading-[1.25] tracking-[-0.012em]">
+                    {j.title}
+                  </span>
+                  <span className="mt-auto pt-3 text-[0.8125rem] text-muted tabular-nums">
+                    {shortDate(j.date)}
+                  </span>
+                </div>
               </a>
-            </div>
+            </li>
           ))}
-        </div>
+        </ul>
+      </section>
 
-        {/* Essays — auto from Substack RSS, as a typed index */}
-        <h2 className="eyebrow mb-6">Essays</h2>
-        <div>
+      {/* Essays: the Substack archive, newest first. */}
+      <section className="page pt-20 md:pt-28">
+        <h2 className="title-2">Essays</h2>
+        <div className="mt-8">
           {essays === null && !error && (
-            <p className="text-muted italic">Loading essays&#8230;</p>
+            <p className="text-muted" role="status">Loading essays&#8230;</p>
           )}
           {error && (
-            <p className="text-muted italic">
+            <p className="text-muted">
               Essays are published on{" "}
-              <a
-                href="https://aasifj.substack.com"
-                target="_blank"
-                rel="noreferrer"
-                className="link"
-              >
+              <a href="https://aasifj.substack.com" target="_blank" rel="noreferrer" className="link">
                 Substack
               </a>
               .
@@ -269,51 +286,41 @@ export default function Writing() {
           )}
           {essays && essays.length > 0 && (
             <>
-              <div className="flex flex-col gap-4">
+              <ul className="grouped">
                 {essays.map((e) => (
-                  <div key={e.url} className="flex gap-4 sm:gap-6">
-                    <span className="text-sm text-muted pt-0.5 whitespace-nowrap">
-                      {isoDay(e.date) || "--"}
-                    </span>
-                    <a
-                      href={e.url}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="font-bold text-ink hover:text-crimson transition-colors"
-                    >
-                      {e.title}
+                  <li key={e.url}>
+                    <a href={e.url} target="_blank" rel="noreferrer" className="row">
+                      <span className="flex min-w-0 flex-1 flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">
+                        <span className="font-display text-[1.1875rem] font-semibold leading-[1.3] tracking-[-0.01em]">
+                          {e.title}
+                        </span>
+                        <span className="shrink-0 text-[0.8125rem] text-muted tabular-nums">
+                          {shortDate(e.date)}
+                        </span>
+                      </span>
+                      <span className="chevron" aria-hidden="true">›</span>
                     </a>
-                  </div>
+                  </li>
                 ))}
-              </div>
-              <div className="mt-12 text-[15px]">
-                <a
-                  href="https://aasifj.substack.com"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-crimson hover:text-crimson-dark transition-colors"
-                >
-                  [ <span className="underline decoration-1 underline-offset-4">More on Substack</span> -&gt; ]
+              </ul>
+              <p className="mt-8">
+                <a href="https://aasifj.substack.com" target="_blank" rel="noreferrer" className="link-more">
+                  Subscribe on Substack
                 </a>
-              </div>
+              </p>
             </>
           )}
           {essays && essays.length === 0 && (
-            <p className="text-muted italic">
+            <p className="text-muted">
               No essays yet. Check{" "}
-              <a
-                href="https://aasifj.substack.com"
-                target="_blank"
-                rel="noreferrer"
-                className="link"
-              >
+              <a href="https://aasifj.substack.com" target="_blank" rel="noreferrer" className="link">
                 Substack
               </a>
               .
             </p>
           )}
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 }

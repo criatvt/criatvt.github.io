@@ -7,12 +7,17 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="alternate icon" type="image/jpeg" href="/favicon.jpg" />
     <link rel="apple-touch-icon" href="/favicon.jpg" />
-    <!-- Apply a saved dark-mode choice before first paint, so there is no
-         light flash. Light is the default; only an explicit "dark" flips it. -->
+    <meta name="description" content="Aasif Iqbal J. builds software, writes, and educates. Co-founder of iamneo, author of Doomscroller to Reader." />
+    <meta name="theme-color" content="#FBFBFD" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0A0A0B" media="(prefers-color-scheme: dark)" />
+    <!-- Appearance follows the system unless the visitor chose one with the
+         nav toggle (stored as "light" or "dark"). Applied before first paint
+         so there is no flash; ThemeToggle keeps the same rule. -->
     <script>
       try {
-        if (localStorage.getItem('theme') === 'dark')
-          document.documentElement.classList.add('dark');
+        var t = localStorage.getItem('theme');
+        var dark = t ? t === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+        if (dark) document.documentElement.classList.add('dark');
       } catch (e) {}
     </script>
     <!-- Single Page Apps for GitHub Pages: restore the deep link the 404.html redirect encoded. -->

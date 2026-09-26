@@ -20,84 +20,65 @@ const endorsements = [
 
 export default function Book() {
   return (
-    <section className="px-6 py-14 md:py-20">
-      <div className="max-w-2xl mx-auto">
-        {/* Cover, centred, resting on a hard typed shadow */}
-        <a
-          href={AMAZON}
-          target="_blank"
-          rel="noreferrer"
-          className="block w-44 md:w-56 mx-auto mb-12"
-        >
-          <img
-            src="https://m.media-amazon.com/images/P/B0GH73Z8RP.01.LZZZZZZZ.jpg"
-            alt="Doomscroller to Reader"
-            className="w-full border border-ink shadow-[10px_10px_0_var(--color-line)]"
-            referrerPolicy="no-referrer"
-          />
-        </a>
-
-        <h1 className="text-[26px] md:text-[36px] font-bold uppercase tracking-[0.03em] leading-[1.35]">
-          Doomscroller to <span className="text-crimson">Reader</span>
-        </h1>
-        <div className="typed-rule mt-1 mb-8" aria-hidden="true"></div>
-
-        <p className="text-lg leading-[1.9] mb-12">
-          Build a reading habit without giving up your phone.
-        </p>
-
-        {/* Endorsements */}
-        <h2 className="eyebrow mb-6">Endorsements</h2>
-        <div className="flex flex-col gap-8 mb-14">
-          {endorsements.map((r) => (
-            <blockquote key={r.by} className="flex flex-col gap-2">
-              <p className="text-base leading-[1.9] italic text-ink/80">
-                &#8220;{r.quote}&#8221;
-              </p>
-              <footer className="text-[13px] uppercase tracking-[0.12em] text-muted">
-                {r.by}
-              </footer>
-            </blockquote>
-          ))}
-        </div>
-
-        {/* What readers make of it */}
-        <h2 className="eyebrow mb-5">User reviews</h2>
-        <div className="flex flex-col gap-3 mb-14">
-          <p className="text-[22px] font-bold">
-            {rating.score}/5{" "}
-            <span className="text-[13px] font-normal uppercase tracking-[0.12em] text-muted">
-              &#160;Average on Amazon
-            </span>
-          </p>
-          <a
-            href={`${AMAZON}#customerReviews`}
-            target="_blank"
-            rel="noreferrer"
-            className="link text-sm self-start"
-          >
-            Read all reviews on Amazon -&gt;
-          </a>
-        </div>
-
-        {/* Actions */}
-        <div className="flex flex-col sm:flex-row sm:items-center gap-6">
+    <>
+      {/* Cover beside title and actions; stacked on phones. */}
+      <section className="page pt-12 pb-20 md:pt-24 md:pb-28">
+        <div className="grid grid-cols-1 items-center gap-12 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:gap-16">
           <a
             href={AMAZON}
             target="_blank"
             rel="noreferrer"
-            className="btn btn-solid px-7 py-3.5 text-sm self-start"
+            className="enter mx-auto block w-48 sm:w-56 md:w-full md:max-w-[340px]"
           >
-            Order on Amazon
+            <img
+              src="https://m.media-amazon.com/images/P/B0GH73Z8RP.01.LZZZZZZZ.jpg"
+              alt="Cover of Doomscroller to Reader"
+              referrerPolicy="no-referrer"
+              className="aspect-[5/8] w-full rounded-[4px] bg-surface object-cover shadow-cover"
+            />
           </a>
-          <a
-            href="/resources/"
-            className="text-[15px] text-crimson hover:text-crimson-dark transition-colors"
-          >
-            [ <span className="underline decoration-1 underline-offset-4">Book resources</span> -&gt; ]
-          </a>
+
+          <div className="enter-2 text-center md:text-left">
+            <p className="label">My first book</p>
+            <h1 className="title-1 mt-3">Doomscroller to Reader</h1>
+            <p className="lede mt-5 max-w-[30ch] mx-auto md:mx-0">
+              Build a reading habit without giving up your phone.
+            </p>
+            <p className="mt-6 text-[0.9375rem] text-muted">
+              <span className="font-semibold text-ink tabular-nums">{rating.score}</span> out of 5,
+              average on Amazon
+            </p>
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-x-7 gap-y-4 md:justify-start">
+              <a href={AMAZON} target="_blank" rel="noreferrer" className="btn btn-primary">
+                Order on Amazon
+              </a>
+              <a href="/resources/" className="link-more">Book resources</a>
+            </div>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+
+      {/* Endorsements, set as pull quotes. */}
+      <section className="page">
+        <div className="tile px-7 py-14 sm:px-12 md:py-20">
+          <h2 className="sr-only">Endorsements</h2>
+          <div className="grid grid-cols-1 gap-12 md:grid-cols-2 md:gap-16">
+            {endorsements.map((r) => (
+              <figure key={r.by} className="flex flex-col gap-5">
+                <blockquote className="font-display text-[1.5rem] font-medium leading-[1.3] tracking-[-0.014em] md:text-[1.75rem]">
+                  &ldquo;{r.quote}&rdquo;
+                </blockquote>
+                <figcaption className="text-[0.9375rem] text-muted">{r.by}</figcaption>
+              </figure>
+            ))}
+          </div>
+        </div>
+        <p className="mt-8 text-center">
+          <a href={`${AMAZON}#customerReviews`} target="_blank" rel="noreferrer" className="link-more">
+            Read all reviews on Amazon
+          </a>
+        </p>
+      </section>
+    </>
   );
 }
