@@ -50,13 +50,22 @@ const articles = [
 
 const CTA_EMAIL = "aasif@aasifj.com";
 
-// A talk block: responsive 16:9 YouTube embed in a typed frame, then the
-// date/host line, title, blurb, and panel line. Props typed `any` because
-// this project runs React untyped, so a concrete type rejects React's `key`.
+function formatDate(iso: string): string {
+  return new Date(iso).toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    timeZone: "Asia/Kolkata", // the dates are Indian; show the same day to everyone
+  });
+}
+
+// A talk: responsive 16:9 YouTube embed on a rounded tile, then date and host,
+// title, blurb, and panel. Props typed `any` because this project runs React
+// untyped, so a concrete type rejects React's `key`.
 function TalkCard({talk}: any) {
   return (
-    <article className="flex flex-col gap-3.5">
-      <div className="aspect-video overflow-hidden border border-ink bg-ink">
+    <article className="grid grid-cols-1 gap-7 md:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] md:gap-10">
+      <div className="aspect-video overflow-hidden rounded-[1.25rem] bg-surface">
         <iframe
           className="h-full w-full"
           src={`https://www.youtube-nocookie.com/embed/${talk.youtubeId}`}
@@ -66,72 +75,75 @@ function TalkCard({talk}: any) {
           allowFullScreen
         />
       </div>
-      <span className="text-[13px] text-muted">
-        {talk.date}&#160;&#160;{talk.host}
-      </span>
-      <h3 className="text-xl font-bold leading-[1.5]">{talk.title}</h3>
-      <p className="text-[15px] leading-[1.85] text-ink/75">{talk.blurb}</p>
-      <p className="text-[13px] leading-[1.8] text-muted">{talk.panel}</p>
+      <div className="flex flex-col gap-3">
+        <span className="text-[0.8125rem] text-muted">
+          {formatDate(talk.date)} · {talk.host}
+        </span>
+        <h3 className="title-3">{talk.title}</h3>
+        <p className="text-[0.9375rem] leading-[1.6] text-ink/80">{talk.blurb}</p>
+        <p className="text-[0.8125rem] leading-[1.55] text-muted">{talk.panel}</p>
+      </div>
     </article>
   );
 }
 
 export default function Educate() {
   return (
-    <section className="px-6 py-14 md:py-20">
-      <div className="max-w-2xl mx-auto">
-        <h1 className="text-[30px] md:text-[38px] font-bold uppercase tracking-[0.04em]">
-          Educate
-        </h1>
-        <div className="typed-rule mt-1 mb-9" aria-hidden="true"></div>
-
-        <p className="text-base leading-[1.9] text-ink/80 mb-14">
+    <>
+      <header className="page pt-16 pb-14 md:pt-28 md:pb-20">
+        <h1 className="title-1 enter">Educate</h1>
+        <p className="lede enter-2 mt-5 max-w-[46ch]">
           I speak and write about how children learn, and how technology is
           changing it. Lately that means one topic more than any other: AI in
           the classroom. Not whether it belongs there, but how to bring it in
           responsibly. A few of those conversations are here.
         </p>
+      </header>
 
-        {/* Talks — embedded panels and webinars */}
-        <h2 className="eyebrow mb-7">Talks</h2>
-        <div className="flex flex-col gap-14 mb-16">
+      <section className="page">
+        <h2 className="title-2">Talks</h2>
+        <div className="mt-10 flex flex-col gap-16 md:gap-20">
           {talks.map((t) => (
             <TalkCard key={t.youtubeId} talk={t} />
           ))}
         </div>
+      </section>
 
-        {/* Writing — the AI-in-education press pieces (also on /writing) */}
-        <h2 className="eyebrow mb-6">Writing</h2>
-        <div className="flex flex-col gap-7 mb-16">
+      <section className="page pt-20 md:pt-28">
+        <h2 className="title-2">Writing</h2>
+        <ul className="grouped mt-8">
           {articles.map((a) => (
-            <div key={a.url} className="flex flex-col gap-1">
-              <span className="text-[13px] text-muted">
-                {a.date}&#160;&#160;{a.publication}
-              </span>
-              <a
-                href={a.url}
-                target="_blank"
-                rel="noreferrer"
-                className="text-[19px] font-bold leading-[1.5] text-ink hover:text-crimson transition-colors"
-              >
-                {a.title}
+            <li key={a.url}>
+              <a href={a.url} target="_blank" rel="noreferrer" className="row">
+                <span className="flex min-w-0 flex-col gap-1">
+                  <span className="text-[0.8125rem] text-muted">
+                    {a.publication} · {formatDate(a.date)}
+                  </span>
+                  <span className="font-display text-[1.1875rem] font-semibold leading-[1.3] tracking-[-0.01em]">
+                    {a.title}
+                  </span>
+                </span>
+                <span className="chevron" aria-hidden="true">›</span>
               </a>
-            </div>
+            </li>
           ))}
-        </div>
+        </ul>
+      </section>
 
-        {/* CTA */}
-        <h2 className="eyebrow mb-6">Let&rsquo;s talk</h2>
-        <p className="text-[17px] leading-[1.9]">
-          I enjoy speaking and trading perspectives with fellow educators,
-          founders, and builders. On AI in education, building AI products, and
-          startups. If that sounds like you,{" "}
-          <a href={`mailto:${CTA_EMAIL}`} className="link">
-            write to me
+      {/* Invitation to get in touch. */}
+      <section className="page pt-20 md:pt-28">
+        <div className="tile px-7 py-14 text-center sm:px-12 md:py-20">
+          <h2 className="title-2">Let&rsquo;s talk</h2>
+          <p className="mx-auto mt-5 max-w-[44ch] text-ink/80">
+            I enjoy speaking and trading perspectives with fellow educators,
+            founders, and builders. On AI in education, building AI products,
+            and startups. If that sounds like you, write to me.
+          </p>
+          <a href={`mailto:${CTA_EMAIL}`} className="btn btn-primary mt-8">
+            Write to me
           </a>
-          .
-        </p>
-      </div>
-    </section>
+        </div>
+      </section>
+    </>
   );
 }

@@ -1,6 +1,10 @@
 import {writeFileSync, existsSync, readFileSync} from "node:fs";
 
-// Builds public/photos.json — the album behind the Photography page.
+// Refreshes src/data/photos.json — the album behind the Photography page.
+//
+// This is a manual, one-off tool, not part of the build: the site ships the
+// committed list and never talks to Flickr at build time or in the browser.
+// Run `npm run photos` when the album changes, review the diff, and commit.
 //
 // Two sources, in order of preference:
 //   1. The Flickr API, when FLICKR_API_KEY is set. Returns the whole album.
@@ -9,11 +13,11 @@ import {writeFileSync, existsSync, readFileSync} from "node:fs";
 //
 // Like fetch-essays.mjs, this never replaces good data with worse: a run that
 // yields nothing — or fewer photos than the file already has — keeps the
-// existing file and exits 0 so a build is never blocked.
+// existing file and exits 0.
 
 const ALBUM_ID = "72157687588601032";
 const USER_PATH = "criatvt";
-const OUT = "public/photos.json";
+const OUT = "src/data/photos.json";
 const UA =
   "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
 

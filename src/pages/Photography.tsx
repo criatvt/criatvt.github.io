@@ -1,11 +1,13 @@
 import {useEffect, useRef, useState} from "react";
+import photos from "../data/photos.json";
 
 const ALBUM_ID = "72157687588601032";
 const USER_PATH = "criatvt";
 
-// Photos come from public/photos.json, refreshed by scripts/fetch-photos.mjs
-// (see prebuild). If that file is missing or empty, the page falls back to the
-// Flickr album player so there is always something to look at.
+// The album is a committed list (src/data/photos.json), refreshed by hand with
+// `npm run photos`; nothing is fetched at build time or in the browser. Each
+// photo links to its page in Flickr's lightbox, which shows it at full
+// resolution and steps through the rest of the album.
 type Photo = {
   id: string;
   title: string;
@@ -14,63 +16,53 @@ type Photo = {
   large: string;
   width?: number;
   height?: number;
-  link: string;
+  link: string; // the photo's page within the album
 };
 
+const album = photos as Photo[];
+const lightbox = (p: Photo) => `${p.link.replace(/\/$/, "")}/lightbox/`;
+const albumUrl = `https://www.flickr.com/photos/${USER_PATH}/albums/${ALBUM_ID}/`;
+
 // One photo per screen. The page is its own scroll container — a viewport
-// minus the fixed nav (5rem) — with mandatory y-snapping, so a scroll settles
+// minus the fixed nav (52px) — with mandatory y-snapping, so a scroll settles
 // on the next photo instead of stopping halfway. It has to be a local
-// container rather than the document: Layout's `overflow-x-hidden` wrapper
-// captures the snap areas, which silently kills document-level snapping.
-const FRAME = "h-[calc(100svh-5rem)] overflow-y-auto snap-y snap-mandatory";
+// container rather than the document: snapping on the document is fragile
+// across browsers once any ancestor clips overflow.
+const FRAME =
+  "h-[calc(100svh-52px)] overflow-y-auto snap-y snap-mandatory outline-none";
 const SECTION =
-  "snap-start h-full flex flex-col items-center justify-center px-4 md:px-8 py-8";
+  "snap-start h-full flex flex-col items-center justify-center px-4 md:px-10 py-6 md:py-10";
 // The intro write-up runs longer than a phone screen. It needs min-h-full
 // rather than h-full: a centered flex column clips the top of anything taller
-// than itself, so the section must be allowed to grow with its text and let
-// the frame scroll through it.
+// than itself, so the section must be allowed to grow with its text.
 const INTRO_SECTION =
-  "snap-start min-h-full flex flex-col items-center justify-center px-5 md:px-8 py-10";
+  "snap-start min-h-full flex flex-col justify-center py-12";
 
 // The write-up, two sentences to a paragraph: short beats carry better on a
 // phone than one long block.
 const INTRO_PARAS = [
   "Photography is more than a hobby. It helps me slow down time and be in the moment.",
   "I took it up in the late 2000s at college, borrowing cameras from friends. I bought one for myself in the mid-2010s, once I started earning enough.",
-  "My photos have been shown at exhibitions in Bengaluru, and I have won cash prizes in contests. While I did take up professional engagements, it wasn't as fun as doing it for myself.",
+  "My photos have been shown at exhibitions in Bengaluru, and I have won cash prizes in contests. While I did take up professional engagements, it wasn’t as fun as doing it for myself.",
   "I learnt more about photography when I started teaching it to children.",
-  "This page shows some of my favourite published shots. There are thousands more that I may publish... someday :)",
+  "This page shows some of my favourite published shots. There are thousands more that I may publish… someday :)",
 ];
 
 export default function Photography() {
-  const [photos, setPhotos] = useState<Photo[] | null>(null);
-  const [failed, setFailed] = useState(false);
   const [current, setCurrent] = useState<number | null>(null);
   const frame = useRef<HTMLDivElement | null>(null);
 
+  // Focus the frame so Space, Page Down and the arrow keys scroll the album
+  // straight away, without a click first.
   useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      try {
-        const res = await fetch("/photos.json");
-        if (!res.ok) throw new Error("not found");
-        const data = (await res.json()) as Photo[];
-        if (!Array.isArray(data) || data.length === 0) throw new Error("empty");
-        if (!cancelled) setPhotos(data);
-      } catch {
-        if (!cancelled) setFailed(true);
-      }
-    })();
-    return () => {
-      cancelled = true;
-    };
+    frame.current?.focus({preventScroll: true});
   }, []);
 
   // Track which photo is on screen, for the counter in the corner. The title
   // and closing screens carry index -1, which clears the counter.
   useEffect(() => {
     const root = frame.current;
-    if (!photos || !root) return;
+    if (!root) return;
     const io = new IntersectionObserver(
       (entries) => {
         for (const e of entries) {
@@ -83,64 +75,40 @@ export default function Photography() {
     );
     root.querySelectorAll("section[data-index]").forEach((el) => io.observe(el));
     return () => io.disconnect();
-  }, [photos]);
+  }, []);
 
   return (
-    <div ref={frame} className={FRAME}>
-      {/* Opening screen: the page's own title card. w-full matters: as a
-          non-stretched flex item, the wrapper would otherwise size itself to
-          the typed-rule's unwrappable run of = (min-content), pinning it at
-          max-w-2xl on phones and clipping the text on both sides. */}
-      <section data-index={-1} className={`${INTRO_SECTION} text-center`}>
-        <div className="w-full max-w-2xl">
-          <h1 className="text-[30px] md:text-[38px] font-bold uppercase tracking-[0.04em] text-ink">
-            Photography
-          </h1>
-          <div className="typed-rule mt-1 mb-6 md:mb-8 text-left" aria-hidden="true"></div>
-          <div className="space-y-5 md:space-y-6">
+    <div ref={frame} tabIndex={-1} className={FRAME} aria-label="Photography album">
+      {/* Opening screen: title and write-up. */}
+      <section data-index={-1} className={INTRO_SECTION}>
+        <div className="page">
+          <h1 className="title-1 enter">Photography</h1>
+          <div className="prose-col enter-2 mt-8 flex flex-col gap-4 text-ink/85 md:mt-10 md:gap-5">
             {INTRO_PARAS.map((text) => (
-              <p
-                key={text}
-                className="text-[15px] md:text-base text-ink/80 leading-[1.8] md:leading-[1.9] text-left"
-              >
-                {text}
-              </p>
+              <p key={text}>{text}</p>
             ))}
           </div>
-          <p className="eyebrow mt-8 md:mt-10">
-            Scroll ↓
+          <p className="enter-3 mt-10 flex items-center gap-2 text-[0.9375rem] text-muted">
+            <span>Scroll to begin</span>
+            <span aria-hidden="true" className="text-[1.125rem] leading-none">↓</span>
           </p>
         </div>
       </section>
 
-      {failed ? (
-        // Fallback: album player (photos.json missing or empty).
-        <section className={SECTION}>
-          <div className="w-full max-w-5xl aspect-[4/5] md:aspect-video bg-card overflow-hidden rounded-[9px] border border-line">
-            <iframe
-              src={`https://www.flickr.com/photos/${USER_PATH}/albums/${ALBUM_ID}/player/`}
-              width="100%"
-              height="100%"
-              frameBorder="0"
-              title="Photography Archive"
-              className="w-full h-full"
-              allowFullScreen
-            />
-          </div>
-        </section>
-      ) : photos === null ? (
-        <section className={SECTION}>
-          <p className="font-body text-muted italic">Loading photos…</p>
-        </section>
-      ) : (
-        photos.map((p, i) => (
-          <section
-            key={p.id}
-            data-index={i}
-            className={`${SECTION} gap-5`}
+      {album.map((p, i) => (
+        <section key={p.id} data-index={i} className={`${SECTION} gap-5 md:gap-6`}>
+          {/* The image takes most of the frame, contained so nothing is ever
+              cropped. Its cap is measured against the viewport (the frame is
+              100svh minus the nav) so the caption sits right under it; min-h-0
+              lets it give way to a long caption on short screens. It opens the
+              photo in Flickr's full-resolution lightbox. */}
+          <a
+            href={lightbox(p)}
+            target="_blank"
+            rel="noreferrer"
+            className="flex min-h-0 max-w-full justify-center"
+            aria-label={`${p.title || "Photograph"}, open full size on Flickr`}
           >
-            {/* The image takes most of the frame, contained so nothing is ever
-                cropped; the rest is left for the caption below it. */}
             <img
               src={p.large}
               alt={p.title || "Photograph"}
@@ -148,47 +116,45 @@ export default function Photography() {
               height={p.height}
               loading={i < 2 ? "eager" : "lazy"}
               decoding="async"
-              // min-h-0 lets a tall photo give way to a long caption on short
-              // screens instead of spilling past the frame.
-              className="max-h-[78%] min-h-0 w-auto max-w-full object-contain border border-ink"
+              className="max-h-[calc((100svh-52px)*0.74)] min-h-0 w-auto max-w-full object-contain"
             />
-            {(p.title || p.description) && (
-              <figcaption className="shrink-0 max-w-xl text-center">
-                {p.title && (
-                  <h2 className="text-base md:text-lg font-bold text-ink">
-                    {p.title}
-                  </h2>
-                )}
-                {p.description && (
-                  <p className="mt-1 text-sm text-muted leading-[1.8]">
-                    {p.description}
-                  </p>
-                )}
-              </figcaption>
-            )}
-          </section>
-        ))
-      )}
+          </a>
+          {(p.title || p.description) && (
+            <div className="shrink-0 max-w-xl text-center">
+              {p.title && <h2 className="title-3">{p.title}</h2>}
+              {p.description && (
+                <p className="mt-1.5 text-[0.9375rem] leading-[1.55] text-muted">
+                  {p.description}
+                </p>
+              )}
+            </div>
+          )}
+        </section>
+      ))}
 
-      {/* Closing screen. */}
+      {/* Closing screen: the whole album, one by one, at full resolution. */}
       <section data-index={-1} className={`${SECTION} text-center`}>
-        <p className="text-xl md:text-2xl font-bold text-ink mb-5">
-          That's the album.
+        <h2 className="title-2">That&rsquo;s the album.</h2>
+        <p className="mt-4 max-w-[36ch] text-muted">
+          See every photo at full resolution, one by one, in Flickr&rsquo;s
+          lightbox.
         </p>
-        <a
-          href={`https://www.flickr.com/photos/${USER_PATH}/albums/${ALBUM_ID}/`}
-          target="_blank"
-          rel="noreferrer"
-          className="btn"
-        >
-          View the full album on Flickr →
-        </a>
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-x-7 gap-y-4">
+          {album[0] && (
+            <a href={lightbox(album[0])} target="_blank" rel="noreferrer" className="btn btn-primary">
+              Open the lightbox
+            </a>
+          )}
+          <a href={albumUrl} target="_blank" rel="noreferrer" className="link-more">
+            Album on Flickr
+          </a>
+        </div>
       </section>
 
       {/* Position in the album, pinned out of the way. */}
-      {photos && current !== null && (
-        <p className="fixed bottom-5 right-5 z-40 text-[13px] text-muted tabular-nums pointer-events-none">
-          {String(current + 1).padStart(2, "0")} / {photos.length}
+      {current !== null && (
+        <p className="fixed bottom-5 right-5 z-40 rounded-full bg-paper/75 px-3 py-1 text-[0.8125rem] text-muted tabular-nums backdrop-blur-md pointer-events-none">
+          {current + 1} of {album.length}
         </p>
       )}
     </div>

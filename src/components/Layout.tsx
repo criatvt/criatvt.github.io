@@ -1,5 +1,6 @@
-import {Outlet} from "react-router-dom";
-import Nav from "./Nav";
+import {useEffect} from "react";
+import {Link, Outlet, useLocation} from "react-router-dom";
+import Nav, {links} from "./Nav";
 
 // Brand glyphs (single-path, 24x24) from simple-icons — solid marks read far
 // stronger than hairline line-icons, and give Substack a real logo lucide lacks.
@@ -26,45 +27,73 @@ const socials = [
   },
 ];
 
+// Route changes land at the top of the new page, as a fresh page load would.
+function ScrollToTop() {
+  const {pathname} = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
+}
+
 export default function Layout() {
+  const {pathname} = useLocation();
+  // Photography is a full-screen viewing room that scrolls in its own frame;
+  // it carries no footer.
+  const immersive = pathname === "/photography";
+
   return (
-    <div className="min-h-screen flex flex-col bg-paper text-ink overflow-x-hidden">
+    <div className="min-h-screen flex flex-col bg-paper text-ink">
+      <ScrollToTop />
       <Nav />
-      <main className="flex-1 pt-20">
+      <main className="flex-1 pt-[52px]">
         <Outlet />
       </main>
-      <footer className="border-t border-line px-6 py-10">
-        <div className="max-w-2xl mx-auto flex flex-col items-center gap-5 text-center sm:flex-row sm:justify-between sm:text-left">
-          <div className="flex flex-col gap-1 text-[13px] text-muted">
-            {/* Written with [at] so scrapers can't harvest it as a live mailto. */}
-            <span>aasif [at] aasifj.com</span>
-            <span className="uppercase tracking-[0.08em]">
-              &copy; {new Date().getFullYear()} Aasif Iqbal J.
-            </span>
+      {!immersive && (
+        <footer className="mt-24 bg-surface">
+          <div className="page py-12 text-[0.8125rem] leading-[1.5] text-muted">
+            <div className="flex flex-col gap-8 md:flex-row md:items-start md:justify-between">
+              <div className="flex flex-col gap-1.5">
+                <Link to="/" className="font-display text-[1.0625rem] font-semibold text-ink">
+                  Aasif Iqbal J.
+                </Link>
+                {/* Written with [at] so scrapers can't harvest it as a live mailto. */}
+                <span>aasif [at] aasifj.com</span>
+              </div>
+
+              <ul className="flex flex-wrap gap-x-6 gap-y-2">
+                {[{to: "/story", label: "Story"}, ...links].map((l) => (
+                  <li key={l.to}>
+                    <Link to={l.to} className="whitespace-nowrap hover:text-ink transition-colors">
+                      {l.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="mt-8 flex flex-col-reverse gap-5 border-t border-line pt-6 sm:flex-row sm:items-center sm:justify-between">
+              <span>Copyright &copy; {new Date().getFullYear()} Aasif Iqbal J.</span>
+              <div className="flex gap-1 -ml-3 sm:ml-0 sm:-mr-3">
+                {socials.map(({href, label, path}) => (
+                  <a
+                    key={label}
+                    href={href}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={label}
+                    className="flex h-11 w-11 items-center justify-center rounded-full hover:text-ink transition-colors"
+                  >
+                    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" className="h-4 w-4">
+                      <path d={path} />
+                    </svg>
+                  </a>
+                ))}
+              </div>
+            </div>
           </div>
-          <div className="flex gap-5">
-            {socials.map(({href, label, path}) => (
-              <a
-                key={label}
-                href={href}
-                target="_blank"
-                rel="noreferrer"
-                aria-label={label}
-                className="text-muted hover:text-crimson transition-colors"
-              >
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  aria-hidden="true"
-                  className="w-[17px] h-[17px]"
-                >
-                  <path d={path} />
-                </svg>
-              </a>
-            ))}
-          </div>
-        </div>
-      </footer>
+        </footer>
+      )}
     </div>
   );
 }

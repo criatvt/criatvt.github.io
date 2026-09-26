@@ -1,27 +1,33 @@
 import {Link} from "react-router-dom";
 
-// Inline link style shared across the narrative — matches the "here" link on Home.
+// Inline link style shared across the narrative.
 const link = "link";
+
+// Placeholder for the professional bio, to be adapted from the LinkedIn About
+// section (linkedin.com/in/aasifiqbalj). Until it is filled in, the Profile
+// block shows a short holding line and a link to LinkedIn. Replace null with
+// an array of paragraphs.
+const LINKEDIN_ABOUT: string[] | null = null;
 
 export default function Story() {
   return (
-    <section className="px-6 py-14 md:py-20">
-      <div className="max-w-2xl mx-auto">
-        <h1 className="text-[30px] md:text-[38px] font-bold uppercase tracking-[0.04em]">
-          My story
-        </h1>
-        <div className="typed-rule mt-1 mb-10" aria-hidden="true"></div>
+    <>
+      <header className="page pt-16 pb-12 md:pt-28 md:pb-16">
+        <h1 className="title-1 enter">My story</h1>
+        <p className="lede enter-2 mt-5 max-w-[30ch]">
+          I started my career in IT, in 2010.
+        </p>
+      </header>
 
-        <div className="flex flex-col gap-6 text-[17px] leading-[1.9]">
-          <p>I started my career in IT, in 2010.</p>
-
+      <article className="page">
+        <div className="prose-col flex flex-col gap-6 text-[1.1875rem] leading-[1.6] text-ink/85">
           <p>
             After 6+ years of the grind I got restless, so I rode 4,000km solo
             across East India for a month.
           </p>
 
           <p>
-            I came back with a decision to work in education. I joined a K-12
+            I came back with a decision to work in education. I joined a K‑12
             edtech startup and did a bit of everything, from teaching to
             cold-calling.
           </p>
@@ -72,13 +78,32 @@ export default function Story() {
             .
           </p>
         </div>
+      </article>
 
-        <div className="mt-14 pt-7 border-t border-line text-[15px]">
-          <Link to="/" className="text-crimson hover:text-crimson-dark transition-colors">
-            &lt;- <span className="underline decoration-1 underline-offset-4">Back home</span>
-          </Link>
+      {/* Profile: the professional bio (placeholder until it is written). */}
+      <section className="page pt-20 md:pt-24">
+        <div className="tile px-7 py-12 sm:px-12 md:py-14">
+          <h2 className="title-2">Profile</h2>
+          <p className="mt-3 text-muted">
+            Co-founder, iamneo (an NIIT venture)
+          </p>
+          <div className="prose-col mt-6 flex flex-col gap-4 text-ink/85">
+            {LINKEDIN_ABOUT ? (
+              LINKEDIN_ABOUT.map((para) => <p key={para}>{para}</p>)
+            ) : (
+              <p>A fuller professional bio is on its way.</p>
+            )}
+          </div>
+          <a
+            href="https://linkedin.com/in/aasifiqbalj"
+            target="_blank"
+            rel="noreferrer"
+            className="link-more mt-6"
+          >
+            View on LinkedIn
+          </a>
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 }

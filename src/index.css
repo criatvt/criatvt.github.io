@@ -1,41 +1,49 @@
-@import url('https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
+/* Design system: Apple-editorial. A serif for headlines (Source Serif 4, with
+   its optical-size axis, so display cuts sharpen as they grow), the platform
+   sans for everything else (SF Pro on Apple devices, Inter elsewhere), one
+   crimson accent, and near-white / near-black grounds. Every colour and face
+   on the site is a token below; components never hard-code either. The fonts
+   are self-hosted from npm (see main.tsx), so nothing loads from a font CDN. */
 @theme {
-  /* One face everywhere: the typewriter's. Weight, case, and letterspacing do
-     the hierarchy work that font pairings used to. The three font tokens stay
-     so existing font-* utilities keep resolving. */
-  --font-serif: "Courier Prime", "Courier New", monospace;
-  --font-body: "Courier Prime", "Courier New", monospace;
-  --font-sans: "Courier Prime", "Courier New", monospace;
+  --font-display: "Source Serif 4 Variable", "Source Serif 4", Georgia, serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Inter Variable", "Segoe UI",
+    Roboto, sans-serif;
 
-  --color-ink: #1B1A18;      /* typed ink: warm near-black */
-  --color-paper: #FBFAF7;    /* bond paper: warm white, untextured */
-  --color-card: #FBFAF7;
-  --color-line: #D9D6CF;     /* hairlines: faint rules and footers */
-  --color-muted: #6E6B66;    /* secondary text */
-  --color-crimson: #C22B21;  /* the red half of the ribbon: links, labels, accents */
-  --color-crimson-dark: #8F1F18; /* pressed or hovered */
+  --color-paper: #FBFBFD;    /* page ground: Apple's off-white, never pure */
+  --color-surface: #F2F2F5;  /* raised surfaces: cards, grouped lists, footer */
+  --color-ink: #1D1D1F;      /* primary text, 16.3:1 on paper */
+  --color-muted: #6E6E73;    /* secondary text, 4.9:1 on paper, 4.5:1 on surface */
+  --color-line: #D2D2D7;     /* hairlines */
+  --color-crimson: #C22B21;  /* the one accent: links, focus, highlights, 5.5:1 */
+  --color-crimson-dark: #9E2119; /* accent, pressed */
+  --color-crimson-fill: #C22B21; /* solid button fill; white text 5.7:1 in both themes */
+  --color-on-crimson: #FFFFFF;
+
+  --ease-apple: cubic-bezier(0.25, 0.1, 0.25, 1);
+
+  /* A physical object resting on the page: the book cover. */
+  --shadow-cover: 0 2px 4px rgb(0 0 0 / 0.08), 0 24px 48px -12px rgb(0 0 0 / 0.35);
 }
 
-/* Dark mode is the darkroom: the safelight-red-on-near-black palette from the
-   design exploration. Every component paints with the tokens above, so
-   re-valuing them here flips the whole site; the .dark class lives on <html>,
-   set by the nav toggle (and pre-paint by index.html so there is no flash).
-   Light is the default — only an explicit choice turns the lights off. */
+/* Dark appearance. It follows the system by default; the nav toggle can
+   override it (index.html sets .dark on <html> before first paint, so there
+   is no flash). Re-valuing the tokens flips the whole site. */
 .dark {
-  --color-ink: #ECE6DB;
-  --color-paper: #131110;
-  --color-card: #1C1916;
-  --color-line: #2A2622;
-  --color-muted: #9A928A;
-  --color-crimson: #E04E38;
-  --color-crimson-dark: #F2705C;
+  --color-paper: #0A0A0B;
+  --color-surface: #1C1C1E;
+  --color-ink: #F5F5F7;      /* 18.2:1 */
+  --color-muted: #A1A1A6;    /* 7.7:1 on paper, 6.6:1 on surface */
+  --color-line: #38383A;
+  --color-crimson: #FF6B5B;  /* lifted for the dark ground, 7.1:1 */
+  --color-crimson-dark: #FF8F82;
 }
 
 html {
   color-scheme: light;
+  overflow-x: clip;
 }
 html.dark {
   color-scheme: dark;
@@ -44,78 +52,223 @@ html.dark {
 @layer base {
   html {
     scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
   }
   body {
-    @apply bg-paper text-ink antialiased selection:bg-crimson/15;
-    font-family: var(--font-body);
-    font-size: 1.0625rem;
-    line-height: 1.9;
+    @apply bg-paper text-ink antialiased;
+    overflow-x: clip;
+    font-family: var(--font-sans);
+    font-size: 1.0625rem; /* 17px: Apple's body size */
+    line-height: 1.6;
+    letter-spacing: -0.011em;
+    font-feature-settings: "kern", "liga";
   }
-  h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-body);
-    @apply font-bold;
+  ::selection {
+    background: color-mix(in srgb, var(--color-crimson) 22%, transparent);
+  }
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-optical-sizing: auto;
+    text-wrap: balance;
+    overflow-wrap: anywhere;
+    min-width: 0;
+  }
+  p {
+    text-wrap: pretty;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-crimson);
+    outline-offset: 3px;
+    border-radius: 4px;
   }
 }
 
 @layer components {
-  /* Small red label: section heads, kickers. The typewriter's second ink. */
-  .eyebrow {
-    @apply text-xs font-bold uppercase tracking-[0.18em] text-crimson;
+  /* Type scale. Display sizes clamp between phone and desktop; line height
+     tightens as size grows, tracking pulls in the way Apple sets headlines. */
+  .display {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(2.75rem, 6vw + 0.5rem, 5rem);
+    line-height: 1.04;
+    letter-spacing: -0.025em;
+  }
+  .title-1 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(2.5rem, 4.5vw + 0.5rem, 4rem);
+    line-height: 1.06;
+    letter-spacing: -0.022em;
+  }
+  .title-2 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.75rem, 2vw + 1rem, 2.5rem);
+    line-height: 1.12;
+    letter-spacing: -0.018em;
+  }
+  .title-3 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.5rem;
+    line-height: 1.2;
+    letter-spacing: -0.012em;
+  }
+  /* The standfirst under a page title: larger sans, muted. */
+  .lede {
+    font-size: clamp(1.1875rem, 0.6vw + 1rem, 1.5rem);
+    line-height: 1.45;
+    letter-spacing: -0.016em;
+    @apply text-muted;
+  }
+  /* A small label above a group. Used sparingly, never on every section. */
+  .label {
+    @apply text-[0.8125rem] font-semibold text-muted;
+    letter-spacing: -0.005em;
   }
 
-  /* The ruled line typed under a page title: a run of = clipped to width. */
-  .typed-rule {
-    @apply block overflow-hidden whitespace-nowrap text-base tracking-[0.02em] text-ink;
+  /* Apple's text link: accent colour, a trailing chevron, underline on hover. */
+  .link-more {
+    @apply inline-flex items-center gap-1 whitespace-nowrap text-crimson;
+    line-height: 1.2;
   }
-  .typed-rule::after {
-    content: "================================================================================================================================";
+  .link-more::after {
+    content: "›";
+    font-size: 1.2em;
+    line-height: 1;
+    transform: translateY(-0.04em);
+    transition: transform 200ms var(--ease-apple);
   }
-
-  /* The block cursor left mid-sentence. Steps, not fades: a cursor blinks. */
-  .type-cursor {
-    @apply inline-block bg-crimson;
-    width: 0.45em;
-    height: 0.78em;
-    margin-left: 0.3em;
-    animation: type-cursor-blink 1.1s steps(1) infinite;
+  .link-more:hover {
+    @apply underline decoration-1 underline-offset-4;
   }
-  @keyframes type-cursor-blink {
-    50% {
-      opacity: 0;
-    }
+  .link-more:hover::after {
+    transform: translate(2px, -0.04em);
   }
-
-  /* Button: a square, hard-edged typed box. No shadows, no lift. */
-  .btn {
-    @apply inline-flex items-center justify-center gap-2 border border-ink
-      bg-paper px-5 py-2.5 text-[13px] font-bold uppercase tracking-[0.12em]
-      text-ink transition-colors;
-  }
-  .btn:hover {
-    @apply border-crimson text-crimson;
-  }
-  .btn:focus {
-    outline: none;
-  }
-  .btn:focus-visible {
-    outline: 2px solid var(--color-crimson);
-    outline-offset: 2px;
+  .link-more:active {
+    @apply text-crimson-dark;
   }
 
-  /* The same box, inked in for a page's primary action. */
-  .btn-solid {
-    @apply border-ink bg-ink text-paper;
-  }
-  .btn-solid:hover {
-    @apply border-crimson bg-crimson text-paper;
-  }
-
-  /* Inline text link: red, underlined, like a correction in the margin. */
+  /* Inline link inside running prose. */
   .link {
-    @apply text-crimson underline decoration-1 underline-offset-4 transition-colors;
+    @apply text-crimson underline decoration-1 underline-offset-[3px];
+    text-decoration-color: color-mix(in srgb, var(--color-crimson) 40%, transparent);
+    transition: text-decoration-color 150ms var(--ease-apple);
   }
   .link:hover {
+    text-decoration-color: currentColor;
+  }
+  .link:active {
     @apply text-crimson-dark;
+  }
+
+  /* Pill button. Filled for the page's primary action, tinted otherwise. */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full
+      px-6 py-3 text-[1.0625rem] font-medium;
+    line-height: 1;
+    transition: background-color 150ms var(--ease-apple), color 150ms var(--ease-apple),
+      transform 150ms var(--ease-apple);
+  }
+  .btn:active {
+    transform: scale(0.97);
+  }
+  .btn:disabled,
+  .btn[aria-disabled="true"] {
+    @apply pointer-events-none opacity-40;
+  }
+  .btn-primary {
+    background: var(--color-crimson-fill);
+    color: var(--color-on-crimson);
+  }
+  .btn-primary:hover {
+    background: color-mix(in srgb, var(--color-crimson-fill) 88%, black);
+  }
+  .btn-secondary {
+    @apply text-crimson;
+    background: color-mix(in srgb, var(--color-crimson) 10%, transparent);
+  }
+  .btn-secondary:hover {
+    background: color-mix(in srgb, var(--color-crimson) 16%, transparent);
+  }
+
+  /* Raised surface: Apple's rounded tile. */
+  .tile {
+    @apply rounded-[1.75rem] bg-surface;
+  }
+  a.tile {
+    transition: background-color 150ms var(--ease-apple);
+  }
+  a.tile:hover {
+    background: color-mix(in srgb, var(--color-surface) 94%, var(--color-ink));
+  }
+
+  /* An inset grouped list: rows on one surface, hairlines between them that
+     stop short of the leading edge, the way iOS draws them. */
+  .grouped {
+    @apply overflow-hidden rounded-[1.375rem] bg-surface;
+  }
+  .grouped > * + * {
+    position: relative;
+  }
+  .grouped > * + *::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 1.5rem;
+    right: 0;
+    height: 1px;
+    background: var(--color-line);
+  }
+  .row {
+    @apply flex items-center gap-4 px-6 py-5;
+    transition: background-color 150ms var(--ease-apple);
+  }
+  a.row:hover {
+    background: color-mix(in srgb, var(--color-ink) 4%, transparent);
+  }
+  a.row:active {
+    background: color-mix(in srgb, var(--color-ink) 8%, transparent);
+  }
+  a.row:focus-visible {
+    outline-offset: -2px;
+    border-radius: 0;
+  }
+  .chevron {
+    @apply ml-auto shrink-0 text-muted;
+    font-size: 1.375rem;
+    line-height: 1;
+    transition: transform 200ms var(--ease-apple);
+  }
+  a.row:hover .chevron {
+    transform: translateX(2px);
+  }
+
+  /* Page scaffolding. */
+  .page {
+    @apply mx-auto w-full max-w-[1024px] px-5 sm:px-8;
+  }
+  .prose-col {
+    max-width: 38rem; /* ~68ch at 17px */
+  }
+
+  /* A single entrance for page headers: a short rise and fade. Only headers
+     get it, not every section, so the page settles rather than performs. */
+  .enter {
+    animation: enter 700ms var(--ease-apple) both;
+  }
+  .enter-2 {
+    animation: enter 700ms var(--ease-apple) 90ms both;
+  }
+  .enter-3 {
+    animation: enter 700ms var(--ease-apple) 180ms both;
+  }
+  @keyframes enter {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
   }
 }
 
@@ -124,19 +277,16 @@ html.dark {
   html {
     scroll-behavior: auto;
   }
-  .type-cursor {
+  .enter,
+  .enter-2,
+  .enter-3 {
     animation: none;
   }
-}
-
-.markdown-body {
-  @apply prose max-w-none prose-a:text-crimson;
-}
-
-.section-full {
-  @apply w-full px-6 md:px-24 py-32;
-}
-
-.content-container {
-  @apply max-w-5xl mx-auto;
+  .btn,
+  .btn:active,
+  .link-more::after,
+  .chevron {
+    transition: none;
+    transform: none;
+  }
 }

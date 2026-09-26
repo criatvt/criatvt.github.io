@@ -1,92 +1,142 @@
-import {useState, useEffect} from "react";
+import {useEffect, useState} from "react";
 import {Link, NavLink, useLocation} from "react-router-dom";
-import {Menu, X} from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
 
-const links = [
-  {to: "/", label: "Home"},
+export const links = [
   {to: "/build", label: "Build"},
   {to: "/writing", label: "Writing"},
   {to: "/book", label: "Book"},
+  {to: "/educate", label: "Educate"},
   {to: "/photography", label: "Photography"},
 ];
 
+// A translucent bar, like Apple's: it sits clear over the top of the page and
+// frosts, with a hairline, once content scrolls beneath it. On phones the
+// links fold into a full-height sheet of large serif entries.
 export default function Nav() {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
 
-  // Close the mobile menu whenever the route changes.
   useEffect(() => {
     setOpen(false);
   }, [location.pathname]);
 
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 4);
+    onScroll();
+    window.addEventListener("scroll", onScroll, {passive: true});
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // While the sheet is open: no page scroll behind it, and Escape closes it.
+  useEffect(() => {
+    if (!open) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = prev;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
+  // The Photography page scrolls inside its own frame, so the window never
+  // does; treat it as always scrolled so the bar keeps its frost there.
+  const frosted = scrolled || open || location.pathname === "/photography";
+
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 bg-paper/95 backdrop-blur-md border-b border-ink">
-      <div className="max-w-5xl mx-auto px-6 md:px-12 py-5 flex justify-between items-center">
+    <header
+      className={`fixed inset-x-0 top-0 z-50 transition-[background-color,box-shadow] duration-300 ${
+        frosted
+          ? "bg-paper/75 shadow-[0_1px_0_var(--color-line)] backdrop-blur-xl backdrop-saturate-150"
+          : "bg-paper/0"
+      }`}
+    >
+      <nav className="page flex h-[52px] items-center justify-between" aria-label="Main">
         <Link
           to="/"
-          className="text-[15px] md:text-[17px] font-bold uppercase tracking-[0.06em] text-ink hover:text-crimson transition-colors"
+          className="font-display text-[1.1875rem] font-semibold tracking-[-0.015em] text-ink transition-opacity hover:opacity-70"
         >
           Aasif Iqbal J.
         </Link>
 
-        {/* One lights switch for both breakpoints: desktop puts it after the
-            typed links, mobile beside the hamburger. */}
-        <div className="flex items-center gap-1 -mr-2 md:mr-0 md:gap-7">
-          <div className="hidden md:flex items-center gap-7">
+        <div className="flex items-center gap-1 md:gap-8 -mr-3 md:mr-0">
+          <ul className="hidden md:flex items-center gap-7">
             {links.map((l) => (
-              <NavLink
-                key={l.to}
-                to={l.to}
-                end={l.to === "/"}
-                className={({isActive}) =>
-                  `text-[13px] uppercase tracking-[0.1em] transition-colors ${
-                    isActive
-                      ? "text-crimson underline decoration-1 underline-offset-4"
-                      : "text-muted hover:text-crimson"
-                  }`
-                }
-              >
-                {l.label}
-              </NavLink>
+              <li key={l.to}>
+                <NavLink
+                  to={l.to}
+                  className={({isActive}) =>
+                    `whitespace-nowrap text-[0.875rem] transition-colors ${
+                      isActive ? "text-ink" : "text-muted hover:text-ink"
+                    }`
+                  }
+                >
+                  {l.label}
+                </NavLink>
+              </li>
             ))}
-          </div>
+          </ul>
 
-          <ThemeToggle />
+          <div className="md:-mr-3">
+            <ThemeToggle />
+          </div>
 
           <button
             type="button"
             aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}
+            aria-controls="mobile-menu"
             onClick={() => setOpen((v) => !v)}
-            className="md:hidden flex items-center justify-center w-11 h-11 text-ink hover:text-crimson transition-colors"
+            className="md:hidden flex h-11 w-11 items-center justify-center text-ink active:opacity-60"
           >
-            {open ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            {/* Two bars that cross into an X. */}
+            <span className="relative block h-3 w-[18px]" aria-hidden="true">
+              <span
+                className={`absolute left-0 h-[1.5px] w-full rounded-full bg-current transition-transform duration-300 ease-apple ${
+                  open ? "top-[5px] rotate-45" : "top-0.5"
+                }`}
+              />
+              <span
+                className={`absolute left-0 h-[1.5px] w-full rounded-full bg-current transition-transform duration-300 ease-apple ${
+                  open ? "top-[5px] -rotate-45" : "top-[8.5px]"
+                }`}
+              />
+            </span>
           </button>
         </div>
-      </div>
+      </nav>
 
-      {/* Mobile menu panel */}
       {open && (
-        <div className="md:hidden border-t border-ink bg-paper/95 backdrop-blur-md">
-          <div className="px-6 py-4 flex flex-col">
-            {links.map((l) => (
-              <NavLink
+        <div
+          id="mobile-menu"
+          className="md:hidden h-[calc(100dvh-52px)] overflow-y-auto bg-paper"
+        >
+          <ul className="page flex flex-col pt-6 pb-10">
+            {[{to: "/", label: "Home"}, ...links].map((l, i) => (
+              <li
                 key={l.to}
-                to={l.to}
-                end={l.to === "/"}
-                className={({isActive}) =>
-                  `text-sm font-bold uppercase tracking-[0.1em] py-3.5 border-b border-line last:border-0 transition-colors hover:text-crimson ${
-                    isActive ? "text-crimson" : "text-ink"
-                  }`
-                }
+                className="enter"
+                style={{animationDelay: `${i * 35}ms`, animationDuration: "450ms"}}
               >
-                {l.label}
-              </NavLink>
+                <NavLink
+                  to={l.to}
+                  end={l.to === "/"}
+                  className={({isActive}) =>
+                    `block py-2.5 font-display text-[2rem] font-semibold tracking-[-0.02em] ${
+                      isActive ? "text-ink" : "text-muted active:text-ink"
+                    }`
+                  }
+                >
+                  {l.label}
+                </NavLink>
+              </li>
             ))}
-          </div>
+          </ul>
         </div>
       )}
-    </nav>
+    </header>
   );
 }
