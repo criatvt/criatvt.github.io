@@ -6,7 +6,7 @@ const index = [
   {to: "/writing", title: "Writing", blurb: "Op-eds in the press and essays on Substack."},
   {to: "/book", title: "Book", blurb: "Doomscroller to Reader, my first book."},
   {to: "/educate", title: "Educate", blurb: "Talks and writing on AI in the classroom."},
-  {to: "/photography", title: "Photography", blurb: "Photographs I have taken and processed myself."},
+  {to: "/photography", title: "Photography", blurb: "How I slow down time and stay in the moment."},
   {to: "/story", title: "Story", blurb: "From IT to edtech to an exit, and what came after."},
 ];
 
@@ -41,8 +41,7 @@ export default function Home() {
           <p>
             When I am not doing any of these, I{" "}
             <Link to="/photography" className="link">take photographs</Link>{" "}
-            with a real camera and process them all myself, sometimes
-            attempting to colour-correct at the pixel level.
+            with a real camera.
           </p>
           <p>
             <Link to="/story" className="link-more">More about me</Link>
