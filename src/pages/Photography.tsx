@@ -1,5 +1,6 @@
 import {useEffect, useRef, useState} from "react";
 import photos from "../data/photos.json";
+import SafeImage from "../components/SafeImage";
 
 const ALBUM_ID = "72157687588601032";
 const USER_PATH = "criatvt";
@@ -37,7 +38,7 @@ const SECTION =
 // rather than h-full: a centered flex column clips the top of anything taller
 // than itself, so the section must be allowed to grow with its text.
 const INTRO_SECTION =
-  "snap-start min-h-full flex flex-col justify-center py-12";
+  "snap-start min-h-full pt-16 pb-16 md:pt-28 md:pb-24";
 
 // The write-up, two sentences to a paragraph: short beats carry better on a
 // phone than one long block.
@@ -84,12 +85,12 @@ export default function Photography() {
       <section data-index={-1} className={INTRO_SECTION}>
         <div className="page">
           <h1 className="title-1 enter">Photography</h1>
-          <div className="prose-col enter-2 mt-8 flex flex-col gap-4 text-ink-2 md:mt-10 md:gap-5">
+          <div className="prose-col enter-2 mt-10 flex flex-col gap-6 text-[clamp(1.1875rem,0.3vw+1.1rem,1.25rem)] leading-[1.7] text-ink-2 md:mt-12">
             {INTRO_PARAS.map((text) => (
               <p key={text}>{text}</p>
             ))}
           </div>
-          <p className="enter-3 mt-10 flex items-center gap-2 text-[0.9375rem] text-muted">
+          <p className="enter-3 mt-12 flex items-center gap-2 text-[1.0625rem] text-muted">
             <span>Scroll to begin</span>
             <span aria-hidden="true" className="text-[1.125rem] leading-none">↓</span>
           </p>
@@ -110,21 +111,21 @@ export default function Photography() {
             className="flex min-h-0 max-w-full justify-center"
             aria-label={`${p.title || "Photograph"}, open full size on Flickr`}
           >
-            <img
+            <SafeImage
               src={p.large}
               alt={p.title || "Photograph"}
               width={p.width}
               height={p.height}
               loading={i < 2 ? "eager" : "lazy"}
               decoding="async"
-              className="max-h-[calc((100svh-52px)*0.74)] min-h-0 w-auto max-w-full object-contain"
+              className="max-h-[calc((100svh-52px)*0.74)] min-h-0 w-auto max-w-full object-contain [&:not(img)]:aspect-[3/2] [&:not(img)]:w-[min(90vw,64rem)]"
             />
           </a>
           {(p.title || p.description) && (
-            <div className="shrink-0 max-w-xl text-center">
+            <div className="shrink-0 max-w-[60ch] text-center">
               {p.title && <h2 className="title-3">{p.title}</h2>}
               {p.description && (
-                <p className="mt-1.5 text-[0.9375rem] leading-[1.55] text-muted">
+                <p className="mt-2 text-[1.0625rem] leading-[1.6] text-ink-2">
                   {p.description}
                 </p>
               )}
@@ -136,7 +137,7 @@ export default function Photography() {
       {/* Closing screen: the whole album, one by one, at full resolution. */}
       <section data-index={-1} className={`${SECTION} text-center`}>
         <h2 className="title-2">That&rsquo;s the album.</h2>
-        <p className="mt-4 max-w-[36ch] text-muted">
+        <p className="mt-5 max-w-[36ch] text-[clamp(1.1875rem,0.3vw+1.1rem,1.25rem)] leading-[1.6] text-ink-2">
           See every photo at full resolution, one by one, in Flickr&rsquo;s
           lightbox.
         </p>
