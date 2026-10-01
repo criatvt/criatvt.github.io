@@ -83,7 +83,7 @@ export default function Photography() {
       <section data-index={-1} className={INTRO_SECTION}>
         <div className="page">
           <h1 className="title-1 enter">Photography</h1>
-          <div className="prose-col enter-2 mt-8 flex flex-col gap-4 text-ink/85 md:mt-10 md:gap-5">
+          <div className="prose-col enter-2 mt-8 flex flex-col gap-4 text-ink-2 md:mt-10 md:gap-5">
             {INTRO_PARAS.map((text) => (
               <p key={text}>{text}</p>
             ))}
@@ -153,7 +153,7 @@ export default function Photography() {
 
       {/* Position in the album, pinned out of the way. */}
       {current !== null && (
-        <p className="fixed bottom-5 right-5 z-40 rounded-full bg-paper/75 px-3 py-1 text-[0.8125rem] text-muted tabular-nums backdrop-blur-md pointer-events-none">
+        <p className="fixed bottom-5 right-5 z-40 rounded-full bg-paper/75 px-3 py-1 text-[0.875rem] text-muted tabular-nums backdrop-blur-md pointer-events-none">
           {current + 1} of {album.length}
         </p>
       )}

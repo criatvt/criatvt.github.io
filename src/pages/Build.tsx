@@ -1,3 +1,5 @@
+import PlocaTile from "../components/PlocaTile";
+
 // Newest first. `kind` is the one-word label shown beside each name.
 const builds = [
   {
@@ -49,27 +51,9 @@ export default function Build() {
         </p>
       </header>
 
-      {/* Currently building: Ploca, as a product tile. */}
+      {/* Currently building: Ploca, always first. */}
       <section className="page">
-        <a
-          href="https://ploca.app"
-          target="_blank"
-          rel="noreferrer"
-          className="tile group block px-7 py-12 sm:px-12 md:py-16"
-        >
-          <p className="label">Currently building</p>
-          <div className="mt-3 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-            <div>
-              <h2 className="title-1">ploca</h2>
-              <p className="mt-3 max-w-[34ch] text-[1.1875rem] leading-[1.45] text-muted">
-                A private, on-device dictation app for Mac.
-              </p>
-            </div>
-            <span className="link-more group-hover:underline decoration-1 underline-offset-4">
-              ploca.app
-            </span>
-          </div>
-        </a>
+        <PlocaTile />
       </section>
 
       {/* Everything else, as one grouped list. */}
@@ -84,10 +68,10 @@ export default function Build() {
                     <span className="font-display text-[1.375rem] font-semibold tracking-[-0.014em]">
                       {b.name}
                     </span>
-                    <span className="text-[0.8125rem] text-muted">{b.kind}</span>
+                    <span className="text-[0.875rem] text-muted">{b.kind}</span>
                   </div>
-                  <p className="max-w-[60ch] text-[0.9375rem] leading-[1.55] text-ink/80">{b.blurb}</p>
-                  <span className="text-[0.8125rem] text-muted">{host(b.url)}</span>
+                  <p className="max-w-[60ch] text-[0.9375rem] leading-[1.55] text-ink-2">{b.blurb}</p>
+                  <span className="text-[0.875rem] text-muted">{host(b.url)}</span>
                 </div>
                 <span className="chevron self-center" aria-hidden="true">›</span>
               </a>

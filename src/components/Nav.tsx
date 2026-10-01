@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {Link, NavLink, useLocation} from "react-router-dom";
 import ThemeToggle from "./ThemeToggle";
 
@@ -8,6 +8,7 @@ export const links = [
   {to: "/book", label: "Book"},
   {to: "/educate", label: "Educate"},
   {to: "/photography", label: "Photography"},
+  {to: "/story", label: "Story"},
 ];
 
 // A translucent bar, like Apple's: it sits clear over the top of the page and
@@ -17,6 +18,8 @@ export default function Nav() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
+  const menuRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     setOpen(false);
@@ -36,7 +39,11 @@ export default function Nav() {
     document.body.style.overflow = "hidden";
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
     window.addEventListener("keydown", onKey);
+    // Move focus into the sheet; hand it back to the button on close.
+    menuRef.current?.querySelector<HTMLElement>("a")?.focus();
+    const button = buttonRef.current;
     return () => {
+      button?.focus();
       document.body.style.overflow = prev;
       window.removeEventListener("keydown", onKey);
     };
@@ -50,27 +57,29 @@ export default function Nav() {
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-[background-color,box-shadow] duration-300 ${
         frosted
-          ? "bg-paper/75 shadow-[0_1px_0_var(--color-line)] backdrop-blur-xl backdrop-saturate-150"
+          ? "glass bg-paper/75 shadow-[0_1px_0_var(--color-line)] backdrop-blur-xl backdrop-saturate-150"
           : "bg-paper/0"
       }`}
     >
       <nav className="page flex h-[52px] items-center justify-between" aria-label="Main">
         <Link
           to="/"
-          className="font-display text-[1.1875rem] font-semibold tracking-[-0.015em] text-ink transition-opacity hover:opacity-70"
+          className="tap font-display text-[1.1875rem] font-semibold tracking-[-0.015em] text-ink transition-opacity hover:opacity-70"
         >
           Aasif Iqbal J.
         </Link>
 
         <div className="flex items-center gap-1 md:gap-8 -mr-3 md:mr-0">
-          <ul className="hidden md:flex items-center gap-7">
+          <ul className="hidden md:flex items-center gap-5 lg:gap-7">
             {links.map((l) => (
               <li key={l.to}>
                 <NavLink
                   to={l.to}
                   className={({isActive}) =>
-                    `whitespace-nowrap text-[0.875rem] transition-colors ${
-                      isActive ? "text-ink" : "text-muted hover:text-ink"
+                    `tap whitespace-nowrap text-[0.875rem] underline decoration-2 underline-offset-[10px] transition-colors ${
+                      isActive
+                        ? "text-ink decoration-crimson"
+                        : "text-muted decoration-transparent hover:text-ink"
                     }`
                   }
                 >
@@ -85,6 +94,7 @@ export default function Nav() {
           </div>
 
           <button
+            ref={buttonRef}
             type="button"
             aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}
@@ -112,6 +122,7 @@ export default function Nav() {
       {open && (
         <div
           id="mobile-menu"
+          ref={menuRef}
           className="md:hidden h-[calc(100dvh-52px)] overflow-y-auto bg-paper"
         >
           <ul className="page flex flex-col pt-6 pb-10">

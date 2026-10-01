@@ -12,7 +12,7 @@ const socials = [
   },
   {
     href: "https://x.com/theaasifj",
-    label: "Twitter",
+    label: "X",
     path: "M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z",
   },
   {
@@ -36,6 +36,25 @@ function ScrollToTop() {
   return null;
 }
 
+// Each route sets its own document title, so tabs and history are readable.
+const titles: Record<string, string> = {
+  "/build": "Build",
+  "/writing": "Writing",
+  "/book": "Book",
+  "/educate": "Educate",
+  "/photography": "Photography",
+  "/story": "My story",
+};
+
+function PageTitle() {
+  const {pathname} = useLocation();
+  useEffect(() => {
+    const page = titles[pathname.replace(/\/$/, "")];
+    document.title = page ? `${page} · Aasif Iqbal J.` : "Aasif Iqbal J.";
+  }, [pathname]);
+  return null;
+}
+
 export default function Layout() {
   const {pathname} = useLocation();
   // Photography is a full-screen viewing room that scrolls in its own frame;
@@ -45,26 +64,33 @@ export default function Layout() {
   return (
     <div className="min-h-screen flex flex-col bg-paper text-ink">
       <ScrollToTop />
+      <PageTitle />
+      <a
+        href="#main"
+        className="fixed left-4 top-3 z-[60] -translate-y-20 rounded-full bg-ink px-5 py-3 text-paper focus:translate-y-0"
+      >
+        Skip to content
+      </a>
       <Nav />
-      <main className="flex-1 pt-[52px]">
+      <main id="main" tabIndex={-1} className="flex-1 pt-[52px] outline-none">
         <Outlet />
       </main>
       {!immersive && (
         <footer className="mt-24 bg-surface">
-          <div className="page py-12 text-[0.8125rem] leading-[1.5] text-muted">
+          <div className="page py-12 text-[0.875rem] leading-[1.5] text-muted">
             <div className="flex flex-col gap-8 md:flex-row md:items-start md:justify-between">
               <div className="flex flex-col gap-1.5">
-                <Link to="/" className="font-display text-[1.0625rem] font-semibold text-ink">
+                <Link to="/" className="tap font-display text-[1.0625rem] font-semibold text-ink">
                   Aasif Iqbal J.
                 </Link>
                 {/* Written with [at] so scrapers can't harvest it as a live mailto. */}
                 <span>aasif [at] aasifj.com</span>
               </div>
 
-              <ul className="flex flex-wrap gap-x-6 gap-y-2">
-                {[{to: "/story", label: "Story"}, ...links].map((l) => (
+              <ul className="flex flex-wrap gap-x-6">
+                {links.map((l) => (
                   <li key={l.to}>
-                    <Link to={l.to} className="whitespace-nowrap hover:text-ink transition-colors">
+                    <Link to={l.to} className="tap whitespace-nowrap hover:text-ink transition-colors">
                       {l.label}
                     </Link>
                   </li>

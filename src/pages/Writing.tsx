@@ -258,7 +258,7 @@ export default function Writing() {
                   <span className="font-display text-[1.25rem] font-semibold leading-[1.25] tracking-[-0.012em]">
                     {j.title}
                   </span>
-                  <span className="mt-auto pt-3 text-[0.8125rem] text-muted tabular-nums">
+                  <span className="mt-auto pt-3 text-[0.875rem] text-muted tabular-nums">
                     {shortDate(j.date)}
                   </span>
                 </div>
@@ -294,7 +294,7 @@ export default function Writing() {
                         <span className="font-display text-[1.1875rem] font-semibold leading-[1.3] tracking-[-0.01em]">
                           {e.title}
                         </span>
-                        <span className="shrink-0 text-[0.8125rem] text-muted tabular-nums">
+                        <span className="shrink-0 text-[0.875rem] text-muted tabular-nums">
                           {shortDate(e.date)}
                         </span>
                       </span>

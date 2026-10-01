@@ -43,7 +43,9 @@ Built from two references: Apple's Human Interface Guidelines
   imported in `src/main.tsx`), so don't add a Google Fonts link. Body text is
   17px. Headings are never italic. Two families only, so don't add a third.
 - **Colour.** Use only the tokens: `paper`, `surface`, `ink`, `muted`, `line`,
-  `crimson` (the single accent), `crimson-dark`, `crimson-fill`, `on-crimson`.
+  `ink-2` (body copy under a headline; never `text-ink/80`), `crimson` (the single
+  accent), `crimson-dark`, `crimson-fill`, `on-crimson`, and `ploca` (Ploca’s
+  navy, for its mark only, never text).
   Never hard-code hex/rgb in components; add a token to `@theme` (and `.dark`)
   first. Every text pair meets WCAG AA (4.5:1) in both themes, so re-check
   contrast whenever a colour changes.
@@ -51,7 +53,10 @@ Built from two references: Apple's Human Interface Guidelines
   toggle stores an override in `localStorage.theme`; choosing what the system
   already shows clears it. `index.html` applies the same rule before first
   paint, so keep the two in sync.
-- **Components.** `.page` (1024px max, side gutters), `.prose-col` (~68ch
+- **Sizes.** Nothing a reader needs is under 14px. Interactive targets are at
+  least 44px: use `.tap` on small links; `.btn` already has `min-h-11`.
+- **Components.** `PlocaTile` (src/components) is the one way Ploca appears,
+  on Home and Build. `.page` (1024px max, side gutters), `.prose-col` (~68ch
   measure), `.lede`, `.label`, `.tile` (rounded surface), `.grouped` + `.row`
   + `.chevron` (iOS inset grouped list), `.btn .btn-primary` / `.btn-secondary`
   (pills), `.link` (inline prose link), `.link-more` (accent link with ›).
@@ -90,5 +95,3 @@ Built from two references: Apple's Human Interface Guidelines
 - `src/data/photos.json` holds only the first 25 album photos. The full album
   list still needs to be committed. Cloud sessions can't reach flickr.com
   unless it's allowed in the environment's network settings.
-- `src/pages/Story.tsx`: `LINKEDIN_ABOUT` is a placeholder (`null`) waiting
-  for the bio adapted from linkedin.com/in/aasifiqbalj.

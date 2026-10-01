@@ -76,12 +76,12 @@ function TalkCard({talk}: any) {
         />
       </div>
       <div className="flex flex-col gap-3">
-        <span className="text-[0.8125rem] text-muted">
+        <span className="text-[0.875rem] text-muted">
           {formatDate(talk.date)} · {talk.host}
         </span>
         <h3 className="title-3">{talk.title}</h3>
-        <p className="text-[0.9375rem] leading-[1.6] text-ink/80">{talk.blurb}</p>
-        <p className="text-[0.8125rem] leading-[1.55] text-muted">{talk.panel}</p>
+        <p className="text-[0.9375rem] leading-[1.6] text-ink-2">{talk.blurb}</p>
+        <p className="text-[0.875rem] leading-[1.55] text-muted">{talk.panel}</p>
       </div>
     </article>
   );
@@ -116,7 +116,7 @@ export default function Educate() {
             <li key={a.url}>
               <a href={a.url} target="_blank" rel="noreferrer" className="row">
                 <span className="flex min-w-0 flex-col gap-1">
-                  <span className="text-[0.8125rem] text-muted">
+                  <span className="text-[0.875rem] text-muted">
                     {a.publication} · {formatDate(a.date)}
                   </span>
                   <span className="font-display text-[1.1875rem] font-semibold leading-[1.3] tracking-[-0.01em]">
@@ -134,7 +134,7 @@ export default function Educate() {
       <section className="page pt-20 md:pt-28">
         <div className="tile px-7 py-14 text-center sm:px-12 md:py-20">
           <h2 className="title-2">Let&rsquo;s talk</h2>
-          <p className="mx-auto mt-5 max-w-[44ch] text-ink/80">
+          <p className="mx-auto mt-5 max-w-[44ch] text-ink-2">
             I enjoy speaking and trading perspectives with fellow educators,
             founders, and builders. On AI in education, building AI products,
             and startups. If that sounds like you, write to me.

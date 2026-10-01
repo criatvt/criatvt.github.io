@@ -1,4 +1,5 @@
 import {Link} from "react-router-dom";
+import PlocaTile from "../components/PlocaTile";
 
 // The rest of the site, as one grouped index below the intro.
 const index = [
@@ -13,64 +14,62 @@ const index = [
 export default function Home() {
   return (
     <>
-      {/* Intro: a large serif greeting, then the short version. */}
-      <section className="page pt-16 pb-20 md:pt-28 md:pb-28">
-        <h1 className="display enter">Hi, I&rsquo;m Aasif.</h1>
-        <p className="lede enter-2 mt-6 max-w-[30ch] md:mt-8 text-ink">
-          I <Link to="/build" className="link">build software</Link>,{" "}
-          <Link to="/writing" className="link">write</Link>, and{" "}
-          <Link to="/educate" className="link">educate</Link>.
-        </p>
+      {/* Intro: a large serif greeting beside a portrait, then the short version. */}
+      <section className="page pt-12 pb-[var(--space-section)] md:pt-24 md:pb-[var(--space-section-lg)]">
+        <div className="grid items-center gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,19rem)] md:gap-16">
+          <div>
+            <h1 className="display enter">Hi, I&rsquo;m Aasif.</h1>
+            <p className="lede enter-2 mt-6 max-w-[30ch] md:mt-8 text-ink">
+              I <Link to="/build" className="link">build software</Link>,{" "}
+              <Link to="/writing" className="link">write</Link>, and{" "}
+              <Link to="/educate" className="link">educate</Link>.
+            </p>
 
-        <div className="prose-col enter-3 mt-10 flex flex-col gap-5 md:mt-12 text-ink/85">
-          <p>
-            Formerly, as a co-founder and Chief Operating Officer, I helped
-            scale{" "}
-            <a href="https://iamneo.ai" target="_blank" rel="noreferrer" className="link">
-              iamneo
-            </a>
-            , an edtech startup, by 10x, culminating in a majority-stake
-            acquisition by NIIT Limited in 2025.
-          </p>
-          <p>
-            After my exit from iamneo, I wrote my first book,{" "}
-            <Link to="/book" className="link">Doomscroller to Reader</Link>,
-            which helps people build a reading habit without giving up their
-            phone.
-          </p>
-          <p>
-            When I am not doing any of these, I{" "}
-            <Link to="/photography" className="link">take photographs</Link>{" "}
-            with a real camera.
-          </p>
-          <p>
-            <Link to="/story" className="link-more">More about me</Link>
-          </p>
+            <div className="prose-col enter-3 mt-10 flex flex-col gap-5 md:mt-12 text-ink-2">
+              <p>
+                Formerly, as a co-founder and Chief Operating Officer, I helped
+                scale{" "}
+                <a href="https://iamneo.ai" target="_blank" rel="noreferrer" className="link">
+                  iamneo
+                </a>
+                , an edtech startup, by 10x, culminating in a majority-stake
+                acquisition by NIIT Limited in 2025.
+              </p>
+              <p>
+                After my exit from iamneo, I wrote my first book,{" "}
+                <Link to="/book" className="link">Doomscroller to Reader</Link>,
+                which helps people build a reading habit without giving up their
+                phone.
+              </p>
+              <p>
+                When I am not doing any of these, I{" "}
+                <Link to="/photography" className="link">take photographs</Link>{" "}
+                with a real camera.
+              </p>
+              <p>
+                <Link to="/story" className="link-more tap">More about me</Link>
+              </p>
+            </div>
+          </div>
+
+          <img
+            src="/portrait.jpg"
+            width={960}
+            height={1286}
+            alt="Portrait of Aasif Iqbal J."
+            fetchPriority="high"
+            className="enter-2 order-first h-36 w-36 rounded-full bg-surface object-cover object-top md:order-none md:h-auto md:w-full md:aspect-[4/5] md:rounded-[var(--radius-tile)]"
+          />
         </div>
       </section>
 
-      {/* Currently building: a product tile, the way Apple presents one. */}
+      {/* Currently building: always first after the intro. */}
       <section className="page">
-        <div className="tile px-6 py-16 text-center sm:px-12 md:py-24">
-          <p className="label">Currently building</p>
-          <h2 className="title-1 mt-3">ploca</h2>
-          <p className="title-3 mt-4 font-normal text-ink/85">
-            Write at the speed of thought, privately.
-          </p>
-          <p className="mx-auto mt-4 max-w-[36ch] text-muted">
-            A fast, accurate voice-to-text app for Mac that is truly private.
-          </p>
-          <div className="mt-9 flex flex-wrap items-center justify-center gap-x-7 gap-y-4">
-            <a href="https://ploca.app" target="_blank" rel="noreferrer" className="btn btn-primary">
-              Visit ploca.app
-            </a>
-            <Link to="/build" className="link-more">See everything I have built</Link>
-          </div>
-        </div>
+        <PlocaTile more={{to: "/build", label: "See everything I have built"}} />
       </section>
 
       {/* Everything else. */}
-      <section className="page pt-24 md:pt-32">
+      <section className="page pt-[var(--space-section)] md:pt-[var(--space-section-lg)]">
         <h2 className="title-2">Around the site</h2>
         <nav aria-label="Sections" className="grouped mt-8">
           {index.map((s) => (

@@ -22,6 +22,7 @@
   --color-crimson-dark: #9E2119; /* accent, pressed */
   --color-crimson-fill: #C22B21; /* solid button fill; white text 5.7:1 in both themes */
   --color-on-crimson: #FFFFFF;
+  --color-ploca: #1F3558;    /* Ploca's navy, for its mark only (never text): 11.7:1 on paper */
 
   --ease-apple: cubic-bezier(0.25, 0.1, 0.25, 1);
 
@@ -50,6 +51,7 @@
   --color-line: #38383A;
   --color-crimson: #FF6B5B;  /* lifted for the dark ground, 7.1:1 */
   --color-crimson-dark: #FF8F82;
+  --color-ploca: #8FA8D0;    /* lifted for the dark ground, 7.1:1 on surface */
 }
 
 html {
@@ -185,7 +187,7 @@ html.dark {
   /* Pill button. Filled for the page's primary action, tinted otherwise. */
   .btn {
     @apply inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full
-      px-6 py-3 text-[1.0625rem] font-medium;
+      min-h-11 px-6 py-3 text-[1.0625rem] font-medium;
     line-height: 1;
     transition: background-color 150ms var(--ease-apple), color 150ms var(--ease-apple),
       transform 150ms var(--ease-apple);
