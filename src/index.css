@@ -15,6 +15,7 @@
   --color-paper: #FBFBFD;    /* page ground: Apple's off-white, never pure */
   --color-surface: #F2F2F5;  /* raised surfaces: cards, grouped lists, footer */
   --color-ink: #1D1D1F;      /* primary text, 16.3:1 on paper */
+  --color-ink-2: #424245;    /* body copy under a headline, 9.7:1 on paper; replaces text-ink/80 */
   --color-muted: #6E6E73;    /* secondary text, 4.9:1 on paper, 4.5:1 on surface */
   --color-line: #D2D2D7;     /* hairlines */
   --color-crimson: #C22B21;  /* the one accent: links, focus, highlights, 5.5:1 */
@@ -23,6 +24,15 @@
   --color-on-crimson: #FFFFFF;
 
   --ease-apple: cubic-bezier(0.25, 0.1, 0.25, 1);
+
+  /* Radii: control, grouped list, tile. Pills use rounded-full. */
+  --radius-control: 0.75rem;
+  --radius-grouped: 1.375rem;
+  --radius-tile: 1.75rem;
+
+  /* 4pt spacing steps for section rhythm (use via var(), e.g. py-[var(--space-section)]). */
+  --space-section: 4.5rem;   /* gap between page sections */
+  --space-section-lg: 7rem;  /* same, from the md breakpoint up */
 
   /* A physical object resting on the page: the book cover. */
   --shadow-cover: 0 2px 4px rgb(0 0 0 / 0.08), 0 24px 48px -12px rgb(0 0 0 / 0.35);
@@ -35,6 +45,7 @@
   --color-paper: #0A0A0B;
   --color-surface: #1C1C1E;
   --color-ink: #F5F5F7;      /* 18.2:1 */
+  --color-ink-2: #D1D1D6;    /* 13.0:1 on paper */
   --color-muted: #A1A1A6;    /* 7.7:1 on paper, 6.6:1 on surface */
   --color-line: #38383A;
   --color-crimson: #FF6B5B;  /* lifted for the dark ground, 7.1:1 */
@@ -90,14 +101,14 @@ html.dark {
   .display {
     font-family: var(--font-display);
     font-weight: 600;
-    font-size: clamp(2.75rem, 6vw + 0.5rem, 5rem);
-    line-height: 1.04;
-    letter-spacing: -0.025em;
+    font-size: clamp(3.25rem, 7vw + 0.5rem, 6rem); /* a real step above title-1 */
+    line-height: 1.02;
+    letter-spacing: -0.03em;
   }
   .title-1 {
     font-family: var(--font-display);
     font-weight: 600;
-    font-size: clamp(2.5rem, 4.5vw + 0.5rem, 4rem);
+    font-size: clamp(2.25rem, 3.5vw + 0.75rem, 3.5rem);
     line-height: 1.06;
     letter-spacing: -0.022em;
   }
@@ -124,8 +135,16 @@ html.dark {
   }
   /* A small label above a group. Used sparingly, never on every section. */
   .label {
-    @apply text-[0.8125rem] font-semibold text-muted;
+    @apply text-[0.875rem] font-semibold text-muted; /* 14px floor for anything readers need */
     letter-spacing: -0.005em;
+  }
+
+  /* Grows a small link's hit area to 44px without changing its look. */
+  .tap {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
   }
 
   /* Apple's text link: accent colour, a trailing chevron, underline on hover. */
@@ -269,6 +288,15 @@ html.dark {
       opacity: 0;
       transform: translateY(12px);
     }
+  }
+}
+
+/* Translucent bars fall back to a solid ground for readers who ask for it. */
+@media (prefers-reduced-transparency: reduce) {
+  .glass {
+    background: var(--color-paper);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
   }
 }
 
