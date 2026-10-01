@@ -1,10 +1,9 @@
 import {StrictMode} from 'react';
 import {createRoot} from 'react-dom/client';
 import {BrowserRouter, HashRouter} from 'react-router-dom';
-// Self-hosted faces: the serif with its optical-size axis, and Inter as the
-// sans for devices without SF Pro. Browsers only download a face they render.
-import '@fontsource-variable/source-serif-4/opsz.css';
-import '@fontsource-variable/inter';
+// Self-hosted Inter (with its optical-size axis, so headlines get a display
+// cut) for devices without SF Pro. Browsers only download a face they render.
+import '@fontsource-variable/inter/opsz.css';
 import App from './App.tsx';
 import './index.css';
 

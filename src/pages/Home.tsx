@@ -1,89 +1,135 @@
 import {Link} from "react-router-dom";
-import PlocaTile from "../components/PlocaTile";
-
-// The rest of the site, as one grouped index below the intro.
-const index = [
-  {to: "/build", title: "Build", blurb: "Tools and games I have made with AI."},
-  {to: "/writing", title: "Writing", blurb: "Op-eds in the press and essays on Substack."},
-  {to: "/book", title: "Book", blurb: "Doomscroller to Reader, my first book."},
-  {to: "/educate", title: "Educate", blurb: "Talks and writing on AI in the classroom."},
-  {to: "/photography", title: "Photography", blurb: "How I slow down time and stay in the moment."},
-  {to: "/story", title: "Story", blurb: "From IT to edtech to an exit, and what came after."},
-];
+import PlocaBand from "../components/PlocaBand";
+import SafeImage from "../components/SafeImage";
+import {ImageCard} from "../components/Cards";
+import {book, talks, youtubeThumb} from "../data/content";
+import {shortDate, useEssays} from "../data/essays";
+import photos from "../data/photos.json";
 
 export default function Home() {
+  const {essays} = useEssays();
+  const latest = essays?.slice(0, 3) ?? [];
+  const photo = (photos as {large: string; title: string}[])[0];
+
   return (
     <>
-      {/* Intro: a large serif greeting beside a portrait, then the short version. */}
-      <section className="page pt-12 pb-[var(--space-section)] md:pt-24 md:pb-[var(--space-section-lg)]">
-        <div className="grid items-center gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,19rem)] md:gap-16">
-          <div>
-            <h1 className="display enter">Hi, I&rsquo;m Aasif.</h1>
-            <p className="lede enter-2 mt-6 max-w-[30ch] md:mt-8 text-ink">
-              I <Link to="/build" className="link">build software</Link>,{" "}
-              <Link to="/writing" className="link">write</Link>, and{" "}
-              <Link to="/educate" className="link">educate</Link>.
-            </p>
+      {/* Intro: a large centred greeting, then the short version. */}
+      <section className="page pt-16 pb-[var(--space-section)] text-center md:pt-28 md:pb-[var(--space-section-lg)]">
+        <h1 className="display enter">Hi, I&rsquo;m Aasif.</h1>
+        <p className="lede enter-2 mx-auto mt-6 max-w-[30ch] text-ink md:mt-8">
+          I <Link to="/build" className="link">build software</Link>,{" "}
+          <Link to="/writing" className="link">write</Link>, and{" "}
+          <Link to="/educate" className="link">educate</Link>.
+        </p>
 
-            <div className="prose-col enter-3 mt-10 flex flex-col gap-5 md:mt-12 text-ink-2">
-              <p>
-                Formerly, as a co-founder and Chief Operating Officer, I helped
-                scale{" "}
-                <a href="https://iamneo.ai" target="_blank" rel="noreferrer" className="link">
-                  iamneo
-                </a>
-                , an edtech startup, by 10x, culminating in a majority-stake
-                acquisition by NIIT Limited in 2025.
-              </p>
-              <p>
-                After my exit from iamneo, I wrote my first book,{" "}
-                <Link to="/book" className="link">Doomscroller to Reader</Link>,
-                which helps people build a reading habit without giving up their
-                phone.
-              </p>
-              <p>
-                When I am not doing any of these, I{" "}
-                <Link to="/photography" className="link">take photographs</Link>{" "}
-                with a real camera.
-              </p>
-              <p>
-                <Link to="/story" className="link-more tap">More about me</Link>
-              </p>
-            </div>
-          </div>
-
-          <img
-            src={`${import.meta.env.BASE_URL}portrait.jpg`}
-            width={960}
-            height={1286}
-            alt="Portrait of Aasif Iqbal J."
-            fetchPriority="high"
-            className="enter-2 order-first h-36 w-36 rounded-full bg-surface object-cover object-top md:order-none md:h-auto md:w-full md:aspect-[4/5] md:rounded-[var(--radius-tile)]"
-          />
+        <div className="prose-col enter-3 mx-auto mt-10 flex flex-col gap-5 text-left text-ink-2 md:mt-12">
+          <p>
+            Formerly, as a co-founder and Chief Operating Officer, I helped
+            scale{" "}
+            <a href="https://iamneo.ai" target="_blank" rel="noreferrer" className="link">
+              iamneo
+            </a>
+            , an edtech startup, by 10x, culminating in a majority-stake
+            acquisition by NIIT Limited in 2025.
+          </p>
+          <p>
+            After my exit from iamneo, I wrote my first book,{" "}
+            <Link to="/book" className="link">Doomscroller to Reader</Link>,
+            which helps people build a reading habit without giving up their
+            phone.
+          </p>
+          <p>
+            When I am not doing any of these, I{" "}
+            <Link to="/photography" className="link">take photographs</Link>{" "}
+            with a real camera.
+          </p>
+          <p>
+            <Link to="/story" className="link-more tap">More about me</Link>
+          </p>
         </div>
       </section>
 
       {/* Currently building: always first after the intro. */}
-      <section className="page">
-        <PlocaTile more={{to: "/build", label: "See everything I have built"}} />
+      <PlocaBand more={{to: "/build", label: "See everything I have built"}} />
+
+      {/* Latest writing, as magazine cards. */}
+      <section className="page pt-[var(--space-section)] md:pt-[var(--space-section-lg)]">
+        <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-2">
+          <h2 className="title-1">Latest writing</h2>
+          <Link to="/writing" className="link-more tap">All writing</Link>
+        </div>
+        <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-12 md:grid-cols-[repeat(3,minmax(0,1fr))]">
+          {latest.length === 0
+            ? [0, 1, 2].map((i) => (
+                <div key={i} className="card" aria-hidden="true">
+                  <div className="card-media aspect-[16/10] animate-pulse motion-reduce:animate-none" />
+                  <div className="h-5 w-4/5 rounded-full bg-surface" />
+                </div>
+              ))
+            : latest.map((e) => (
+                <ImageCard
+                  key={e.url}
+                  href={e.url}
+                  image={e.image}
+                  kicker="Essay"
+                  title={e.title}
+                  meta={shortDate(e.date)}
+                />
+              ))}
+        </div>
       </section>
 
-      {/* Everything else. */}
+      {/* The book, set on paper: cover beside title and the order button. */}
       <section className="page pt-[var(--space-section)] md:pt-[var(--space-section-lg)]">
-        <h2 className="title-2">Around the site</h2>
-        <nav aria-label="Sections" className="grouped mt-8">
-          {index.map((s) => (
-            <Link key={s.to} to={s.to} className="row">
-              <span className="flex min-w-0 flex-col gap-0.5 sm:flex-row sm:items-baseline sm:gap-5">
-                <span className="font-display text-[1.25rem] font-semibold tracking-[-0.012em] sm:w-36 sm:shrink-0">
-                  {s.title}
-                </span>
-                <span className="text-[0.9375rem] text-muted">{s.blurb}</span>
-              </span>
-              <span className="chevron" aria-hidden="true">›</span>
-            </Link>
-          ))}
-        </nav>
+        <div className="grid grid-cols-1 items-center gap-10 rounded-[var(--radius-tile)] bg-surface px-7 py-12 sm:px-12 md:grid-cols-[minmax(0,4fr)_minmax(0,7fr)] md:gap-14 md:py-16">
+          <Link to="/book" className="mx-auto block w-40 sm:w-48 md:w-full md:max-w-[260px]" aria-label={book.title}>
+            <SafeImage
+              src={book.cover}
+              alt={`Cover of ${book.title}`}
+              referrerPolicy="no-referrer"
+              className="aspect-[5/8] w-full rounded-[4px] bg-paper object-cover shadow-cover"
+            />
+          </Link>
+          <div className="text-center md:text-left">
+            <p className="label">My first book</p>
+            <h2 className="title-1 mt-2">{book.title}</h2>
+            <p className="lede mt-4 max-w-[30ch] mx-auto md:mx-0">{book.tagline}</p>
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-x-7 gap-y-3 md:justify-start">
+              <a href={book.amazon} target="_blank" rel="noreferrer" className="btn btn-primary">
+                Order on Amazon
+              </a>
+              <Link to="/book" className="link-more tap">About the book</Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Explore: the rest of the site, each with its own picture. */}
+      <section className="page pt-[var(--space-section)] md:pt-[var(--space-section-lg)]">
+        <h2 className="title-1">Explore</h2>
+        <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-12 md:grid-cols-[repeat(3,minmax(0,1fr))]">
+          <Link to="/educate" className="card">
+            <div className="card-media aspect-[16/10]">
+              <SafeImage src={youtubeThumb(talks[0].youtubeId)} alt="" loading="lazy" className="h-full w-full" />
+            </div>
+            <span className="label">Educate</span>
+            <span className="card-title">Talks and writing on AI in the classroom</span>
+          </Link>
+          <Link to="/photography" className="card">
+            <div className="card-media aspect-[16/10]">
+              {photo && <SafeImage src={photo.large} alt="" loading="lazy" className="h-full w-full" />}
+            </div>
+            <span className="label">Photography</span>
+            <span className="card-title">How I slow down time and stay in the moment</span>
+          </Link>
+          <Link to="/story" className="card">
+            <div className="card-media flex aspect-[16/10] items-center justify-center bg-band">
+              <span className="display text-on-band">2010&ndash;</span>
+            </div>
+            <span className="label">Story</span>
+            <span className="card-title">From IT to edtech to an exit, and what came after</span>
+          </Link>
+        </div>
       </section>
     </>
   );

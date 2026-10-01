@@ -1,14 +1,15 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
-/* Design system: Apple-editorial. A serif for headlines (Source Serif 4, with
-   its optical-size axis, so display cuts sharpen as they grow), the platform
-   sans for everything else (SF Pro on Apple devices, Inter elsewhere), one
-   crimson accent, and near-white / near-black grounds. Every colour and face
-   on the site is a token below; components never hard-code either. The fonts
-   are self-hosted from npm (see main.tsx), so nothing loads from a font CDN. */
+/* Design system: Apple product page meets magazine. One sans family (SF Pro on
+   Apple devices, Inter with optical sizes elsewhere, so large headlines get a
+   display cut), bold and tightly tracked for headlines. Monochrome grounds,
+   full-bleed black feature bands, and crimson reserved for actions and links.
+   Every colour and face is a token below; components never hard-code either.
+   The font is self-hosted from npm (see main.tsx); nothing loads from a CDN. */
 @theme {
-  --font-display: "Source Serif 4 Variable", "Source Serif 4", Georgia, serif;
+  --font-display: -apple-system, BlinkMacSystemFont, "Inter Variable", "Segoe UI",
+    Roboto, sans-serif;
   --font-sans: -apple-system, BlinkMacSystemFont, "Inter Variable", "Segoe UI",
     Roboto, sans-serif;
 
@@ -23,6 +24,14 @@
   --color-crimson-fill: #C22B21; /* solid button fill; white text 5.7:1 in both themes */
   --color-on-crimson: #FFFFFF;
   --color-ploca: #1F3558;    /* Ploca's navy, for its mark only (never text): 11.7:1 on paper */
+
+  /* Feature bands: black in both themes (a touch lifted in dark so the band
+     still reads against the near-black page). */
+  --color-band: #000000;
+  --color-on-band: #F5F5F7;        /* 19.3:1 on band */
+  --color-on-band-muted: #A1A1A6;  /* 8.2:1 on band */
+  --color-on-band-link: #FF6B5B;   /* 7.5:1 on band */
+  --color-ploca-on-band: #8FA8D0;  /* Ploca's mark on a band (graphic only) */
 
   --ease-apple: cubic-bezier(0.25, 0.1, 0.25, 1);
 
@@ -52,6 +61,7 @@
   --color-crimson: #FF6B5B;  /* lifted for the dark ground, 7.1:1 */
   --color-crimson-dark: #FF8F82;
   --color-ploca: #8FA8D0;    /* lifted for the dark ground, 7.1:1 on surface */
+  --color-band: #161617;     /* on-band 16.6:1, muted 7.0:1, link 6.5:1 */
 }
 
 html {
@@ -81,7 +91,8 @@ html.dark {
   }
   h1, h2, h3, h4 {
     font-family: var(--font-display);
-    font-weight: 600;
+    font-weight: 650;
+    letter-spacing: -0.02em;
     font-optical-sizing: auto;
     text-wrap: balance;
     overflow-wrap: anywhere;
@@ -102,31 +113,31 @@ html.dark {
      tightens as size grows, tracking pulls in the way Apple sets headlines. */
   .display {
     font-family: var(--font-display);
-    font-weight: 600;
-    font-size: clamp(3.25rem, 7vw + 0.5rem, 6rem); /* a real step above title-1 */
+    font-weight: 700;
+    font-size: clamp(3rem, 7vw + 0.5rem, 6rem);
     line-height: 1.02;
-    letter-spacing: -0.03em;
+    letter-spacing: -0.035em;
   }
   .title-1 {
     font-family: var(--font-display);
-    font-weight: 600;
-    font-size: clamp(2.25rem, 3.5vw + 0.75rem, 3.5rem);
-    line-height: 1.06;
-    letter-spacing: -0.022em;
+    font-weight: 700;
+    font-size: clamp(2.5rem, 4vw + 1rem, 4rem);
+    line-height: 1.04;
+    letter-spacing: -0.03em;
   }
   .title-2 {
     font-family: var(--font-display);
-    font-weight: 600;
+    font-weight: 650;
     font-size: clamp(1.75rem, 2vw + 1rem, 2.5rem);
-    line-height: 1.12;
-    letter-spacing: -0.018em;
+    line-height: 1.1;
+    letter-spacing: -0.022em;
   }
   .title-3 {
     font-family: var(--font-display);
     font-weight: 600;
-    font-size: 1.5rem;
-    line-height: 1.2;
-    letter-spacing: -0.012em;
+    font-size: 1.375rem;
+    line-height: 1.22;
+    letter-spacing: -0.015em;
   }
   /* The standfirst under a page title: larger sans, muted. */
   .lede {
@@ -266,6 +277,64 @@ html.dark {
     transform: translateX(2px);
   }
 
+  /* A full-bleed feature band, Apple product-page style: black in both
+     themes, centred, one idea per screen. Links inside take the band's
+     lighter accent. */
+  .band {
+    @apply bg-band text-on-band;
+    padding-block: var(--space-section);
+  }
+  @media (min-width: 48rem) {
+    .band {
+      padding-block: var(--space-section-lg);
+    }
+  }
+  .band .lede,
+  .band .label {
+    @apply text-on-band-muted;
+  }
+  .band .link-more,
+  .band .link {
+    @apply text-on-band-link;
+  }
+  .band .text-muted {
+    @apply text-on-band-muted;
+  }
+  .band .text-ink-2,
+  .band .text-ink {
+    @apply text-on-band;
+  }
+  .band .card-media {
+    background: color-mix(in srgb, var(--color-on-band) 10%, var(--color-band));
+  }
+
+  /* Magazine card: picture first, words beneath, no box around them. */
+  .card {
+    @apply flex min-w-0 flex-col gap-4;
+  }
+  .card-media {
+    @apply relative overflow-hidden rounded-[var(--radius-grouped)] bg-surface;
+  }
+  .card-media img {
+    @apply h-full w-full object-cover;
+    transition: transform 600ms var(--ease-apple);
+  }
+  a.card:hover .card-media img,
+  a:hover > .card .card-media img {
+    transform: scale(1.03);
+  }
+  .card-title {
+    font-family: var(--font-display);
+    font-weight: 650;
+    font-size: 1.25rem;
+    line-height: 1.25;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+  a.card:hover .card-title {
+    @apply underline decoration-1 underline-offset-4;
+  }
+
   /* Page scaffolding. */
   .page {
     @apply mx-auto w-full max-w-[1024px] px-5 sm:px-8;
@@ -315,7 +384,9 @@ html.dark {
   .btn,
   .btn:active,
   .link-more::after,
-  .chevron {
+  .chevron,
+  .card-media img,
+  a.card:hover .card-media img {
     transition: none;
     transform: none;
   }

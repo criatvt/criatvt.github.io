@@ -7,9 +7,8 @@
   <meta name="description" content="Access your book resources for Doomscroller to Reader">
   <meta name="theme-color" content="#FBFBFD" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#0A0A0B" media="(prefers-color-scheme: dark)">
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
   <link rel="preload" href="./fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="./fonts/source-serif-4.woff2" as="font" type="font/woff2" crossorigin>
   <!-- Same appearance rule as the main site (see /index.html). -->
   <script>
     try {
@@ -25,15 +24,11 @@
       font-family: "Inter Variable"; font-weight: 100 900; font-display: swap;
       src: url("./fonts/inter.woff2") format("woff2");
     }
-    @font-face {
-      font-family: "Source Serif 4 Variable"; font-weight: 200 900; font-display: swap;
-      src: url("./fonts/source-serif-4.woff2") format("woff2");
-    }
     :root {
       color-scheme: light;
       --paper: #FBFBFD; --surface: #F2F2F5; --ink: #1D1D1F; --ink-2: #424245;
       --muted: #6E6E73; --line: #D2D2D7; --crimson: #C22B21; --on-crimson: #FFFFFF;
-      --font-display: "Source Serif 4 Variable", Georgia, serif;
+      --font-display: -apple-system, BlinkMacSystemFont, "Inter Variable", "Segoe UI", Roboto, sans-serif;
       --font-sans: -apple-system, BlinkMacSystemFont, "Inter Variable", "Segoe UI", Roboto, sans-serif;
     }
     :root.dark {
@@ -51,22 +46,22 @@
     :focus-visible { outline: 2px solid var(--crimson); outline-offset: 3px; border-radius: 4px; }
     .topbar { max-width: 1024px; margin: 0 auto; padding: 0 20px; height: 52px; display: flex; align-items: center; }
     .brand {
-      font-family: var(--font-display); font-weight: 600; font-size: 1.1875rem;
-      letter-spacing: -0.015em; color: var(--ink); text-decoration: none;
+      font-family: var(--font-display); font-weight: 650; font-size: 1.1875rem;
+      letter-spacing: -0.02em; color: var(--ink); text-decoration: none;
       min-height: 44px; display: inline-flex; align-items: center;
     }
     main { max-width: 640px; margin: 0 auto; padding: 56px 20px 96px; }
     header { margin-bottom: 40px; }
     .book-label { font-size: 0.875rem; font-weight: 600; color: var(--muted); margin-bottom: 12px; }
     h1 {
-      font-family: var(--font-display); font-weight: 600; font-optical-sizing: auto;
-      font-size: clamp(2.25rem, 3.5vw + 0.75rem, 3.5rem); line-height: 1.06;
-      letter-spacing: -0.022em; text-wrap: balance; overflow-wrap: anywhere; margin-bottom: 24px;
+      font-family: var(--font-display); font-weight: 700;
+      font-size: clamp(2.5rem, 4vw + 1rem, 4rem); line-height: 1.04;
+      letter-spacing: -0.03em; text-wrap: balance; overflow-wrap: anywhere; margin-bottom: 24px;
     }
     .intro-text p { color: var(--ink-2); margin-bottom: 16px; text-wrap: pretty; }
     .intro-text p:last-child { margin-bottom: 0; }
     .form-container { background: var(--surface); padding: 36px 28px; border-radius: 1.75rem; }
-    .form-heading { font-family: var(--font-display); font-weight: 600; font-size: 1.5rem; letter-spacing: -0.012em; margin-bottom: 24px; }
+    .form-heading { font-family: var(--font-display); font-weight: 650; font-size: 1.375rem; letter-spacing: -0.015em; margin-bottom: 24px; }
     .formkit-powered-by-convertkit-container { display: none !important; }
     .formkit-form[data-uid="17d2ab237e"] .formkit-fields { display: flex !important; flex-direction: column !important; gap: 0 !important; }
     .formkit-form[data-uid="17d2ab237e"] .formkit-field { width: 100% !important; flex: none !important; margin: 0 0 20px 0 !important; }

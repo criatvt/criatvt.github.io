@@ -2,115 +2,131 @@ import {Link} from "react-router-dom";
 
 // Inline link style shared across the narrative.
 const link = "link";
+const ext = {target: "_blank", rel: "noreferrer"} as const;
 
-// The professional bio, from the LinkedIn About section
-// (linkedin.com/in/aasifiqbalj). One string per paragraph.
-const LINKEDIN_ABOUT: string[] = [
-  "15 years in IT consulting and Edtech.",
-  "My career has been driven by two forces: a fascination with technology and a love for teaching.",
-  "I started as a software engineer at Tata Consultancy Services and Accenture. I soon moved to pitching customers at a startup, finding my calling where those two forces met: Education Technology.",
-  "I became a Co-founder and COO at iamneo. Our mission was to build a developer upskilling platform that universities and enterprises actually loved. My focus: leading B2B Sales, shaping the customer experience, and scaling a high-performance, “never-give-up” team.",
-  "We built something special. In April 2025, iamneo was acquired by NIIT.",
-  "Now? I’ve traded Teams calls for long reads. Quarterly reviews for quiet reflection. After a 15-year sprint, my focus has shifted to being present. My new work is to Read. Think. Create.",
-  "After the startup grind, I wrote and published my first book called Doomscroller to Reader. It is a habit memoir that helps people build a reading habit that sticks.",
-  "I have also been sharing my perspectives of AI in education via essays, Op-Eds in The Hindu and speaking at education conferences. It only reinforced my opinion and almost the truth that attention is the currency in this era. Getting the foundation LSRW is essential not just for children but anyone who wants to learn and sharpen their critical thinking.",
-  "With the pace at which AI is evolving, I couldn’t stop myself from exploring different models. I do commentary on these models by building actually useful tools. Check them all on my website and Github.",
-  "Occasionally, I take up some consulting gigs that require my expertise in sales, governance, operations, systems and processes, specifically in optimizing with the help of AI.",
-];
-
+// The narrative merges the earlier story with the LinkedIn About section
+// (linkedin.com/in/aasifiqbalj). Facts come only from those two sources.
 export default function Story() {
   return (
     <>
       <header className="page pt-16 pb-12 md:pt-28 md:pb-16">
         <h1 className="title-1 enter">My story</h1>
-        <p className="lede enter-2 mt-5 max-w-[30ch]">
-          I started my career in IT, in 2010.
+        <p className="lede enter-2 mt-5 max-w-[34ch]">
+          Fifteen years in IT and edtech, driven by two forces: a fascination
+          with technology and a love for teaching.
         </p>
       </header>
 
-      <article className="page">
-        <div className="prose-col flex flex-col gap-6 text-[1.1875rem] leading-[1.6] text-ink-2">
-          <p>
-            After 6+ years of the grind I got restless, so I rode 4,000km solo
-            across East India for a month.
-          </p>
+      <article>
+        <div className="page">
+          <div className="prose-col flex flex-col gap-6 text-[1.1875rem] leading-[1.6] text-ink-2">
+            <p>
+              I started my career in 2010 as a software engineer at Tata
+              Consultancy Services and Accenture.
+            </p>
+            <p>
+              After 6+ years of the grind I got restless, so I rode 4,000km solo
+              across East India for a month.
+            </p>
+            <p>
+              I came back with a decision to work in education. I joined a K‑12
+              edtech startup and did a bit of everything, from teaching to
+              cold-calling and pitching customers. That is where my two forces
+              met: education technology.
+            </p>
+            <p>
+              In 2020 I joined the founding team of iamneo as Co-founder and COO.
+              Our mission was to build a developer upskilling platform that
+              universities and enterprises actually loved. I led B2B sales,
+              shaped the customer experience, and scaled a high-performance,
+              “never-give-up” team. We grew it 10x, and in April 2025 iamneo was
+              acquired by{" "}
+              <a
+                href="https://www.business-standard.com/industry/news/niit-acquires-coimbatore-based-deep-skilling-training-provider-iamneo-125041701208_1.html"
+                className={link}
+                {...ext}
+              >
+                NIIT
+              </a>
+              .
+            </p>
+          </div>
+        </div>
 
-          <p>
-            I came back with a decision to work in education. I joined a K‑12
-            edtech startup and did a bit of everything, from teaching to
-            cold-calling.
-          </p>
+        {/* The turn in the story, given a screen of its own. */}
+        <section className="band my-[var(--space-section)] md:my-[var(--space-section-lg)]">
+          <div className="page text-center">
+            <p className="display">Read. Think. Create.</p>
+            <p className="lede mx-auto mt-6 max-w-[40ch]">
+              After a 15-year sprint, I’ve traded Teams calls for long reads, and
+              quarterly reviews for quiet reflection. My focus has shifted to
+              being present.
+            </p>
+          </div>
+        </section>
 
-          <p>
-            In 2020 I joined the founding team of iamneo. We scaled it 10x, and
-            the company was acquired by{" "}
-            <a
-              href="https://www.business-standard.com/industry/news/niit-acquires-coimbatore-based-deep-skilling-training-provider-iamneo-125041701208_1.html"
-              target="_blank"
-              rel="noreferrer"
-              className={link}
-            >
-              NIIT
-            </a>{" "}
-            in 2025.
-          </p>
-
-          <p>
-            The author in me came alive in January 2026, when I launched my
-            first book,{" "}
-            <Link to="/book" className={link}>
-              Doomscroller to Reader
-            </Link>
-            .
-          </p>
-
-          <p>
-            Public policy is a quieter interest I take seriously. I studied it at
-            the Takshashila Institution, wrote op-eds in The Hindu and Deccan
-            Herald, and even built a{" "}
-            <a
-              href="https://policywonkgame.aasifj.com"
-              target="_blank"
-              rel="noreferrer"
-              className={link}
-            >
-              game
-            </a>{" "}
-            to test the ideas.
-          </p>
-
-          <p>
-            And a camera usually comes along for the{" "}
-            <Link to="/photography" className={link}>
-              ride
-            </Link>
-            .
-          </p>
+        <div className="page">
+          <div className="prose-col flex flex-col gap-6 text-[1.1875rem] leading-[1.6] text-ink-2">
+            <p>
+              The author in me came alive in January 2026, when I launched my
+              first book,{" "}
+              <Link to="/book" className={link}>
+                Doomscroller to Reader
+              </Link>
+              , a habit memoir that helps people build a reading habit that
+              sticks.
+            </p>
+            <p>
+              I share my perspectives on AI in education through{" "}
+              <Link to="/writing" className={link}>
+                essays and op-eds
+              </Link>{" "}
+              in The Hindu and Deccan Herald, and by{" "}
+              <Link to="/educate" className={link}>
+                speaking
+              </Link>{" "}
+              at education conferences. It has only reinforced what I believe:
+              attention is the currency of this era. A strong foundation in LSRW
+              (listening, speaking, reading and writing) matters not just for
+              children but for anyone who wants to learn and sharpen their
+              critical thinking.
+            </p>
+            <p>
+              With AI evolving this fast, I couldn’t stop myself from exploring
+              different models. I comment on them by{" "}
+              <Link to="/build" className={link}>
+                building actually useful tools
+              </Link>
+              .
+            </p>
+            <p>
+              Occasionally, I take up consulting work that needs my experience in
+              sales, governance, operations, and systems and processes,
+              especially in optimising them with AI.
+            </p>
+            <p>
+              Public policy is a quieter interest I take seriously. I studied it at
+              the Takshashila Institution and even built a{" "}
+              <a href="https://policywonkgame.aasifj.com" className={link} {...ext}>
+                game
+              </a>{" "}
+              to test the ideas.
+            </p>
+            <p>
+              And a camera usually comes along for the{" "}
+              <Link to="/photography" className={link}>
+                ride
+              </Link>
+              .
+            </p>
+            <p>
+              <a href="https://linkedin.com/in/aasifiqbalj" className="link-more tap" {...ext}>
+                View on LinkedIn
+              </a>
+            </p>
+          </div>
         </div>
       </article>
-
-      {/* Profile: the professional bio. */}
-      <section className="page pt-20 md:pt-24">
-        <div className="tile px-7 py-12 sm:px-12 md:py-14">
-          <h2 className="title-2">Profile</h2>
-          <p className="mt-3 text-muted">
-            Co-founder, iamneo (an NIIT venture)
-          </p>
-          <div className="prose-col mt-6 flex flex-col gap-4 text-ink-2">
-            {LINKEDIN_ABOUT.map((para) => (
-              <p key={para}>{para}</p>
-            ))}
-          </div>
-          <a
-            href="https://linkedin.com/in/aasifiqbalj"
-            target="_blank"
-            rel="noreferrer"
-            className="link-more tap mt-4"
-          >
-            View on LinkedIn
-          </a>
-        </div>
-      </section>
     </>
   );
 }
