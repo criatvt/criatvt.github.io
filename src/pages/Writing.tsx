@@ -80,8 +80,8 @@ export default function Writing() {
         )}
       </section>
 
-      {/* Journalism: op-eds in the press, on a black band. */}
-      <section className="band mt-[var(--space-section)] md:mt-[var(--space-section-lg)]" aria-labelledby="press-title">
+      {/* Journalism: op-eds in the press. */}
+      <section className="pt-[var(--space-section)] md:pt-[var(--space-section-lg)]" aria-labelledby="press-title">
         <div className="page">
           <h2 id="press-title" className="title-1">In the press</h2>
           <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-12 md:grid-cols-[repeat(3,minmax(0,1fr))]">

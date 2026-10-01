@@ -20,7 +20,7 @@ branch; never push to `main` directly.
   Photography, Story, NotFound. Routes are in `src/App.tsx`.
 - `src/components/` — `Layout` (footer, scroll reset), `Nav` (translucent bar,
   mobile sheet; its `links` array also drives the footer), `ThemeToggle`,
-  `PlocaBand`, `Cards`, `SafeImage`.
+  `PlocaPanel`, `Cards`, `SafeImage`.
 - `src/index.css` — the whole design system: tokens in `@theme`, dark values
   under `.dark`, and component classes in `@layer components`.
 - `src/data/photos.json` — the Photography album, committed.
@@ -35,24 +35,24 @@ branch; never push to `main` directly.
 
 Built from two references: Apple's Human Interface Guidelines
 (github.com/dickwu/apple-design-skill) and Hallmark's anti-slop rules
-(github.com/Nutlope/hallmark). Home, Ploca and Book use Apple-style
-full-bleed bands (one idea per screen); Writing, Educate and Build use
-magazine image grids.
+(github.com/Nutlope/hallmark). Apple-style centred sections with one idea per
+screen on Home, Ploca and Book; magazine image grids on Writing, Educate and
+Build.
 
 - **Type.** One family: the platform sans (SF Pro on Apple devices, Inter with
   optical sizes elsewhere, self-hosted via `@fontsource-variable/inter/opsz.css`
   in `src/main.tsx`; don't add a Google Fonts link or a second family).
   Headlines are bold and tightly tracked: `.display`, `.title-1`, `.title-2`,
   `.title-3` or plain `h1`–`h4`. Body text is 17px. Headings are never italic.
-- **Colour.** Use only the tokens: `paper`, `surface`, `ink`, `ink-2` (body
-  copy under a headline; never `text-ink/80`), `muted`, `line`, `crimson`,
-  `crimson-dark`, `crimson-fill`, `on-crimson`, `band`, `on-band`,
-  `on-band-muted`, `on-band-link`, `ploca` and `ploca-on-band` (Ploca’s mark
-  only, never text). Crimson is for actions and links only: `.btn-primary`,
-  `.link`, `.link-more`, the focus ring and the active-nav underline. Everything
-  else is monochrome. Never hard-code hex/rgb in components; add a token to
-  `@theme` (and `.dark`) first. Every text pair meets WCAG AA (4.5:1) in both
-  themes, so re-check contrast whenever a colour changes.
+- **Colour.** Fully monochrome: colour comes only from images and Ploca’s
+  own mark. Use only the tokens: `paper`, `surface`, `ink`, `ink-2` (body copy
+  under a headline; never `text-ink/80`), `muted`, `line`, `action` and
+  `on-action` (buttons, focus), `band`, `on-band`, `on-band-muted`, and
+  `ploca` / `ploca-wash` (Ploca’s mark and panel only, never text colour).
+  Links are ink with an underline; `.link-more` is ink with a ›. Never
+  hard-code hex/rgb in components; add a token to `@theme` (and `.dark`)
+  first. Every text pair meets WCAG AA (4.5:1) in both themes, so re-check
+  contrast whenever a colour changes.
 - **Appearance.** The site follows the system light/dark setting. The nav
   toggle stores an override in `localStorage.theme`; choosing what the system
   already shows clears it. `index.html` applies the same rule before first
@@ -60,12 +60,13 @@ magazine image grids.
 - **Sizes.** Nothing a reader needs is under 14px. Interactive targets are at
   least 44px: use `.tap` on small links; `.btn` already has `min-h-11`.
 - **Components.**
-  - `.band`: a full-bleed black feature section in both themes; it re-colours
-    muted text, links and card media inside it.
+  - `.band`: a full-bleed black section in both themes, used once (“Read.
+    Think. Create.” on Story). Keep it that rare.
   - `.card`, `.card-media`, `.card-title`: the magazine card (picture first,
     words beneath). Use `ImageCard` and `TalkVideo` in
     `src/components/Cards.tsx` rather than hand-building them.
-  - `PlocaBand` (src/components) is the one way Ploca appears, on Home and Build.
+  - `PlocaPanel` (src/components) is the one way Ploca appears, on Home and
+    Build: a rounded `ploca-wash` panel.
   - `SafeImage` wraps every hotlinked image. It handles failures, and preview
     builds show labelled placeholders.
   - Also: `.page` (1024px max, side gutters), `.prose-col` (~68ch measure),
@@ -88,8 +89,8 @@ magazine image grids.
 ## Content rules
 
 - **Ploca is always featured at the top**, labelled "Currently building": the
-  first band on the Build page, above every other build, and the band directly
-  after the intro on Home.
+  first panel on the Build page, above every other build, and the panel
+  directly after the intro on Home.
 - The Build list is newest first, below Ploca. Each entry has a name, a kind
   (Game / Tool / Open source), a URL and a one-sentence blurb.
 - Honest copy only: no invented metrics, testimonials or dates. Keep Aasif's

@@ -71,8 +71,8 @@ export default function Educate() {
       </section>
 
       {/* Invitation to get in touch. */}
-      <section className="band mt-[var(--space-section)] md:mt-[var(--space-section-lg)]">
-        <div className="page text-center">
+      <section className="page pt-[var(--space-section)] md:pt-[var(--space-section-lg)]">
+        <div className="tile px-7 py-14 text-center sm:px-12 md:py-20">
           <h2 className="title-1">Let&rsquo;s talk</h2>
           <p className="mx-auto mt-5 max-w-[44ch] text-ink-2">
             I enjoy speaking and trading perspectives with fellow educators,

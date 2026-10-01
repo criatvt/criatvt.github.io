@@ -1,5 +1,5 @@
 import {Link} from "react-router-dom";
-import PlocaBand from "../components/PlocaBand";
+import PlocaPanel from "../components/PlocaPanel";
 import SafeImage from "../components/SafeImage";
 import {ImageCard} from "../components/Cards";
 import {book, talks, youtubeThumb} from "../data/content";
@@ -22,7 +22,7 @@ export default function Home() {
           <Link to="/educate" className="link">educate</Link>.
         </p>
 
-        <div className="prose-col enter-3 mx-auto mt-10 flex flex-col gap-5 text-left text-ink-2 md:mt-12">
+        <div className="prose-col enter-3 mx-auto mt-12 flex flex-col gap-6 text-left text-[clamp(1.1875rem,0.3vw+1.1rem,1.25rem)] leading-[1.7] text-ink-2 md:mt-16">
           <p>
             Formerly, as a co-founder and Chief Operating Officer, I helped
             scale{" "}
@@ -50,7 +50,7 @@ export default function Home() {
       </section>
 
       {/* Currently building: always first after the intro. */}
-      <PlocaBand more={{to: "/build", label: "See everything I have built"}} />
+      <PlocaPanel more={{to: "/build", label: "See everything I have built"}} />
 
       {/* Latest writing, as magazine cards. */}
       <section className="page pt-[var(--space-section)] md:pt-[var(--space-section-lg)]">

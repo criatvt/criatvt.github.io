@@ -3,24 +3,24 @@ import {Link} from "react-router-dom";
 // Ploca's mark: three concentric discs, drawn from the product's own icon.
 function PlocaMark() {
   return (
-    <svg viewBox="0 0 100 100" aria-hidden="true" className="mx-auto h-24 w-24 text-ploca-on-band md:h-28 md:w-28">
-      <circle cx="50" cy="50" r="50" fill="currentColor" fillOpacity="0.16" />
-      <circle cx="50" cy="50" r="34" fill="currentColor" fillOpacity="0.45" />
+    <svg viewBox="0 0 100 100" aria-hidden="true" className="mx-auto h-24 w-24 text-ploca md:h-28 md:w-28">
+      <circle cx="50" cy="50" r="50" fill="currentColor" fillOpacity="0.1" />
+      <circle cx="50" cy="50" r="34" fill="currentColor" fillOpacity="0.4" />
       <circle cx="50" cy="50" r="20" fill="currentColor" />
     </svg>
   );
 }
 
-// The flagship, as a full-bleed black band: the one way Ploca appears, first
-// after the intro on Home and first on Build. Copy follows ploca.app.
-export default function PlocaBand({more}: {more?: {to: string; label: string}}) {
+// The flagship, on a soft navy-washed panel that echoes ploca.app: the one
+// way Ploca appears, first after the intro on Home and first on Build.
+export default function PlocaPanel({more}: {more?: {to: string; label: string}}) {
   return (
-    <section aria-labelledby="ploca-title" className="band">
-      <div className="page text-center">
+    <section aria-labelledby="ploca-title" className="page">
+      <div className="rounded-[var(--radius-tile)] bg-ploca-wash px-6 py-16 text-center sm:px-12 md:py-24">
         <PlocaMark />
         <p className="label mt-8">Currently building</p>
         <h2 id="ploca-title" className="display mt-2">ploca</h2>
-        <p className="title-3 mx-auto mt-5 max-w-[24ch] font-semibold text-on-band">
+        <p className="title-3 mx-auto mt-5 max-w-[24ch]">
           Dictation in the way you speak, privately on your Mac.
         </p>
         <p className="lede mx-auto mt-4 max-w-[38ch]">

@@ -3,8 +3,8 @@
 
 /* Design system: Apple product page meets magazine. One sans family (SF Pro on
    Apple devices, Inter with optical sizes elsewhere, so large headlines get a
-   display cut), bold and tightly tracked for headlines. Monochrome grounds,
-   full-bleed black feature bands, and crimson reserved for actions and links.
+   display cut), bold and tightly tracked for headlines. Fully monochrome:
+   colour comes only from images and Ploca's own mark.
    Every colour and face is a token below; components never hard-code either.
    The font is self-hosted from npm (see main.tsx); nothing loads from a CDN. */
 @theme {
@@ -19,10 +19,9 @@
   --color-ink-2: #424245;    /* body copy under a headline, 9.7:1 on paper; replaces text-ink/80 */
   --color-muted: #6E6E73;    /* secondary text, 4.9:1 on paper, 4.5:1 on surface */
   --color-line: #D2D2D7;     /* hairlines */
-  --color-crimson: #C22B21;  /* the one accent: links, focus, highlights, 5.5:1 */
-  --color-crimson-dark: #9E2119; /* accent, pressed */
-  --color-crimson-fill: #C22B21; /* solid button fill; white text 5.7:1 in both themes */
-  --color-on-crimson: #FFFFFF;
+  --color-action: #1D1D1F;   /* buttons, links, focus: monochrome, 16.3:1 on paper */
+  --color-on-action: #FBFBFD;
+  --color-ploca-wash: #F0F3F8; /* Ploca panel ground: ink 15.1:1, muted 4.6:1 */
   --color-ploca: #1F3558;    /* Ploca's navy, for its mark only (never text): 11.7:1 on paper */
 
   /* Feature bands: black in both themes (a touch lifted in dark so the band
@@ -30,8 +29,6 @@
   --color-band: #000000;
   --color-on-band: #F5F5F7;        /* 19.3:1 on band */
   --color-on-band-muted: #A1A1A6;  /* 8.2:1 on band */
-  --color-on-band-link: #FF6B5B;   /* 7.5:1 on band */
-  --color-ploca-on-band: #8FA8D0;  /* Ploca's mark on a band (graphic only) */
 
   --ease-apple: cubic-bezier(0.25, 0.1, 0.25, 1);
 
@@ -58,8 +55,9 @@
   --color-ink-2: #D1D1D6;    /* 13.0:1 on paper */
   --color-muted: #A1A1A6;    /* 7.7:1 on paper, 6.6:1 on surface */
   --color-line: #38383A;
-  --color-crimson: #FF6B5B;  /* lifted for the dark ground, 7.1:1 */
-  --color-crimson-dark: #FF8F82;
+  --color-action: #F5F5F7;   /* 18.2:1 on paper */
+  --color-on-action: #0A0A0B;
+  --color-ploca-wash: #18202D; /* ink 15.0:1, muted 6.4:1 */
   --color-ploca: #8FA8D0;    /* lifted for the dark ground, 7.1:1 on surface */
   --color-band: #161617;     /* on-band 16.6:1, muted 7.0:1, link 6.5:1 */
 }
@@ -87,7 +85,7 @@ html.dark {
     font-feature-settings: "kern", "liga";
   }
   ::selection {
-    background: color-mix(in srgb, var(--color-crimson) 22%, transparent);
+    background: color-mix(in srgb, var(--color-ink) 16%, transparent);
   }
   h1, h2, h3, h4 {
     font-family: var(--font-display);
@@ -102,7 +100,7 @@ html.dark {
     text-wrap: pretty;
   }
   :focus-visible {
-    outline: 2px solid var(--color-crimson);
+    outline: 2px solid var(--color-action);
     outline-offset: 3px;
     border-radius: 4px;
   }
@@ -162,7 +160,7 @@ html.dark {
 
   /* Apple's text link: accent colour, a trailing chevron, underline on hover. */
   .link-more {
-    @apply inline-flex items-center gap-1 whitespace-nowrap text-crimson;
+    @apply inline-flex items-center gap-1 whitespace-nowrap font-medium text-ink;
     line-height: 1.2;
   }
   .link-more::after {
@@ -179,20 +177,20 @@ html.dark {
     transform: translate(2px, -0.04em);
   }
   .link-more:active {
-    @apply text-crimson-dark;
+    @apply opacity-60;
   }
 
   /* Inline link inside running prose. */
   .link {
-    @apply text-crimson underline decoration-1 underline-offset-[3px];
-    text-decoration-color: color-mix(in srgb, var(--color-crimson) 40%, transparent);
+    @apply text-ink underline decoration-1 underline-offset-[3px];
+    text-decoration-color: color-mix(in srgb, var(--color-ink) 35%, transparent);
     transition: text-decoration-color 150ms var(--ease-apple);
   }
   .link:hover {
     text-decoration-color: currentColor;
   }
   .link:active {
-    @apply text-crimson-dark;
+    @apply opacity-60;
   }
 
   /* Pill button. Filled for the page's primary action, tinted otherwise. */
@@ -211,18 +209,18 @@ html.dark {
     @apply pointer-events-none opacity-40;
   }
   .btn-primary {
-    background: var(--color-crimson-fill);
-    color: var(--color-on-crimson);
+    background: var(--color-action);
+    color: var(--color-on-action);
   }
   .btn-primary:hover {
-    background: color-mix(in srgb, var(--color-crimson-fill) 88%, black);
+    background: color-mix(in srgb, var(--color-action) 82%, var(--color-paper));
   }
   .btn-secondary {
-    @apply text-crimson;
-    background: color-mix(in srgb, var(--color-crimson) 10%, transparent);
+    @apply text-ink;
+    background: color-mix(in srgb, var(--color-ink) 8%, transparent);
   }
   .btn-secondary:hover {
-    background: color-mix(in srgb, var(--color-crimson) 16%, transparent);
+    background: color-mix(in srgb, var(--color-ink) 14%, transparent);
   }
 
   /* Raised surface: Apple's rounded tile. */
@@ -278,8 +276,7 @@ html.dark {
   }
 
   /* A full-bleed feature band, Apple product-page style: black in both
-     themes, centred, one idea per screen. Links inside take the band's
-     lighter accent. */
+     themes, centred, one idea per screen. Used once, for the turn in Story. */
   .band {
     @apply bg-band text-on-band;
     padding-block: var(--space-section);
@@ -295,7 +292,7 @@ html.dark {
   }
   .band .link-more,
   .band .link {
-    @apply text-on-band-link;
+    @apply text-on-band;
   }
   .band .text-muted {
     @apply text-on-band-muted;

@@ -78,7 +78,7 @@ export default function Nav() {
                   className={({isActive}) =>
                     `tap whitespace-nowrap text-[0.875rem] underline decoration-2 underline-offset-[10px] transition-colors ${
                       isActive
-                        ? "text-ink decoration-crimson"
+                        ? "text-ink decoration-ink"
                         : "text-muted decoration-transparent hover:text-ink"
                     }`
                   }

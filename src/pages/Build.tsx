@@ -1,4 +1,4 @@
-import PlocaBand from "../components/PlocaBand";
+import PlocaPanel from "../components/PlocaPanel";
 
 // Newest first. `kind` is the one-word label shown beside each name.
 const builds = [
@@ -52,7 +52,7 @@ export default function Build() {
       </header>
 
       {/* Currently building: Ploca, always first. */}
-      <PlocaBand />
+      <PlocaPanel />
 
       {/* Everything else, newest first, as a two-column grid. */}
       <section className="page pt-[var(--space-section)] md:pt-[var(--space-section-lg)]">

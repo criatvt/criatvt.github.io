@@ -4,9 +4,9 @@ import {book, endorsements} from "../data/content";
 export default function Book() {
   return (
     <>
-      {/* Hero on a black band: the cover beside the title and actions. */}
-      <section className="band">
-        <div className="page grid grid-cols-1 items-center gap-12 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:gap-16">
+      {/* Hero: the cover beside the title and actions. */}
+      <section className="page pt-12 md:pt-24">
+        <div className="grid grid-cols-1 items-center gap-12 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:gap-16">
           <a
             href={book.amazon}
             target="_blank"
@@ -19,11 +19,11 @@ export default function Book() {
               alt={`Cover of ${book.title}`}
               referrerPolicy="no-referrer"
               fallback={
-                <div className="flex aspect-[5/8] w-full items-end rounded-[4px] bg-paper p-6 text-ink shadow-cover">
+                <div className="flex aspect-[5/8] w-full items-end rounded-[4px] bg-surface p-6 shadow-cover">
                   <span className="title-3">{book.title}</span>
                 </div>
               }
-              className="aspect-[5/8] w-full rounded-[4px] object-cover shadow-cover"
+              className="aspect-[5/8] w-full rounded-[4px] bg-surface object-cover shadow-cover"
             />
           </a>
 
@@ -32,7 +32,7 @@ export default function Book() {
             <h1 className="title-1 mt-3">{book.title}</h1>
             <p className="lede mx-auto mt-5 max-w-[30ch] md:mx-0">{book.tagline}</p>
             <p className="mt-6 text-[0.9375rem] text-muted">
-              <span className="font-semibold text-on-band tabular-nums">{book.rating}</span> out of 5,
+              <span className="font-semibold text-ink tabular-nums">{book.rating}</span> out of 5,
               average on Amazon
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-x-7 gap-y-3 md:justify-start">
@@ -53,7 +53,7 @@ export default function Book() {
         <div className="grid grid-cols-1 gap-14 md:grid-cols-2 md:gap-16">
           {endorsements.map((r) => (
             <figure key={r.by} className="flex flex-col gap-5">
-              <blockquote className="title-2">&ldquo;{r.quote}&rdquo;</blockquote>
+              <blockquote className="text-[clamp(1.5rem,1.2vw+1.1rem,2rem)] font-medium leading-[1.3] tracking-[-0.015em]">&ldquo;{r.quote}&rdquo;</blockquote>
               <figcaption className="text-[0.9375rem] text-muted">{r.by}</figcaption>
             </figure>
           ))}

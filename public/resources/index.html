@@ -27,14 +27,14 @@
     :root {
       color-scheme: light;
       --paper: #FBFBFD; --surface: #F2F2F5; --ink: #1D1D1F; --ink-2: #424245;
-      --muted: #6E6E73; --line: #D2D2D7; --crimson: #C22B21; --on-crimson: #FFFFFF;
+      --muted: #6E6E73; --line: #D2D2D7; --action: #1D1D1F; --on-action: #FBFBFD;
       --font-display: -apple-system, BlinkMacSystemFont, "Inter Variable", "Segoe UI", Roboto, sans-serif;
       --font-sans: -apple-system, BlinkMacSystemFont, "Inter Variable", "Segoe UI", Roboto, sans-serif;
     }
     :root.dark {
       color-scheme: dark;
       --paper: #0A0A0B; --surface: #1C1C1E; --ink: #F5F5F7; --ink-2: #D1D1D6;
-      --muted: #A1A1A6; --line: #38383A; --crimson: #FF6B5B;
+      --muted: #A1A1A6; --line: #38383A; --action: #F5F5F7; --on-action: #0A0A0B;
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html { -webkit-text-size-adjust: 100%; overflow-x: clip; }
@@ -43,7 +43,7 @@
       letter-spacing: -0.011em; background: var(--paper); color: var(--ink);
       -webkit-font-smoothing: antialiased; overflow-x: clip;
     }
-    :focus-visible { outline: 2px solid var(--crimson); outline-offset: 3px; border-radius: 4px; }
+    :focus-visible { outline: 2px solid var(--action); outline-offset: 3px; border-radius: 4px; }
     .topbar { max-width: 1024px; margin: 0 auto; padding: 0 20px; height: 52px; display: flex; align-items: center; }
     .brand {
       font-family: var(--font-display); font-weight: 650; font-size: 1.1875rem;
@@ -73,19 +73,18 @@
       font: inherit !important; letter-spacing: inherit !important; margin: 0 !important;
     }
     .formkit-form[data-uid="17d2ab237e"] .formkit-input::placeholder { color: var(--muted) !important; opacity: 1 !important; }
-    .formkit-form[data-uid="17d2ab237e"] .formkit-input:focus-visible { outline: 2px solid var(--crimson) !important; outline-offset: 2px !important; border-color: var(--crimson) !important; }
+    .formkit-form[data-uid="17d2ab237e"] .formkit-input:focus-visible { outline: 2px solid var(--action) !important; outline-offset: 2px !important; border-color: var(--action) !important; }
     .formkit-form[data-uid="17d2ab237e"] .formkit-submit {
-      background: var(--crimson) !important; color: var(--on-crimson) !important;
+      background: var(--action) !important; color: var(--on-action) !important;
       border: 0 !important; border-radius: 999px !important; min-height: 48px !important;
       padding: 12px 24px !important; width: 100% !important; font: inherit !important;
       font-weight: 500 !important; cursor: pointer !important; margin: 0 !important;
     }
-    :root.dark .formkit-form[data-uid="17d2ab237e"] .formkit-submit { background: #C22B21 !important; }
-    .formkit-form[data-uid="17d2ab237e"] .formkit-submit:hover { filter: brightness(0.92); }
+    .formkit-form[data-uid="17d2ab237e"] .formkit-submit:hover { opacity: 0.85; }
     .formkit-form[data-uid="17d2ab237e"] .formkit-alert-success,
     .formkit-form[data-uid="17d2ab237e"] .formkit-alert-error {
       background: var(--paper) !important; color: var(--ink) !important;
-      border: 1px solid var(--crimson) !important; border-radius: 0.75rem !important;
+      border: 1px solid var(--action) !important; border-radius: 0.75rem !important;
       padding: 16px !important; margin-bottom: 20px !important; font: inherit !important;
     }
     .formkit-form[data-uid="17d2ab237e"] .formkit-alert-error:empty { display: none !important; }
