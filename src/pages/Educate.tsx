@@ -18,7 +18,7 @@ const talks: Talk[] = [
     blurb:
       "A panel at the Sixth National Conference on Education, a national gathering of educators, policymakers, and researchers hosted by Vidya Vanam in Anaikatti, Coimbatore, on the theme of AI in Education. The argument: AI in the classroom has to start with responsible use, not just the tools.",
     panel:
-      "With Jibu Elias (Mozilla Foundation, who leads the Responsible Computing Challenge in India; AI ethicist, ex-INDIAai) and Neerja Singh (author and speaker on generational diversity and intergenerational communication, known as \"The Seenager\"). Moderated by Sudarshana Srinivasan.",
+      "With Jibu Elias (Mozilla Foundation, who leads the Responsible Computing Challenge in India; AI ethicist, ex-INDIAai) and Neerja Singh (author and speaker on generational diversity and intergenerational communication, known as “The Seenager”). Moderated by Sudarshana Srinivasan.",
   },
   {
     youtubeId: "dC6O7ysyudU",
@@ -35,13 +35,13 @@ const talks: Talk[] = [
 // The two press pieces most relevant to AI in education, as on /writing.
 const articles = [
   {
-    title: "India's tech education crisis: When engineers can't code",
+    title: "India’s tech education crisis: When engineers can’t code",
     publication: "The Hindu",
     url: "https://www.thehindu.com/education/indias-tech-education-crisis-when-computer-engineers-cant-code/article69243098.ece",
     date: "2025-02-20",
   },
   {
-    title: "CBSE's future-ready AI curriculum, but are students ready?",
+    title: "CBSE’s future-ready AI curriculum, but are students ready?",
     publication: "The Hindu",
     url: "https://www.thehindu.com/education/cbses-future-ready-ai-curriculum-but-are-students-ready/article70823388.ece",
     date: "2026-04-06",
@@ -60,12 +60,11 @@ function formatDate(iso: string): string {
 }
 
 // A talk: responsive 16:9 YouTube embed on a rounded tile, then date and host,
-// title, blurb, and panel. Props typed `any` because this project runs React
-// untyped, so a concrete type rejects React's `key`.
-function TalkCard({talk}: any) {
+// title, blurb, and panel.
+function TalkCard({talk}: {talk: Talk; key?: string}) {
   return (
     <article className="grid grid-cols-1 gap-7 md:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] md:gap-10">
-      <div className="aspect-video overflow-hidden rounded-[1.25rem] bg-surface">
+      <div className="aspect-video overflow-hidden rounded-[var(--radius-grouped)] bg-surface">
         <iframe
           className="h-full w-full"
           src={`https://www.youtube-nocookie.com/embed/${talk.youtubeId}`}
@@ -80,7 +79,7 @@ function TalkCard({talk}: any) {
           {formatDate(talk.date)} · {talk.host}
         </span>
         <h3 className="title-3">{talk.title}</h3>
-        <p className="text-[0.9375rem] leading-[1.6] text-ink-2">{talk.blurb}</p>
+        <p className="text-[1rem] leading-[1.6] text-ink-2">{talk.blurb}</p>
         <p className="text-[0.875rem] leading-[1.55] text-muted">{talk.panel}</p>
       </div>
     </article>
@@ -109,7 +108,7 @@ export default function Educate() {
         </div>
       </section>
 
-      <section className="page pt-20 md:pt-28">
+      <section className="page pt-[var(--space-section)] md:pt-[var(--space-section-lg)]">
         <h2 className="title-2">Writing</h2>
         <ul className="grouped mt-8">
           {articles.map((a) => (
@@ -131,7 +130,7 @@ export default function Educate() {
       </section>
 
       {/* Invitation to get in touch. */}
-      <section className="page pt-20 md:pt-28">
+      <section className="page pt-[var(--space-section)] md:pt-[var(--space-section-lg)]">
         <div className="tile px-7 py-14 text-center sm:px-12 md:py-20">
           <h2 className="title-2">Let&rsquo;s talk</h2>
           <p className="mx-auto mt-5 max-w-[44ch] text-ink-2">

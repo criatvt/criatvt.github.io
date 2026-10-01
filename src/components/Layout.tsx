@@ -67,6 +67,11 @@ export default function Layout() {
       <PageTitle />
       <a
         href="#main"
+        onClick={(e) => {
+          // Focus the content without touching the URL (the hash is a route in preview builds).
+          e.preventDefault();
+          document.getElementById("main")?.focus();
+        }}
         className="fixed left-4 top-3 z-[60] -translate-y-20 rounded-full bg-ink px-5 py-3 text-paper focus:translate-y-0"
       >
         Skip to content

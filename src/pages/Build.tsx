@@ -57,7 +57,7 @@ export default function Build() {
       </section>
 
       {/* Everything else, as one grouped list. */}
-      <section className="page pt-16 md:pt-20">
+      <section className="page pt-[var(--space-section)]">
         <h2 className="sr-only">Tools and games</h2>
         <ul className="grouped">
           {builds.map((b) => (
@@ -68,7 +68,7 @@ export default function Build() {
                     <span className="font-display text-[1.375rem] font-semibold tracking-[-0.014em]">
                       {b.name}
                     </span>
-                    <span className="text-[0.875rem] text-muted">{b.kind}</span>
+                    <span className="rounded-full bg-paper px-2.5 py-0.5 text-[0.875rem] text-muted">{b.kind}</span>
                   </div>
                   <p className="max-w-[60ch] text-[0.9375rem] leading-[1.55] text-ink-2">{b.blurb}</p>
                   <span className="text-[0.875rem] text-muted">{host(b.url)}</span>

@@ -1,4 +1,5 @@
 import {useEffect, useState} from "react";
+import SafeImage from "../components/SafeImage";
 
 // Render a date the way the rest of the site does: 20 Aug 2026.
 function shortDate(raw?: string): string {
@@ -24,7 +25,6 @@ type Essay = {
 // Journalism — manual list. Pre-filled from Aasif's published op-eds.
 // Images and subtitles are the articles' OpenGraph cover/description,
 // captured from each publication so the cards match the essay cards.
-// TODO(Aasif): add publication dates if you want them shown.
 const journalism: {
   title: string;
   publication: string;
@@ -34,17 +34,17 @@ const journalism: {
   image?: string;
 }[] = [
   {
-    title: "India's tech education crisis: When engineers can't code",
+    title: "India’s tech education crisis: When engineers can’t code",
     publication: "The Hindu",
     url: "https://www.thehindu.com/education/indias-tech-education-crisis-when-computer-engineers-cant-code/article69243098.ece",
     date: "2025-02-20T19:33:55+05:30",
     subtitle:
-      "Infosys layoffs spark debate on Indian graduates' programming skills, and the case for a hybrid assessment framework in higher education.",
+      "Infosys layoffs spark debate on Indian graduates’ programming skills, and the case for a hybrid assessment framework in higher education.",
     image:
       "https://th-i.thgim.com/public/incoming/oqcs7d/article69243145.ece/alternates/LANDSCAPE_1200/iStock-1354205521.jpg",
   },
   {
-    title: "CBSE's future-ready AI curriculum, but are students ready?",
+    title: "CBSE’s future-ready AI curriculum, but are students ready?",
     publication: "The Hindu",
     url: "https://www.thehindu.com/education/cbses-future-ready-ai-curriculum-but-are-students-ready/article70823388.ece",
     date: "2026-04-06T08:00:00+05:30",
@@ -59,7 +59,7 @@ const journalism: {
     url: "https://www.deccanherald.com/education/lessons-about-social-media-usage-from-the-idiot-box-era-2-3958121",
     date: "2026-04-07T09:28:11+05:30",
     subtitle:
-      "Short-form video's grip on children echoes an earlier era's fears about television, and what that history suggests about balanced use.",
+      "Short-form video's grip on children echoes an earlier era’s fears about television, and what that history suggests about balanced use.",
     image:
       "https://media.assettype.com/deccanherald%2F2026-04-07%2Fyy3ksxvx%2FiStock-1413735503.jpg?w=1200&ar=40%3A21&auto=format%2Ccompress&ogImage=true&mode=crop",
   },
@@ -182,7 +182,7 @@ async function loadLive(): Promise<Essay[] | null> {
 // The bundled snapshot, refreshed nightly by scripts/fetch-essays.mjs.
 async function loadSnapshot(): Promise<Essay[] | null> {
   try {
-    const res = await fetch("/essays.json");
+    const res = await fetch(`${import.meta.env.BASE_URL}essays.json`);
     if (!res.ok) throw new Error("not found");
     const data = (await res.json()) as Essay[];
     return Array.isArray(data) ? data : [];
@@ -205,7 +205,14 @@ export default function Writing() {
     // with the bundled snapshot (the accumulated back-catalogue), live data
     // winning where the same essay appears in both.
     async function load() {
-      const [live, snapshot] = await Promise.all([loadLive(), loadSnapshot()]);
+      // Show the bundled snapshot the moment it arrives; the live feed (which
+      // can be slow or blocked) then merges in whatever is newer.
+      const snapshotP = loadSnapshot();
+      const liveP = loadLive();
+      const snapshot = await snapshotP;
+      if (cancelled) return;
+      if (snapshot !== null) setEssays(mergeEssays(snapshot));
+      const live = await liveP;
       if (cancelled) return;
       if (live === null && snapshot === null) setError(true);
       else setEssays(mergeEssays(live ?? [], snapshot ?? []));
@@ -242,8 +249,9 @@ export default function Writing() {
                 className="tile group flex h-full flex-col overflow-hidden"
               >
                 {j.image && (
-                  <div className="aspect-[16/10] overflow-hidden bg-line">
-                    <img
+                  <div className="hidden aspect-[16/10] overflow-hidden bg-line has-[img]:block">
+                    <SafeImage
+                      fallback={null}
                       src={j.image}
                       alt=""
                       loading="lazy"
@@ -269,11 +277,18 @@ export default function Writing() {
       </section>
 
       {/* Essays: the Substack archive, newest first. */}
-      <section className="page pt-20 md:pt-28">
+      <section className="page pt-[var(--space-section)] md:pt-[var(--space-section-lg)]">
         <h2 className="title-2">Essays</h2>
         <div className="mt-8">
           {essays === null && !error && (
-            <p className="text-muted" role="status">Loading essays&#8230;</p>
+            <div className="grouped" role="status" aria-label="Loading essays">
+              {[0, 1, 2, 3, 4, 5].map((i) => (
+                <div key={i} className="row" aria-hidden="true">
+                  <span className="h-5 w-3/5 animate-pulse rounded-full bg-line motion-reduce:animate-none" />
+                  <span className="ml-auto h-4 w-20 animate-pulse rounded-full bg-line motion-reduce:animate-none" />
+                </div>
+              ))}
+            </div>
           )}
           {error && (
             <p className="text-muted">
@@ -304,7 +319,7 @@ export default function Writing() {
                 ))}
               </ul>
               <p className="mt-8">
-                <a href="https://aasifj.substack.com" target="_blank" rel="noreferrer" className="link-more">
+                <a href="https://aasifj.substack.com" target="_blank" rel="noreferrer" className="link-more tap">
                   Subscribe on Substack
                 </a>
               </p>

@@ -24,12 +24,13 @@ const lightbox = (p: Photo) => `${p.link.replace(/\/$/, "")}/lightbox/`;
 const albumUrl = `https://www.flickr.com/photos/${USER_PATH}/albums/${ALBUM_ID}/`;
 
 // One photo per screen. The page is its own scroll container — a viewport
-// minus the fixed nav (52px) — with mandatory y-snapping, so a scroll settles
-// on the next photo instead of stopping halfway. It has to be a local
+// minus the fixed nav (52px) — with proximity y-snapping, so a scroll settles
+// on the next photo instead of stopping halfway, yet a tall caption on a short
+// screen can always be scrolled past. It has to be a local
 // container rather than the document: snapping on the document is fragile
 // across browsers once any ancestor clips overflow.
 const FRAME =
-  "h-[calc(100svh-52px)] overflow-y-auto snap-y snap-mandatory outline-none";
+  "h-[calc(100svh-52px)] overflow-y-auto snap-y snap-proximity outline-none";
 const SECTION =
   "snap-start h-full flex flex-col items-center justify-center px-4 md:px-10 py-6 md:py-10";
 // The intro write-up runs longer than a phone screen. It needs min-h-full
@@ -145,7 +146,7 @@ export default function Photography() {
               Open the lightbox
             </a>
           )}
-          <a href={albumUrl} target="_blank" rel="noreferrer" className="link-more">
+          <a href={albumUrl} target="_blank" rel="noreferrer" className="link-more tap">
             Album on Flickr
           </a>
         </div>

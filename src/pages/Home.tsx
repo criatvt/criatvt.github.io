@@ -53,7 +53,7 @@ export default function Home() {
           </div>
 
           <img
-            src="/portrait.jpg"
+            src={`${import.meta.env.BASE_URL}portrait.jpg`}
             width={960}
             height={1286}
             alt="Portrait of Aasif Iqbal J."

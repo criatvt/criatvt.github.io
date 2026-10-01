@@ -216,7 +216,7 @@ html.dark {
 
   /* Raised surface: Apple's rounded tile. */
   .tile {
-    @apply rounded-[1.75rem] bg-surface;
+    @apply rounded-[var(--radius-tile)] bg-surface;
   }
   a.tile {
     transition: background-color 150ms var(--ease-apple);
@@ -228,7 +228,7 @@ html.dark {
   /* An inset grouped list: rows on one surface, hairlines between them that
      stop short of the leading edge, the way iOS draws them. */
   .grouped {
-    @apply overflow-hidden rounded-[1.375rem] bg-surface;
+    @apply overflow-hidden rounded-[var(--radius-grouped)] bg-surface;
   }
   .grouped > * + * {
     position: relative;

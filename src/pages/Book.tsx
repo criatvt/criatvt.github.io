@@ -1,3 +1,5 @@
+import SafeImage from "../components/SafeImage";
+
 const AMAZON = "https://www.amazon.in/dp/B0GH73Z8RP";
 
 // Read off the Amazon India listing on 17 Aug 2026. The rating count is
@@ -30,10 +32,15 @@ export default function Book() {
             rel="noreferrer"
             className="enter mx-auto block w-48 sm:w-56 md:w-full md:max-w-[340px]"
           >
-            <img
+            <SafeImage
               src="https://m.media-amazon.com/images/P/B0GH73Z8RP.01.LZZZZZZZ.jpg"
               alt="Cover of Doomscroller to Reader"
               referrerPolicy="no-referrer"
+              fallback={
+                <div className="flex aspect-[5/8] w-full items-end rounded-[4px] bg-surface p-6 shadow-cover">
+                  <span className="font-display text-[1.5rem] font-semibold leading-[1.15]">Doomscroller to Reader</span>
+                </div>
+              }
               className="aspect-[5/8] w-full rounded-[4px] bg-surface object-cover shadow-cover"
             />
           </a>
@@ -52,7 +59,7 @@ export default function Book() {
               <a href={AMAZON} target="_blank" rel="noreferrer" className="btn btn-primary">
                 Order on Amazon
               </a>
-              <a href="/resources/" className="link-more">Book resources</a>
+              <a href={`${import.meta.env.BASE_URL}resources/`} className="link-more tap">Book resources</a>
             </div>
           </div>
         </div>
@@ -74,7 +81,7 @@ export default function Book() {
           </div>
         </div>
         <p className="mt-8 text-center">
-          <a href={`${AMAZON}#customerReviews`} target="_blank" rel="noreferrer" className="link-more">
+          <a href={`${AMAZON}#customerReviews`} target="_blank" rel="noreferrer" className="link-more tap">
             Read all reviews on Amazon
           </a>
         </p>

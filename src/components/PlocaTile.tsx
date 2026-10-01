@@ -17,7 +17,8 @@ function PlocaMark() {
 export default function PlocaTile({more}: {more?: {to: string; label: string}}) {
   return (
     <section aria-labelledby="ploca-title" className="tile px-7 py-12 sm:px-12 md:py-16">
-      <div className="flex flex-col gap-8 md:flex-row md:items-center md:gap-12">
+      <div className="grid gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,19rem)] md:items-center md:gap-12">
+        <div className="flex flex-col gap-8 md:flex-row md:items-center md:gap-10">
         <PlocaMark />
         <div>
           <p className="label">Currently building</p>
@@ -39,6 +40,16 @@ export default function PlocaTile({more}: {more?: {to: string; label: string}}) 
             )}
           </div>
         </div>
+        </div>
+
+        {/* A real example from ploca.app: what you say, as it lands. */}
+        <figure className="rounded-[var(--radius-grouped)] bg-paper p-6">
+          <p className="label">Hinglish</p>
+          <blockquote lang="hi-Latn" className="mt-3 font-display text-[1.1875rem] font-medium leading-[1.35] tracking-[-0.012em]">
+            Kal ka call 4 baje tak push kar do, client ne abhi tak deck review nahi kiya.
+          </blockquote>
+          <figcaption className="mt-4 text-[0.875rem] text-muted">Lands at your cursor, in any app</figcaption>
+        </figure>
       </div>
     </section>
   );
