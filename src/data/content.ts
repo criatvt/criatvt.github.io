@@ -84,7 +84,7 @@ export const book = {
   title: "Doomscroller to Reader",
   tagline: "Build a reading habit without giving up your phone.",
   amazon: "https://www.amazon.in/dp/B0GH73Z8RP",
-  cover: "https://m.media-amazon.com/images/P/B0GH73Z8RP.01.LZZZZZZZ.jpg",
+  cover: `${import.meta.env.BASE_URL}book-cover.jpg`, // supplied by Aasif
   rating: 4.6,
 };
 
