@@ -1,8 +1,9 @@
 import {Link} from "react-router-dom";
 import PlocaPanel from "../components/PlocaPanel";
+import IntroReveal from "../components/IntroReveal";
 import SafeImage from "../components/SafeImage";
 import {ImageCard} from "../components/Cards";
-import {book, talks, youtubeThumb} from "../data/content";
+import {book, press, talks, youtubeThumb} from "../data/content";
 import {shortDate, useEssays} from "../data/essays";
 import photos from "../data/photos.json";
 
@@ -13,6 +14,7 @@ export default function Home() {
 
   return (
     <>
+      <IntroReveal />
       {/* Intro: a large centred greeting, then the short version. */}
       <section className="page pt-16 pb-[var(--space-section)] text-center md:pt-28 md:pb-[var(--space-section-lg)]">
         <h1 className="display enter">Hi, I&rsquo;m Aasif.</h1>
@@ -52,13 +54,23 @@ export default function Home() {
       {/* Currently building: always first after the intro. */}
       <PlocaPanel more={{to: "/build", label: "See everything I have built"}} />
 
-      {/* Latest writing, as magazine cards. */}
+      {/* Latest writing: the press pieces first, then the newest essays. */}
       <section className="page pt-[var(--space-section)] md:pt-[var(--space-section-lg)]">
         <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-2">
           <h2 className="title-1">Latest writing</h2>
           <Link to="/writing" className="link-more tap">All writing</Link>
         </div>
         <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-12 md:grid-cols-[repeat(3,minmax(0,1fr))]">
+          {press.map((j) => (
+            <ImageCard
+              key={j.url}
+              href={j.url}
+              image={j.image}
+              kicker={j.publication}
+              title={j.title}
+              meta={shortDate(j.date)}
+            />
+          ))}
           {latest.length === 0
             ? [0, 1, 2].map((i) => (
                 <div key={i} className="card" aria-hidden="true">

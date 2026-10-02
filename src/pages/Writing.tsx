@@ -20,9 +20,28 @@ export default function Writing() {
         </p>
       </header>
 
+      {/* Journalism: op-eds in the press. */}
+      <section aria-labelledby="press-title">
+        <div className="page">
+          <h2 id="press-title" className="title-1">In the press</h2>
+          <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-12 md:grid-cols-[repeat(3,minmax(0,1fr))]">
+            {press.map((j) => (
+              <ImageCard
+                key={j.url}
+                href={j.url}
+                image={j.image}
+                kicker={j.publication}
+                title={j.title}
+                meta={shortDate(j.date)}
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Essays: the newest as a wide lead story, the rest in a grid. */}
-      <section className="page" aria-labelledby="essays-title">
-        <h2 id="essays-title" className="sr-only">Essays</h2>
+      <section className="page pt-[var(--space-section)] md:pt-[var(--space-section-lg)]" aria-labelledby="essays-title">
+        <h2 id="essays-title" className="title-1 mb-10">Essays</h2>
 
         {essays === null && !error && (
           <div role="status" aria-label="Loading essays" className="card md:grid md:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] md:gap-10">
@@ -80,24 +99,6 @@ export default function Writing() {
         )}
       </section>
 
-      {/* Journalism: op-eds in the press. */}
-      <section className="pt-[var(--space-section)] md:pt-[var(--space-section-lg)]" aria-labelledby="press-title">
-        <div className="page">
-          <h2 id="press-title" className="title-1">In the press</h2>
-          <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-12 md:grid-cols-[repeat(3,minmax(0,1fr))]">
-            {press.map((j) => (
-              <ImageCard
-                key={j.url}
-                href={j.url}
-                image={j.image}
-                kicker={j.publication}
-                title={j.title}
-                meta={shortDate(j.date)}
-              />
-            ))}
-          </div>
-        </div>
-      </section>
     </>
   );
 }

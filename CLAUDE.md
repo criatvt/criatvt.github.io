@@ -20,7 +20,7 @@ branch; never push to `main` directly.
   Photography, Story, NotFound. Routes are in `src/App.tsx`.
 - `src/components/` — `Layout` (footer, scroll reset), `Nav` (translucent bar,
   mobile sheet; its `links` array also drives the footer), `ThemeToggle`,
-  `PlocaPanel`, `Cards`, `SafeImage`.
+  `PlocaPanel`, `Cards`, `SafeImage`, `IntroReveal`.
 - `src/index.css` — the whole design system: tokens in `@theme`, dark values
   under `.dark`, and component classes in `@layer components`.
 - `src/data/photos.json` — the Photography album, committed.
@@ -78,7 +78,10 @@ Build.
   AI-made Genmoji-style avatar). The share card is `public/share.png`, which
   is text only. The site itself shows no portrait.
 - **Motion.** Only page headers animate (`.enter`, `.enter-2`, `.enter-3`),
-  plus hover zoom on card images. Don't add scroll-triggered animation. Every
+  plus hover zoom on card images and the Home intro (`IntroReveal`). The intro
+  is an iPhone-ad-style black stage: the two lines resolve out of a blur and
+  the stage lifts to reveal the site. It plays once per browser session, any
+  input skips it, and reduced motion never shows it. Don't add scroll-triggered animation. Every
   animation and transition has a `prefers-reduced-motion` fallback.
 - **Checks before shipping UI.** No horizontal scroll at 320–1440px. Clickable
   text never wraps to two lines. Tap targets are at least 44px. Check both
