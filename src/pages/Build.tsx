@@ -1,3 +1,5 @@
+import PlocaPanel from "../components/PlocaPanel";
+
 // Newest first. `kind` is the one-word label shown beside each name.
 const builds = [
   {
@@ -49,47 +51,27 @@ export default function Build() {
         </p>
       </header>
 
-      {/* Currently building: Ploca, as a product tile. */}
-      <section className="page">
-        <a
-          href="https://ploca.app"
-          target="_blank"
-          rel="noreferrer"
-          className="tile group block px-7 py-12 sm:px-12 md:py-16"
-        >
-          <p className="label">Currently building</p>
-          <div className="mt-3 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-            <div>
-              <h2 className="title-1">ploca</h2>
-              <p className="mt-3 max-w-[34ch] text-[1.1875rem] leading-[1.45] text-muted">
-                A private, on-device dictation app for Mac.
-              </p>
-            </div>
-            <span className="link-more group-hover:underline decoration-1 underline-offset-4">
-              ploca.app
-            </span>
-          </div>
-        </a>
-      </section>
+      {/* Currently building: Ploca, always first. */}
+      <PlocaPanel />
 
-      {/* Everything else, as one grouped list. */}
-      <section className="page pt-16 md:pt-20">
-        <h2 className="sr-only">Tools and games</h2>
-        <ul className="grouped">
+      {/* Everything else, newest first, as a two-column grid. */}
+      <section className="page pt-[var(--space-section)] md:pt-[var(--space-section-lg)]">
+        <h2 className="title-1">More I have built</h2>
+        <ul className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-[repeat(2,minmax(0,1fr))]">
           {builds.map((b) => (
             <li key={b.name}>
-              <a href={b.url} target="_blank" rel="noreferrer" className="row items-start py-6 sm:py-7">
-                <div className="flex min-w-0 flex-col gap-1.5">
-                  <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                    <span className="font-display text-[1.375rem] font-semibold tracking-[-0.014em]">
-                      {b.name}
-                    </span>
-                    <span className="text-[0.8125rem] text-muted">{b.kind}</span>
-                  </div>
-                  <p className="max-w-[60ch] text-[0.9375rem] leading-[1.55] text-ink/80">{b.blurb}</p>
-                  <span className="text-[0.8125rem] text-muted">{host(b.url)}</span>
-                </div>
-                <span className="chevron self-center" aria-hidden="true">›</span>
+              <a
+                href={b.url}
+                target="_blank"
+                rel="noreferrer"
+                className="tile group flex h-full flex-col gap-3 p-7 sm:p-8"
+              >
+                <span className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                  <span className="title-3">{b.name}</span>
+                  <span className="rounded-full bg-paper px-2.5 py-0.5 text-[0.875rem] text-muted">{b.kind}</span>
+                </span>
+                <p className="text-[1rem] leading-[1.55] text-ink-2">{b.blurb}</p>
+                <span className="link-more mt-auto pt-2">{host(b.url)}</span>
               </a>
             </li>
           ))}

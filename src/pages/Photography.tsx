@@ -1,5 +1,6 @@
 import {useEffect, useRef, useState} from "react";
 import photos from "../data/photos.json";
+import SafeImage from "../components/SafeImage";
 
 const ALBUM_ID = "72157687588601032";
 const USER_PATH = "criatvt";
@@ -24,19 +25,20 @@ const lightbox = (p: Photo) => `${p.link.replace(/\/$/, "")}/lightbox/`;
 const albumUrl = `https://www.flickr.com/photos/${USER_PATH}/albums/${ALBUM_ID}/`;
 
 // One photo per screen. The page is its own scroll container — a viewport
-// minus the fixed nav (52px) — with mandatory y-snapping, so a scroll settles
-// on the next photo instead of stopping halfway. It has to be a local
+// minus the fixed nav (52px) — with proximity y-snapping, so a scroll settles
+// on the next photo instead of stopping halfway, yet a tall caption on a short
+// screen can always be scrolled past. It has to be a local
 // container rather than the document: snapping on the document is fragile
 // across browsers once any ancestor clips overflow.
 const FRAME =
-  "h-[calc(100svh-52px)] overflow-y-auto snap-y snap-mandatory outline-none";
+  "h-[calc(100svh-52px)] overflow-y-auto snap-y snap-proximity outline-none";
 const SECTION =
   "snap-start h-full flex flex-col items-center justify-center px-4 md:px-10 py-6 md:py-10";
 // The intro write-up runs longer than a phone screen. It needs min-h-full
 // rather than h-full: a centered flex column clips the top of anything taller
 // than itself, so the section must be allowed to grow with its text.
 const INTRO_SECTION =
-  "snap-start min-h-full flex flex-col justify-center py-12";
+  "snap-start min-h-full pt-16 pb-16 md:pt-28 md:pb-24";
 
 // The write-up, two sentences to a paragraph: short beats carry better on a
 // phone than one long block.
@@ -83,12 +85,12 @@ export default function Photography() {
       <section data-index={-1} className={INTRO_SECTION}>
         <div className="page">
           <h1 className="title-1 enter">Photography</h1>
-          <div className="prose-col enter-2 mt-8 flex flex-col gap-4 text-ink/85 md:mt-10 md:gap-5">
+          <div className="prose-col enter-2 mt-10 flex flex-col gap-6 text-[clamp(1.1875rem,0.3vw+1.1rem,1.25rem)] leading-[1.7] text-ink-2 md:mt-12">
             {INTRO_PARAS.map((text) => (
               <p key={text}>{text}</p>
             ))}
           </div>
-          <p className="enter-3 mt-10 flex items-center gap-2 text-[0.9375rem] text-muted">
+          <p className="enter-3 mt-12 flex items-center gap-2 text-[1.0625rem] text-muted">
             <span>Scroll to begin</span>
             <span aria-hidden="true" className="text-[1.125rem] leading-none">↓</span>
           </p>
@@ -109,21 +111,21 @@ export default function Photography() {
             className="flex min-h-0 max-w-full justify-center"
             aria-label={`${p.title || "Photograph"}, open full size on Flickr`}
           >
-            <img
+            <SafeImage
               src={p.large}
               alt={p.title || "Photograph"}
               width={p.width}
               height={p.height}
               loading={i < 2 ? "eager" : "lazy"}
               decoding="async"
-              className="max-h-[calc((100svh-52px)*0.74)] min-h-0 w-auto max-w-full object-contain"
+              className="max-h-[calc((100svh-52px)*0.74)] min-h-0 w-auto max-w-full object-contain [&:not(img)]:aspect-[3/2] [&:not(img)]:w-[min(90vw,64rem)]"
             />
           </a>
           {(p.title || p.description) && (
-            <div className="shrink-0 max-w-xl text-center">
+            <div className="shrink-0 max-w-[60ch] text-center">
               {p.title && <h2 className="title-3">{p.title}</h2>}
               {p.description && (
-                <p className="mt-1.5 text-[0.9375rem] leading-[1.55] text-muted">
+                <p className="mt-2 text-[1.0625rem] leading-[1.6] text-ink-2">
                   {p.description}
                 </p>
               )}
@@ -135,7 +137,7 @@ export default function Photography() {
       {/* Closing screen: the whole album, one by one, at full resolution. */}
       <section data-index={-1} className={`${SECTION} text-center`}>
         <h2 className="title-2">That&rsquo;s the album.</h2>
-        <p className="mt-4 max-w-[36ch] text-muted">
+        <p className="mt-5 max-w-[36ch] text-[clamp(1.1875rem,0.3vw+1.1rem,1.25rem)] leading-[1.6] text-ink-2">
           See every photo at full resolution, one by one, in Flickr&rsquo;s
           lightbox.
         </p>
@@ -145,7 +147,7 @@ export default function Photography() {
               Open the lightbox
             </a>
           )}
-          <a href={albumUrl} target="_blank" rel="noreferrer" className="link-more">
+          <a href={albumUrl} target="_blank" rel="noreferrer" className="link-more tap">
             Album on Flickr
           </a>
         </div>
@@ -153,7 +155,7 @@ export default function Photography() {
 
       {/* Position in the album, pinned out of the way. */}
       {current !== null && (
-        <p className="fixed bottom-5 right-5 z-40 rounded-full bg-paper/75 px-3 py-1 text-[0.8125rem] text-muted tabular-nums backdrop-blur-md pointer-events-none">
+        <p className="fixed bottom-5 right-5 z-40 rounded-full bg-paper/75 px-3 py-1 text-[0.875rem] text-muted tabular-nums backdrop-blur-md pointer-events-none">
           {current + 1} of {album.length}
         </p>
       )}

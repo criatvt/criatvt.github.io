@@ -1,52 +1,8 @@
-// Talks — public panels and webinars on AI in education. Each embeds a
-// responsive 16:9 YouTube player above its details.
-type Talk = {
-  youtubeId: string;
-  title: string;
-  host: string;
-  date: string; // ISO
-  blurb: string;
-  panel: string;
-};
-
-const talks: Talk[] = [
-  {
-    youtubeId: "WVr3Ggy9xSY",
-    title: "Need to teach responsible use of AI",
-    host: "Sixth National Conference on Education · Vidya Vanam",
-    date: "2026-05-30",
-    blurb:
-      "A panel at the Sixth National Conference on Education, a national gathering of educators, policymakers, and researchers hosted by Vidya Vanam in Anaikatti, Coimbatore, on the theme of AI in Education. The argument: AI in the classroom has to start with responsible use, not just the tools.",
-    panel:
-      "With Jibu Elias (Mozilla Foundation, who leads the Responsible Computing Challenge in India; AI ethicist, ex-INDIAai) and Neerja Singh (author and speaker on generational diversity and intergenerational communication, known as \"The Seenager\"). Moderated by Sudarshana Srinivasan.",
-  },
-  {
-    youtubeId: "dC6O7ysyudU",
-    title: "Curriculum: How should AI be taught to children?",
-    host: "The Hindu",
-    date: "2026-04-11",
-    blurb:
-      "A webinar on what an honest AI curriculum for children should actually teach, and what it should leave out.",
-    panel:
-      "With Viplav Baxi (Founder, AmplifiU) and Bhanu Potta (Senior Partner, EdTech & AI, Central Square Foundation). Moderated by M. Kalyanaraman (heads education at The Hindu).",
-  },
-];
+import {ImageCard, TalkVideo} from "../components/Cards";
+import {press, talks, type Talk} from "../data/content";
 
 // The two press pieces most relevant to AI in education, as on /writing.
-const articles = [
-  {
-    title: "India's tech education crisis: When engineers can't code",
-    publication: "The Hindu",
-    url: "https://www.thehindu.com/education/indias-tech-education-crisis-when-computer-engineers-cant-code/article69243098.ece",
-    date: "2025-02-20",
-  },
-  {
-    title: "CBSE's future-ready AI curriculum, but are students ready?",
-    publication: "The Hindu",
-    url: "https://www.thehindu.com/education/cbses-future-ready-ai-curriculum-but-are-students-ready/article70823388.ece",
-    date: "2026-04-06",
-  },
-];
+const articles = press.filter((p) => p.publication === "The Hindu");
 
 const CTA_EMAIL = "aasif@aasifj.com";
 
@@ -59,29 +15,18 @@ function formatDate(iso: string): string {
   });
 }
 
-// A talk: responsive 16:9 YouTube embed on a rounded tile, then date and host,
-// title, blurb, and panel. Props typed `any` because this project runs React
-// untyped, so a concrete type rejects React's `key`.
-function TalkCard({talk}: any) {
+// A talk: the click-to-play video, then date and host, title, blurb and panel.
+function TalkCard({talk}: {talk: Talk; key?: string}) {
   return (
-    <article className="grid grid-cols-1 gap-7 md:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] md:gap-10">
-      <div className="aspect-video overflow-hidden rounded-[1.25rem] bg-surface">
-        <iframe
-          className="h-full w-full"
-          src={`https://www.youtube-nocookie.com/embed/${talk.youtubeId}`}
-          title={talk.title}
-          loading="lazy"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          allowFullScreen
-        />
-      </div>
+    <article className="grid grid-cols-1 gap-7 md:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] md:items-center md:gap-10">
+      <TalkVideo talk={talk} />
       <div className="flex flex-col gap-3">
-        <span className="text-[0.8125rem] text-muted">
+        <span className="text-[0.875rem] text-muted">
           {formatDate(talk.date)} · {talk.host}
         </span>
         <h3 className="title-3">{talk.title}</h3>
-        <p className="text-[0.9375rem] leading-[1.6] text-ink/80">{talk.blurb}</p>
-        <p className="text-[0.8125rem] leading-[1.55] text-muted">{talk.panel}</p>
+        <p className="text-[1rem] leading-[1.6] text-ink-2">{talk.blurb}</p>
+        <p className="text-[0.875rem] leading-[1.55] text-muted">{talk.panel}</p>
       </div>
     </article>
   );
@@ -101,7 +46,7 @@ export default function Educate() {
       </header>
 
       <section className="page">
-        <h2 className="title-2">Talks</h2>
+        <h2 className="title-1">Talks</h2>
         <div className="mt-10 flex flex-col gap-16 md:gap-20">
           {talks.map((t) => (
             <TalkCard key={t.youtubeId} talk={t} />
@@ -109,32 +54,27 @@ export default function Educate() {
         </div>
       </section>
 
-      <section className="page pt-20 md:pt-28">
-        <h2 className="title-2">Writing</h2>
-        <ul className="grouped mt-8">
+      <section className="page pt-[var(--space-section)] md:pt-[var(--space-section-lg)]">
+        <h2 className="title-1">Writing</h2>
+        <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-12 md:grid-cols-[repeat(2,minmax(0,1fr))]">
           {articles.map((a) => (
-            <li key={a.url}>
-              <a href={a.url} target="_blank" rel="noreferrer" className="row">
-                <span className="flex min-w-0 flex-col gap-1">
-                  <span className="text-[0.8125rem] text-muted">
-                    {a.publication} · {formatDate(a.date)}
-                  </span>
-                  <span className="font-display text-[1.1875rem] font-semibold leading-[1.3] tracking-[-0.01em]">
-                    {a.title}
-                  </span>
-                </span>
-                <span className="chevron" aria-hidden="true">›</span>
-              </a>
-            </li>
+            <ImageCard
+              key={a.url}
+              href={a.url}
+              image={a.image}
+              kicker={a.publication}
+              title={a.title}
+              meta={formatDate(a.date ?? "")}
+            />
           ))}
-        </ul>
+        </div>
       </section>
 
       {/* Invitation to get in touch. */}
-      <section className="page pt-20 md:pt-28">
+      <section className="page pt-[var(--space-section)] md:pt-[var(--space-section-lg)]">
         <div className="tile px-7 py-14 text-center sm:px-12 md:py-20">
-          <h2 className="title-2">Let&rsquo;s talk</h2>
-          <p className="mx-auto mt-5 max-w-[44ch] text-ink/80">
+          <h2 className="title-1">Let&rsquo;s talk</h2>
+          <p className="mx-auto mt-5 max-w-[44ch] text-ink-2">
             I enjoy speaking and trading perspectives with fellow educators,
             founders, and builders. On AI in education, building AI products,
             and startups. If that sounds like you, write to me.

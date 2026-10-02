@@ -1,28 +1,45 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
-/* Design system: Apple-editorial. A serif for headlines (Source Serif 4, with
-   its optical-size axis, so display cuts sharpen as they grow), the platform
-   sans for everything else (SF Pro on Apple devices, Inter elsewhere), one
-   crimson accent, and near-white / near-black grounds. Every colour and face
-   on the site is a token below; components never hard-code either. The fonts
-   are self-hosted from npm (see main.tsx), so nothing loads from a font CDN. */
+/* Design system: Apple product page meets magazine. One sans family (SF Pro on
+   Apple devices, Inter with optical sizes elsewhere, so large headlines get a
+   display cut), bold and tightly tracked for headlines. Fully monochrome:
+   colour comes only from images and Ploca's own mark.
+   Every colour and face is a token below; components never hard-code either.
+   The font is self-hosted from npm (see main.tsx); nothing loads from a CDN. */
 @theme {
-  --font-display: "Source Serif 4 Variable", "Source Serif 4", Georgia, serif;
+  --font-display: -apple-system, BlinkMacSystemFont, "Inter Variable", "Segoe UI",
+    Roboto, sans-serif;
   --font-sans: -apple-system, BlinkMacSystemFont, "Inter Variable", "Segoe UI",
     Roboto, sans-serif;
 
   --color-paper: #FBFBFD;    /* page ground: Apple's off-white, never pure */
   --color-surface: #F2F2F5;  /* raised surfaces: cards, grouped lists, footer */
   --color-ink: #1D1D1F;      /* primary text, 16.3:1 on paper */
+  --color-ink-2: #424245;    /* body copy under a headline, 9.7:1 on paper; replaces text-ink/80 */
   --color-muted: #6E6E73;    /* secondary text, 4.9:1 on paper, 4.5:1 on surface */
   --color-line: #D2D2D7;     /* hairlines */
-  --color-crimson: #C22B21;  /* the one accent: links, focus, highlights, 5.5:1 */
-  --color-crimson-dark: #9E2119; /* accent, pressed */
-  --color-crimson-fill: #C22B21; /* solid button fill; white text 5.7:1 in both themes */
-  --color-on-crimson: #FFFFFF;
+  --color-action: #1D1D1F;   /* buttons, links, focus: monochrome, 16.3:1 on paper */
+  --color-on-action: #FBFBFD;
+  --color-ploca-wash: #F0F3F8; /* Ploca panel ground: ink 15.1:1, muted 4.6:1 */
+  --color-ploca: #1F3558;    /* Ploca's navy, for its mark only (never text): 11.7:1 on paper */
+
+  /* Feature bands: black in both themes (a touch lifted in dark so the band
+     still reads against the near-black page). */
+  --color-band: #000000;
+  --color-on-band: #F5F5F7;        /* 19.3:1 on band */
+  --color-on-band-muted: #A1A1A6;  /* 8.2:1 on band */
 
   --ease-apple: cubic-bezier(0.25, 0.1, 0.25, 1);
+
+  /* Radii: control, grouped list, tile. Pills use rounded-full. */
+  --radius-control: 0.75rem;
+  --radius-grouped: 1.375rem;
+  --radius-tile: 1.75rem;
+
+  /* 4pt spacing steps for section rhythm (use via var(), e.g. py-[var(--space-section)]). */
+  --space-section: 4.5rem;   /* gap between page sections */
+  --space-section-lg: 7rem;  /* same, from the md breakpoint up */
 
   /* A physical object resting on the page: the book cover. */
   --shadow-cover: 0 2px 4px rgb(0 0 0 / 0.08), 0 24px 48px -12px rgb(0 0 0 / 0.35);
@@ -35,10 +52,14 @@
   --color-paper: #0A0A0B;
   --color-surface: #1C1C1E;
   --color-ink: #F5F5F7;      /* 18.2:1 */
+  --color-ink-2: #D1D1D6;    /* 13.0:1 on paper */
   --color-muted: #A1A1A6;    /* 7.7:1 on paper, 6.6:1 on surface */
   --color-line: #38383A;
-  --color-crimson: #FF6B5B;  /* lifted for the dark ground, 7.1:1 */
-  --color-crimson-dark: #FF8F82;
+  --color-action: #F5F5F7;   /* 18.2:1 on paper */
+  --color-on-action: #0A0A0B;
+  --color-ploca-wash: #18202D; /* ink 15.0:1, muted 6.4:1 */
+  --color-ploca: #8FA8D0;    /* lifted for the dark ground, 7.1:1 on surface */
+  --color-band: #161617;     /* on-band 16.6:1, muted 7.0:1, link 6.5:1 */
 }
 
 html {
@@ -64,11 +85,12 @@ html.dark {
     font-feature-settings: "kern", "liga";
   }
   ::selection {
-    background: color-mix(in srgb, var(--color-crimson) 22%, transparent);
+    background: color-mix(in srgb, var(--color-ink) 16%, transparent);
   }
   h1, h2, h3, h4 {
     font-family: var(--font-display);
-    font-weight: 600;
+    font-weight: 650;
+    letter-spacing: -0.02em;
     font-optical-sizing: auto;
     text-wrap: balance;
     overflow-wrap: anywhere;
@@ -78,7 +100,7 @@ html.dark {
     text-wrap: pretty;
   }
   :focus-visible {
-    outline: 2px solid var(--color-crimson);
+    outline: 2px solid var(--color-action);
     outline-offset: 3px;
     border-radius: 4px;
   }
@@ -89,31 +111,31 @@ html.dark {
      tightens as size grows, tracking pulls in the way Apple sets headlines. */
   .display {
     font-family: var(--font-display);
-    font-weight: 600;
-    font-size: clamp(2.75rem, 6vw + 0.5rem, 5rem);
-    line-height: 1.04;
-    letter-spacing: -0.025em;
+    font-weight: 700;
+    font-size: clamp(3rem, 7vw + 0.5rem, 6rem);
+    line-height: 1.02;
+    letter-spacing: -0.035em;
   }
   .title-1 {
     font-family: var(--font-display);
-    font-weight: 600;
-    font-size: clamp(2.5rem, 4.5vw + 0.5rem, 4rem);
-    line-height: 1.06;
-    letter-spacing: -0.022em;
+    font-weight: 700;
+    font-size: clamp(2.5rem, 4vw + 1rem, 4rem);
+    line-height: 1.04;
+    letter-spacing: -0.03em;
   }
   .title-2 {
     font-family: var(--font-display);
-    font-weight: 600;
+    font-weight: 650;
     font-size: clamp(1.75rem, 2vw + 1rem, 2.5rem);
-    line-height: 1.12;
-    letter-spacing: -0.018em;
+    line-height: 1.1;
+    letter-spacing: -0.022em;
   }
   .title-3 {
     font-family: var(--font-display);
     font-weight: 600;
-    font-size: 1.5rem;
-    line-height: 1.2;
-    letter-spacing: -0.012em;
+    font-size: 1.375rem;
+    line-height: 1.22;
+    letter-spacing: -0.015em;
   }
   /* The standfirst under a page title: larger sans, muted. */
   .lede {
@@ -124,13 +146,21 @@ html.dark {
   }
   /* A small label above a group. Used sparingly, never on every section. */
   .label {
-    @apply text-[0.8125rem] font-semibold text-muted;
+    @apply text-[0.875rem] font-semibold text-muted; /* 14px floor for anything readers need */
     letter-spacing: -0.005em;
+  }
+
+  /* Grows a small link's hit area to 44px without changing its look. */
+  .tap {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
   }
 
   /* Apple's text link: accent colour, a trailing chevron, underline on hover. */
   .link-more {
-    @apply inline-flex items-center gap-1 whitespace-nowrap text-crimson;
+    @apply inline-flex items-center gap-1 whitespace-nowrap font-medium text-ink;
     line-height: 1.2;
   }
   .link-more::after {
@@ -147,26 +177,26 @@ html.dark {
     transform: translate(2px, -0.04em);
   }
   .link-more:active {
-    @apply text-crimson-dark;
+    @apply opacity-60;
   }
 
   /* Inline link inside running prose. */
   .link {
-    @apply text-crimson underline decoration-1 underline-offset-[3px];
-    text-decoration-color: color-mix(in srgb, var(--color-crimson) 40%, transparent);
+    @apply text-ink underline decoration-1 underline-offset-[3px];
+    text-decoration-color: color-mix(in srgb, var(--color-ink) 35%, transparent);
     transition: text-decoration-color 150ms var(--ease-apple);
   }
   .link:hover {
     text-decoration-color: currentColor;
   }
   .link:active {
-    @apply text-crimson-dark;
+    @apply opacity-60;
   }
 
   /* Pill button. Filled for the page's primary action, tinted otherwise. */
   .btn {
     @apply inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full
-      px-6 py-3 text-[1.0625rem] font-medium;
+      min-h-11 px-6 py-3 text-[1.0625rem] font-medium;
     line-height: 1;
     transition: background-color 150ms var(--ease-apple), color 150ms var(--ease-apple),
       transform 150ms var(--ease-apple);
@@ -179,23 +209,23 @@ html.dark {
     @apply pointer-events-none opacity-40;
   }
   .btn-primary {
-    background: var(--color-crimson-fill);
-    color: var(--color-on-crimson);
+    background: var(--color-action);
+    color: var(--color-on-action);
   }
   .btn-primary:hover {
-    background: color-mix(in srgb, var(--color-crimson-fill) 88%, black);
+    background: color-mix(in srgb, var(--color-action) 82%, var(--color-paper));
   }
   .btn-secondary {
-    @apply text-crimson;
-    background: color-mix(in srgb, var(--color-crimson) 10%, transparent);
+    @apply text-ink;
+    background: color-mix(in srgb, var(--color-ink) 8%, transparent);
   }
   .btn-secondary:hover {
-    background: color-mix(in srgb, var(--color-crimson) 16%, transparent);
+    background: color-mix(in srgb, var(--color-ink) 14%, transparent);
   }
 
   /* Raised surface: Apple's rounded tile. */
   .tile {
-    @apply rounded-[1.75rem] bg-surface;
+    @apply rounded-[var(--radius-tile)] bg-surface;
   }
   a.tile {
     transition: background-color 150ms var(--ease-apple);
@@ -207,7 +237,7 @@ html.dark {
   /* An inset grouped list: rows on one surface, hairlines between them that
      stop short of the leading edge, the way iOS draws them. */
   .grouped {
-    @apply overflow-hidden rounded-[1.375rem] bg-surface;
+    @apply overflow-hidden rounded-[var(--radius-grouped)] bg-surface;
   }
   .grouped > * + * {
     position: relative;
@@ -245,6 +275,63 @@ html.dark {
     transform: translateX(2px);
   }
 
+  /* A full-bleed feature band, Apple product-page style: black in both
+     themes, centred, one idea per screen. Used once, for the turn in Story. */
+  .band {
+    @apply bg-band text-on-band;
+    padding-block: var(--space-section);
+  }
+  @media (min-width: 48rem) {
+    .band {
+      padding-block: var(--space-section-lg);
+    }
+  }
+  .band .lede,
+  .band .label {
+    @apply text-on-band-muted;
+  }
+  .band .link-more,
+  .band .link {
+    @apply text-on-band;
+  }
+  .band .text-muted {
+    @apply text-on-band-muted;
+  }
+  .band .text-ink-2,
+  .band .text-ink {
+    @apply text-on-band;
+  }
+  .band .card-media {
+    background: color-mix(in srgb, var(--color-on-band) 10%, var(--color-band));
+  }
+
+  /* Magazine card: picture first, words beneath, no box around them. */
+  .card {
+    @apply flex min-w-0 flex-col gap-4;
+  }
+  .card-media {
+    @apply relative overflow-hidden rounded-[var(--radius-grouped)] bg-surface;
+  }
+  .card-media img {
+    @apply h-full w-full object-cover;
+    transition: transform 600ms var(--ease-apple);
+  }
+  a.card:hover .card-media img,
+  a:hover > .card .card-media img {
+    transform: scale(1.03);
+  }
+  .card-title {
+    font-family: var(--font-display);
+    font-weight: 650;
+    font-size: 1.25rem;
+    line-height: 1.25;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+  a.card:hover .card-title {
+    @apply underline decoration-1 underline-offset-4;
+  }
+
   /* Page scaffolding. */
   .page {
     @apply mx-auto w-full max-w-[1024px] px-5 sm:px-8;
@@ -272,6 +359,58 @@ html.dark {
   }
 }
 
+/* The Home intro (IntroReveal): a black stage, lines resolving out of a blur
+   the way iPhone ads set type, then the stage lifts to reveal the site. While
+   it plays, the page's own entrance waits so it can run as the stage lifts. */
+.intro-stage {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 1.25rem;
+  text-align: center;
+  background: var(--color-band);
+}
+.intro-line {
+  animation: intro-in 1400ms cubic-bezier(0.2, 0.7, 0.2, 1) 300ms both;
+}
+.intro-line-2 {
+  animation-delay: 2000ms;
+}
+.intro-out {
+  animation: intro-out 1000ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+@keyframes intro-in {
+  from {
+    opacity: 0;
+    filter: blur(12px);
+    transform: scale(1.06);
+  }
+}
+@keyframes intro-out {
+  to {
+    opacity: 0;
+    transform: scale(1.04);
+  }
+}
+.intro-playing .enter,
+.intro-playing .enter-2,
+.intro-playing .enter-3 {
+  animation-play-state: paused;
+}
+
+/* Translucent bars fall back to a solid ground for readers who ask for it. */
+@media (prefers-reduced-transparency: reduce) {
+  .glass {
+    background: var(--color-paper);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
 /* Nothing should move for readers who would rather it didn't. */
 @media (prefers-reduced-motion: reduce) {
   html {
@@ -282,10 +421,15 @@ html.dark {
   .enter-3 {
     animation: none;
   }
+  .intro-stage {
+    display: none;
+  }
   .btn,
   .btn:active,
   .link-more::after,
-  .chevron {
+  .chevron,
+  .card-media img,
+  a.card:hover .card-media img {
     transition: none;
     transform: none;
   }
