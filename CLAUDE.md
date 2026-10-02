@@ -11,7 +11,9 @@ app, deployed to GitHub Pages (custom domain in `public/CNAME`).
   the essays snapshot; it keeps the old file if Substack is unreachable)
 - `npm run photos` — manual, one-off refresh of the photo list (see below)
 
-Deploys happen on push to `main` (`.github/workflows/deploy.yml`). Work on a
+Deploys happen on push to `main` (`.github/workflows/deploy.yml`).
+`.github/workflows/links.yml` checks every external link with lychee on pushes
+to `dev`, on PRs into `main`, and weekly; a red run lists the broken links. Work on a
 branch; never push to `main` directly.
 
 ## Layout
