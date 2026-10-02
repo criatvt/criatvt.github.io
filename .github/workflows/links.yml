@@ -29,7 +29,9 @@ jobs:
           output: lychee.md
           format: markdown
           # Sites that refuse bots (LinkedIn 999, X, Amazon) still count as up
-          # when they answer at all; anything 404/410/5xx fails.
+          # when they answer at all; anything 404/410/5xx fails. Only web
+          # links are checked (site-internal paths are covered by the build),
+          # and URLs that are templates in code (${...}) are skipped.
           args: >-
             --no-progress
             --max-concurrency 8
@@ -45,6 +47,9 @@ jobs:
             --exclude "substack\.com/feed"
             --exclude "aasifj\.com/share\.png"
             --exclude "\$\{"
+            --exclude "%7B"
+            --scheme https
+            --scheme http
             "src/**/*.tsx" "src/**/*.ts" "src/data/*.json" "public/essays.json"
             "public/resources/index.html" "public/nextread/index.html" "index.html"
 
