@@ -37,7 +37,7 @@ export default function IntroReveal() {
       done = true;
       setPhase("gone");
     };
-    const toLeave = window.setTimeout(() => setPhase("leave"), 2500);
+    const toLeave = window.setTimeout(() => setPhase("leave"), 4600);
     const skipEvents = ["pointerdown", "keydown", "wheel", "touchmove"] as const;
     skipEvents.forEach((e) => window.addEventListener(e, finish, {passive: true}));
 

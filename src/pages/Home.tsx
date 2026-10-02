@@ -10,7 +10,10 @@ import photos from "../data/photos.json";
 export default function Home() {
   const {essays} = useEssays();
   const latest = essays?.slice(0, 3) ?? [];
-  const photo = (photos as {large: string; title: string}[])[0];
+  const photo = (photos as {thumb: string; title: string}[])[0];
+  // Flickr's 1024px size shares the thumbnail's secret: lighter than the
+  // 2048px "large" for a card this size.
+  const photoCard = photo?.thumb.replace(/_q\.jpg$/, "_b.jpg");
 
   return (
     <>
@@ -129,7 +132,7 @@ export default function Home() {
           </Link>
           <Link to="/photography" className="card">
             <div className="card-media aspect-[16/10]">
-              {photo && <SafeImage src={photo.large} alt="" loading="lazy" className="h-full w-full" />}
+              {photoCard && <SafeImage src={photoCard} alt="" loading="lazy" className="h-full w-full" />}
             </div>
             <span className="label">Photography</span>
             <span className="card-title">How I slow down time and stay in the moment</span>
