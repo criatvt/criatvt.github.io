@@ -12,7 +12,8 @@ function shouldPlay(): boolean {
   if (decided !== null) return decided;
   try {
     if (matchMedia("(prefers-reduced-motion: reduce)").matches) return (decided = false);
-    if (sessionStorage.getItem(KEY)) return (decided = false);
+    // Preview builds replay it on every load so it can be reviewed.
+    if (!import.meta.env.VITE_PREVIEW && sessionStorage.getItem(KEY)) return (decided = false);
     sessionStorage.setItem(KEY, "1");
   } catch {
     // Storage blocked: play once for this page load.
